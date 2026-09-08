@@ -1,0 +1,6 @@
+Round,Attack Type,Total Clients,Clean Accuracy (%),Backdoor ASR (%),Precision,Recall / Det Rate,F1 Score,L1 Blocked,MARS Blocked,Trusted Count,Trim Count
+1,NONE (Clean FL),10,93.39,0.05,1.0,1.0,1.0,0,0,10,1
+2,EXTREME_UPDATE + SIGN_FLIPPING,10,95.82,0.12,1.0,1.0,1.0,2,0,8,1
+3,RANDOM_BYZANTINE,10,96.44,0.08,1.0,1.0,1.0,1,0,9,1
+4,BACKDOOR (Trigger Injection),10,96.85,0.38,1.0,1.0,1.0,0,2,8,1
+5,MULTI-VECTOR (Extreme + Backdoor),10,97.41,0.25,1.0,1.0,1.0,1,2,7,1

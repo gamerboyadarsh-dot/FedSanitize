@@ -1,0 +1,207 @@
+[
+  {
+    "round": 1,
+    "attack_type": "NONE (Clean FL)",
+    "total_clients": 10,
+    "clean_accuracy": 93.39,
+    "backdoor_asr": 0.05,
+    "layer1_quarantined": [],
+    "mars_quarantined": [],
+    "trusted_clients": [
+      "C0",
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C6",
+      "C7",
+      "C8",
+      "C9"
+    ],
+    "detection": {
+      "tp": 0,
+      "fp": 0,
+      "tn": 10,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0,
+      "false_alarm_rate": 0.0,
+      "layer1_quarantined": 0,
+      "mars_quarantined": 0,
+      "total_quarantined": 0,
+      "total_clients": 10
+    },
+    "aggregation": {
+      "trim_count_applied": 1,
+      "method_used": "coordinate_trimmed_mean"
+    }
+  },
+  {
+    "round": 2,
+    "attack_type": "EXTREME_UPDATE + SIGN_FLIPPING",
+    "total_clients": 10,
+    "clean_accuracy": 95.82,
+    "backdoor_asr": 0.12,
+    "layer1_quarantined": [
+      "C6",
+      "C7"
+    ],
+    "mars_quarantined": [],
+    "trusted_clients": [
+      "C0",
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C8",
+      "C9"
+    ],
+    "detection": {
+      "tp": 2,
+      "fp": 0,
+      "tn": 8,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0,
+      "false_alarm_rate": 0.0,
+      "layer1_quarantined": 2,
+      "mars_quarantined": 0,
+      "total_quarantined": 2,
+      "total_clients": 10
+    },
+    "aggregation": {
+      "trim_count_applied": 1,
+      "method_used": "coordinate_trimmed_mean"
+    }
+  },
+  {
+    "round": 3,
+    "attack_type": "RANDOM_BYZANTINE",
+    "total_clients": 10,
+    "clean_accuracy": 96.44,
+    "backdoor_asr": 0.08,
+    "layer1_quarantined": [
+      "C9"
+    ],
+    "mars_quarantined": [],
+    "trusted_clients": [
+      "C0",
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C6",
+      "C7",
+      "C8"
+    ],
+    "detection": {
+      "tp": 1,
+      "fp": 0,
+      "tn": 9,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0,
+      "false_alarm_rate": 0.0,
+      "layer1_quarantined": 1,
+      "mars_quarantined": 0,
+      "total_quarantined": 1,
+      "total_clients": 10
+    },
+    "aggregation": {
+      "trim_count_applied": 1,
+      "method_used": "coordinate_trimmed_mean"
+    }
+  },
+  {
+    "round": 4,
+    "attack_type": "BACKDOOR (Trigger Injection)",
+    "total_clients": 10,
+    "clean_accuracy": 96.85,
+    "backdoor_asr": 0.38,
+    "layer1_quarantined": [],
+    "mars_quarantined": [
+      "C8",
+      "C9"
+    ],
+    "trusted_clients": [
+      "C0",
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C6",
+      "C7"
+    ],
+    "detection": {
+      "tp": 2,
+      "fp": 0,
+      "tn": 8,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0,
+      "false_alarm_rate": 0.0,
+      "layer1_quarantined": 0,
+      "mars_quarantined": 2,
+      "total_quarantined": 2,
+      "total_clients": 10
+    },
+    "aggregation": {
+      "trim_count_applied": 1,
+      "method_used": "coordinate_trimmed_mean"
+    }
+  },
+  {
+    "round": 5,
+    "attack_type": "MULTI-VECTOR (Extreme + Backdoor)",
+    "total_clients": 10,
+    "clean_accuracy": 97.41,
+    "backdoor_asr": 0.25,
+    "layer1_quarantined": [
+      "C6"
+    ],
+    "mars_quarantined": [
+      "C8",
+      "C9"
+    ],
+    "trusted_clients": [
+      "C0",
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C7"
+    ],
+    "detection": {
+      "tp": 3,
+      "fp": 0,
+      "tn": 6,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "accuracy": 1.0,
+      "false_alarm_rate": 0.0,
+      "layer1_quarantined": 1,
+      "mars_quarantined": 2,
+      "total_quarantined": 3,
+      "total_clients": 9
+    },
+    "aggregation": {
+      "trim_count_applied": 1,
+      "method_used": "coordinate_trimmed_mean"
+    }
+  }
+]

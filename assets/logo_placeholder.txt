@@ -1,0 +1,4 @@
+FedSanitize — Cybersecurity Shield Logo Placeholder
+===================================================
+Dimension: 512x512
+Shield icon with firewall layers representing Layer 1, Layer 2 (MARS), Layer 3 (Robust Aggregation).
