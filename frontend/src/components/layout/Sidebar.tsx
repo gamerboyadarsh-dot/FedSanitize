@@ -32,15 +32,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
   ];
 
   return (
-    <aside className="w-72 bg-surface border-r border-border flex flex-col justify-between h-screen select-none shrink-0 threat-card z-20">
+    <aside className="w-72 bg-surface border-r border-border flex flex-col justify-between h-screen select-none shrink-0 threat-card z-20 group">
       {/* Brand Header */}
       <div>
         <div className="p-6 border-b border-border flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-surface-elevated border border-border flex items-center justify-center shadow-glow-red">
-            <ShieldAlert className="w-6 h-6 text-accent-red" />
+          <div className="w-10 h-10 flex items-center justify-center">
+            <img src="/logo.png" alt="FedSanitize Logo" className="w-full h-full object-contain drop-shadow-[0_0_12px_rgba(56,251,219,0.45)] group-hover:drop-shadow-[0_0_20px_rgba(56,251,219,0.7)] transition-all duration-300" />
           </div>
           <div>
-            <div className="text-xs font-mono tracking-widest text-accent-red uppercase font-bold">
+            <div className="text-xs font-mono tracking-widest bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent uppercase font-bold">
               FedSanitize
             </div>
             <div className="text-[11px] font-mono text-text-secondary">
@@ -59,7 +59,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
             <AnimatedBackground
               defaultValue={currentPage}
               onValueChange={(id) => id && onSelectPage(id as NavPage)}
-              className="bg-surface-elevated border-l-[3px] border-accent-red rounded-lg shadow-glow-red"
+              className="bg-surface-elevated border-l-[3px] border-primary rounded-lg shadow-glow-cyan"
               transition={{
                 type: "spring",
                 bounce: 0.15,
@@ -77,17 +77,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-mono text-left group transition-all duration-200 ${
                       isActive 
                         ? "text-white font-bold" 
-                        : "text-zinc-400 hover:text-red-300 hover:bg-red-950/20"
+                        : "text-zinc-400 hover:text-primary hover:bg-primary/5"
                     }`}
                   >
                     <Icon className={`w-4 h-4 shrink-0 transition-colors duration-200 ${
                       isActive 
-                        ? "text-accent-red" 
-                        : "text-zinc-500 group-hover:text-red-400"
+                        ? "text-primary" 
+                        : "text-zinc-500 group-hover:text-primary"
                     }`} />
                     <span className="truncate">{item.label}</span>
                     {item.id === "overview" && activeRounds > 0 && (
-                      <span className="ml-auto text-[10px] bg-accent-red/20 text-accent-red border border-accent-red/40 px-1.5 py-0.5 rounded font-bold shrink-0">
+                      <span className="ml-auto text-[10px] bg-primary/20 text-primary border border-primary/40 px-1.5 py-0.5 rounded font-bold shrink-0">
                         R{activeRounds}
                       </span>
                     )}
@@ -103,7 +103,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
       <div className="p-4 border-t border-border">
         <div className="bg-surface-elevated border border-border rounded-lg p-3 space-y-2 text-[11px] font-mono shadow-sm">
           <div className="flex items-center justify-between text-text-secondary border-b border-border/50 pb-1.5">
-            <span className="text-[10px] uppercase tracking-wider font-semibold text-accent-red">
+            <span className="text-[10px] uppercase tracking-wider font-semibold text-primary">
               System Telemetry
             </span>
             <span className="flex items-center gap-1.5 text-accent-safe text-[10px]">
@@ -114,11 +114,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
 
           <div className="space-y-1 text-text-secondary">
             <div className="flex items-center gap-1.5">
-              <Cpu className="w-3 h-3 text-accent-red" />
+              <Cpu className="w-3 h-3 text-primary" />
               <span className="text-text-primary font-medium">SmallCNN</span> (2 Conv, 2 FC)
             </div>
             <div className="flex items-center gap-1.5">
-              <Database className="w-3 h-3 text-accent-red" />
+              <Database className="w-3 h-3 text-primary" />
               <span>MNIST Dirichlet (α=0.5)</span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -128,7 +128,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
           </div>
 
           <div className="pt-1.5 border-t border-border/50 text-[10px] text-text-secondary">
-            <div className="flex items-center gap-1 text-accent-warning">
+            <div className="flex items-center gap-1 text-secondary">
               <BookOpen className="w-3 h-3" />
               <span>MARS (NeurIPS 2025)</span>
             </div>
