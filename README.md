@@ -1,15 +1,17 @@
-# FedSanitize: A Multi-Layer Defense Firewall for Secure Federated Learning
+﻿# FedSanitize: A Multi-Layer Defense Firewall for Secure Federated Learning
 
 <div align="center">
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C.svg?logo=pytorch&logoColor=white)](https://pytorch.org)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.28%2B-FF4B4B.svg?logo=streamlit&logoColor=white)](https://streamlit.io)
+[![React](https://img.shields.io/badge/React-18-61DAFB.svg?logo=react&logoColor=white)](https://react.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Vite](https://img.shields.io/badge/Vite-6-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev)
 [![Paper](https://img.shields.io/badge/NeurIPS%202025-MARS-green.svg)](https://arxiv.org/abs/2509.20383)
-[![Tests](https://img.shields.io/badge/Tests-Passing%20(30%2B)-success.svg)](https://github.com/gamerboyadarsh-dot/FedSanitize)
+[![Tests](https://img.shields.io/badge/API%20Tests-5%2F5%20Passing-success.svg)](https://github.com/gamerboyadarsh-dot/FedSanitize)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**A production-grade, 3-layer security firewall safeguarding Federated Learning systems against Byzantine poisoning and stealthy backdoor attacks.**
+**A production-grade, 3-layer security firewall safeguarding Federated Learning systems against Byzantine poisoning and stealthy backdoor attacks — with a real-time SOC-style React dashboard.**
 
 [Key Features](#-key-features) •
 [Architecture](#-system-architecture) •
@@ -17,7 +19,7 @@
 [Threat Models](#-adversarial-threat-models) •
 [Empirical Results](#-empirical-benchmarks) •
 [Quickstart](#-quickstart--installation) •
-[Dashboard](#-interactive-streamlit-dashboard) •
+[Dashboard](#-react-dashboard) •
 [Citation](#-references--citation)
 
 ---
@@ -32,6 +34,8 @@ Federated Learning (FL) enables decentralized model training across distributed 
 
 **FedSanitize** introduces a sequential, three-layer defense pipeline combining robust statistics, state-of-the-art representations (MARS, NeurIPS 2025), and coordinate-wise robust aggregation to deliver near-zero Attack Success Rate (ASR) while maintaining high clean classification accuracy.
 
+The system ships with a **full-stack React 18 + FastAPI dashboard** — a live SOC (Security Operations Center) interface with animated KPI panels, per-client profiling, defense pipeline visualization, attack playground, and interactive hyperparameter sliders.
+
 ---
 
 ## ✨ Key Features
@@ -40,9 +44,11 @@ Federated Learning (FL) enables decentralized model training across distributed 
   1. **Layer 1: Anomaly Filter** — Fast, robust outlier elimination using Median Absolute Deviation ($\text{MAD}$) on $L_2$ update norms and directional cosine similarity against a coordinate-wise median reference.
   2. **Layer 2: MARS Defense (NeurIPS 2025)** — Deep layer-selection, Client Backdoor Energy ($\text{CBE}$) extraction, and Wasserstein distance-based agglomerative clustering to surgically isolate stealthy backdoor injections.
   3. **Layer 3: Coordinate-wise Trimmed Mean** — Parameter-level coordinate trimming removing extreme tails before final model consolidation.
-- 🎯 **5 Built-in Threat Models**: Label Flipping, Sign Flipping, Gaussian Byzantine Noise, Extreme Update Amplification ($10\times$), and Subsample Backdoors (trigger patch injection).
-- 🖥️ **Full-Featured Streamlit Web UI**: Interactive real-time analytics dashboard displaying round-by-round clean accuracy, ASR, layer-by-layer client telemetry, and Plotly interactive distributions.
-- 🧪 **Deterministic & Reproducible**: Fully seeded non-IID Dirichlet partitions, sample-level backdoor hashing, zero-division guards, and comprehensive pytest coverage across all modules.
+- ⚔️ **5 Built-in Threat Models**: Label Flipping, Sign Flipping, Gaussian Byzantine Noise, Extreme Update Amplification ($10\times$), and Subsample Backdoors (trigger patch injection).
+- 🖥️ **React 18 + TypeScript SOC Dashboard**: Six live pages — Overview, Client Profiling, Defense Pipeline, Attack Playground, Analytics, and Configuration — backed by a FastAPI REST gateway.
+- 🎛️ **Interactive Hyperparameter Sliders**: All defense thresholds, learning rates, and attack intensities are exposed as live range sliders with color-coded glow effects (red / green / amber by section).
+- 🎨 **Motion Primitives Animations**: Startup boot screen, sliding KPI counters, animated nav indicators, cursor spotlight, and threat-card hover states built with Framer Motion.
+- 🧪 **Deterministic & Reproducible**: Fully seeded non-IID Dirichlet partitions, sample-level backdoor hashing, zero-division guards, and comprehensive pytest coverage (5/5 API tests passing).
 
 ---
 
@@ -88,30 +94,27 @@ flowchart TD
         end
     end
 
-    subgraph UI["User Presentation Layer"]
-        Dashboard["Streamlit Interactive Dashboard\n(Overview • Clients • Defense • Analytics)"]
+    subgraph Stack["Full-Stack Presentation Layer"]
+        API["FastAPI REST Gateway\n(backend_api/main.py · port 8000)"]
+        UI["React 18 + TypeScript + Vite Dashboard\n(frontend/ · port 5173)"]
     end
 
-    %% Client updates to server
     H -->|Local Weight Deltas| L1_Norm
     M1 -->|Amplified Deltas| L1_Norm
     M2 -->|Negative Deltas| L1_Norm
     M3 -->|Stealthy Deltas| L1_Norm
 
-    %% Layer 1 Flow
     L1_Norm --> L1_Cos --> L1_Gate
     L1_Gate -- Yes --> L1_Quarantine
     L1_Gate -- No (Pass) --> L2_Layer
 
-    %% Layer 2 Flow
     L2_Layer --> L2_CBE --> L2_Wass --> L2_Cluster
     L2_Cluster -- Malicious Cluster --> L2_Quarantine
     L2_Cluster -- Trusted Survivors --> L3_Trim
 
-    %% Layer 3 Flow
     L3_Trim --> L3_Model
     L3_Model --> Eval_Clean & Eval_ASR & Eval_Metrics
-    Eval_Clean & Eval_ASR & Eval_Metrics --> Dashboard
+    Eval_Clean & Eval_ASR & Eval_Metrics --> API --> UI
 ```
 
 ---
@@ -154,7 +157,7 @@ FedSanitize includes native implementations of 5 adversarial attacks:
 | **Sign Flipping** | $\Delta_{\text{adv}} = -\gamma \cdot \Delta_{\text{honest}}$ | Invert parameter trajectory to prevent learning | **Layer 1** (Cosine Similarity Guard) |
 | **Random Byzantine** | $\Delta_{\text{adv}} \sim \mathcal{N}(0, \sigma^2 \mathbf{I})$ | Inject Gaussian entropy to corrupt gradients | **Layer 1** (Norm & Cosine Filter) |
 | **Label Flipping** | Local labels permuted (e.g. $7 \to 1$) | Force specific clean misclassifications | **Layer 3** (Trimmed Mean Aggregation) |
-| **Stealthy Backdoor** | Injects $3\times 3$ white patch at bottom-right | Force trigger $\to$ target class $0$, normal norm | **Layer 2** (MARS CBE Clustering) |
+| **Stealthy Backdoor** | Injects $3\times 3$ white patch at bottom-right | Force trigger → target class $0$, normal norm | **Layer 2** (MARS CBE Clustering) |
 
 ---
 
@@ -171,10 +174,12 @@ R1     | FedSanitize    |      96.72%        |       0.38%      |      100.00%  
 -------------------------------------------------------------------------------------------------------------
 R5     | FedAvg (None)  |      84.30%        |      99.12%      |        0.00%        |       0.00%
 R5     | FedSanitize    |      97.85%        |       0.21%      |      100.00%        |     100.00%
+-------------------------------------------------------------------------------------------------------------
+R6     | FedSanitize    |      97.14%        |       0.47%      |      100.00%        |     100.00%
 =============================================================================================================
 ```
 
-> **Key Takeaway**: Without defense, the backdoor achieves $>99\%$ ASR while Byzantine updates degrade accuracy by $>13\%$. Under **FedSanitize**, all 4 malicious clients are isolated (100% Precision and 100% Recall), clean accuracy reaches **97.85%**, and backdoor ASR drops to **0.21%** (zero backdoor presence).
+> **Key Takeaway**: Without defense, the backdoor achieves $>99\%$ ASR while Byzantine updates degrade accuracy by $>13\%$. Under **FedSanitize**, all 4 malicious clients are isolated (100% Precision and 100% Recall), clean accuracy reaches **97.14%**, and backdoor ASR drops to **0.47%** — essentially zero backdoor footprint.
 
 ---
 
@@ -182,81 +187,82 @@ R5     | FedSanitize    |      97.85%        |       0.21%      |      100.00%  
 
 ```
 FedSanitize/
-├── app.py                      # Streamlit interactive web dashboard entry point
-├── config.py                   # Central typed configuration dataclasses & presets
-├── README.md                   # Complete system documentation
-├── requirements.txt            # Locked Python dependencies
-├── task.md                     # Phase tracker and development roadmap
-├── assets/                     # Visual assets and branding
+├── config.py                       # Central typed configuration dataclasses & presets
+├── README.md                       # Complete system documentation
+├── requirements.txt                # Locked Python ML dependencies
 │
 ├── models/
-│   └── cnn.py                  # SmallCNN architecture (Conv2D -> ReLU -> MaxPool -> FC)
+│   └── cnn.py                      # SmallCNN: Conv2D → ReLU → MaxPool → FC
 │
 ├── federated/
-│   ├── client.py               # FLClient: local training & update container
-│   ├── server.py               # FLServer: global model state & baseline FedAvg
-│   ├── trainer.py              # Local training loops & validation routines
-│   ├── data_partition.py       # IID & Dirichlet Non-IID data distribution
-│   ├── update_utils.py         # Delta computation, L2 norm, flattening/unflattening
-│   └── baseline_aggregation.py # Standard FedAvg aggregation implementation
+│   ├── client.py                   # FLClient: local training & update container
+│   ├── server.py                   # FLServer: global model state & baseline FedAvg
+│   ├── trainer.py                  # Local training loops & validation routines
+│   ├── data_partition.py           # IID & Dirichlet Non-IID data distribution
+│   ├── update_utils.py             # Delta computation, L2 norm, flattening/unflattening
+│   └── baseline_aggregation.py     # Standard FedAvg aggregation implementation
 │
 ├── defense/
-│   ├── layer1_anomaly/         # LAYER 1: Statistical Anomaly Filter
-│   │   ├── robust_statistics.py# Coordinate-wise median & MAD calculator
-│   │   ├── update_features.py  # Norm & cosine similarity feature extractors
-│   │   └── anomaly_detector.py # Explainable scoring and quarantine tagging
+│   ├── layer1_anomaly/             # LAYER 1: Statistical Anomaly Filter
+│   │   ├── robust_statistics.py    # Coordinate-wise median & MAD calculator
+│   │   ├── update_features.py      # Norm & cosine similarity feature extractors
+│   │   └── anomaly_detector.py     # Explainable scoring and quarantine tagging
 │   │
-│   ├── layer2_mars/            # LAYER 2: MARS Backdoor Isolation (NeurIPS 2025)
-│   │   ├── layer_selection.py  # Gradient variance sensitivity layer selector
-│   │   ├── backdoor_energy.py  # Localized weight energy computation
-│   │   ├── cbe.py              # Client Backdoor Energy (CBE) metric
-│   │   ├── wasserstein.py      # Pairwise 1D Wasserstein distance matrix
-│   │   ├── clustering.py       # Agglomerative clustering with malignity guards
-│   │   └── mars.py             # Unified MARS pipeline controller
+│   ├── layer2_mars/                # LAYER 2: MARS Backdoor Isolation (NeurIPS 2025)
+│   │   ├── layer_selection.py      # Gradient variance sensitivity layer selector
+│   │   ├── cbe.py                  # Client Backdoor Energy (CBE) metric
+│   │   ├── wasserstein.py          # Pairwise 1D Wasserstein distance matrix
+│   │   ├── clustering.py           # Agglomerative clustering with malignity guards
+│   │   └── mars.py                 # Unified MARS pipeline controller
 │   │
-│   └── layer3_robust/          # LAYER 3: Robust Aggregation
-│       └── trimmed_mean.py     # Coordinate-wise trimmed mean aggregator
+│   └── layer3_robust/              # LAYER 3: Robust Aggregation
+│       └── trimmed_mean.py         # Coordinate-wise trimmed mean aggregator
 │
-├── attacks/                    # 5 ADVERSARIAL THREAT MODELS
-│   ├── label_flipping.py       # Source-target permutation attack
-│   ├── sign_flipping.py        # Directional gradient inversion attack
-│   ├── random_byzantine.py     # High-entropy Gaussian noise injection
-│   ├── extreme_update.py       # Multiplicative magnitude scaling (10x)
-│   └── backdoor.py             # Trigger stamping & poisoned dataset generator
+├── attacks/                        # 5 ADVERSARIAL THREAT MODELS
+│   ├── label_flipping.py
+│   ├── sign_flipping.py
+│   ├── random_byzantine.py
+│   ├── extreme_update.py
+│   └── backdoor.py
 │
-├── services/                   # CORE ORCHESTRATION PIPELINES
-│   ├── security_service.py     # 3-Layer Firewall orchestration pipeline
-│   ├── simulation_service.py   # Full FL round coordinator & attack injector
-│   └── result_service.py       # Metrics aggregator & telemetry formatter
+├── services/                       # CORE ORCHESTRATION PIPELINES
+│   ├── security_service.py         # 3-Layer Firewall orchestration
+│   ├── simulation_service.py       # Full FL round coordinator & attack injector
+│   └── result_service.py           # Metrics aggregator & telemetry formatter
 │
-├── evaluation/                 # METRICS & VISUALIZATION ENGINE
-│   ├── accuracy.py             # Clean test split evaluator
-│   ├── attack_success_rate.py  # Backdoor ASR calculator
-│   ├── detection_metrics.py    # Confusion matrix (TP/FP/TN/FN/Precision/Recall/F1)
-│   ├── experiment_logger.py    # Structured JSON telemetry recorder
-│   └── plots.py                # Plotly charts for dashboard integration
+├── evaluation/                     # METRICS & VISUALIZATION ENGINE
+│   ├── accuracy.py
+│   ├── attack_success_rate.py
+│   ├── detection_metrics.py
+│   ├── experiment_logger.py
+│   └── plots.py
 │
-├── dashboard/                  # STREAMLIT MULTI-PAGE DASHBOARD
-│   ├── overview.py             # Live experiment control & key metrics
-│   ├── clients.py              # Per-client inspection & data distributions
-│   ├── defense.py              # Deep-dive into Layer 1, 2, and 3 decisions
-│   ├── attacks.py              # Attack diagnostics & sample trigger previews
-│   ├── analytics.py            # Comparative historical trend graphs
-│   └── config_page.py          # Interactive hyperparameter adjustment
+├── backend_api/                    # FASTAPI REST GATEWAY
+│   ├── main.py                     # All API routes: /config /clients /simulation /experiments
+│   └── schemas.py                  # Pydantic request/response schemas
 │
-├── scripts/
-│   └── generate_demo.py        # Pre-generates 5-round multi-attack telemetry
+├── frontend/                       # REACT 18 + TYPESCRIPT + VITE DASHBOARD
+│   ├── src/
+│   │   ├── pages/
+│   │   │   ├── Overview.tsx        # Live KPI panel + run controls
+│   │   │   ├── ClientProfiling.tsx # Per-client status table & threat tags
+│   │   │   ├── DefensePipeline.tsx # Layer-by-layer audit with MARS heatmap
+│   │   │   ├── AttackPlayground.tsx# Attack toggle & live ASR readout
+│   │   │   ├── Analytics.tsx       # Historical trend charts & confusion matrix
+│   │   │   └── Configuration.tsx   # Hyperparameter sliders (red/green/amber)
+│   │   ├── components/
+│   │   │   ├── layout/             # Header (KPI bar), Sidebar (animated nav)
+│   │   │   ├── common/             # StartupScreen, shared UI primitives
+│   │   │   └── core/               # Motion Primitives: AnimatedGroup, SlidingNumber,
+│   │   │                           #   BorderTrail, GlowEffect, TextEffect, Spotlight
+│   │   ├── api/client.ts           # Typed Axios API client
+│   │   └── types/telemetry.ts      # Round record & config TypeScript types
+│   ├── package.json
+│   └── vite.config.ts
 │
-└── tests/                      # AUTOMATED TEST SUITE (PyTest)
-    ├── test_cnn.py             # Model tensor shape & forward pass tests
-    ├── test_data.py            # Dataset loader & partition balance tests
-    ├── test_baseline.py        # FedAvg convergence unit tests
-    ├── test_attacks.py         # Threat model verification tests
-    ├── test_layer1.py          # MAD filter & anomaly detector tests
-    ├── test_layer3.py          # Trimmed mean shape & sorting tests
-    ├── test_mars.py            # MARS CBE & Wasserstein clustering tests
-    ├── test_pipeline.py        # End-to-end integration test suite
-    └── test_ui.py              # Streamlit dashboard render validation
+└── tests/
+    ├── test_api.py                 # FastAPI endpoint integration tests (5/5 passing)
+    └── ...                         # ML unit tests (CNN, data, attacks, defense layers)
 ```
 
 ---
@@ -265,43 +271,48 @@ FedSanitize/
 
 ### 1. Prerequisites & Environment Setup
 
-Clone the repository and install dependencies in a Python virtual environment:
-
 ```bash
 git clone https://github.com/gamerboyadarsh-dot/FedSanitize.git
 cd FedSanitize
 
-# Create and activate virtual environment
+# Create and activate a Python virtual environment
 python -m venv venv
-# On Windows:
+# Windows:
 .\venv\Scripts\activate
-# On Linux/macOS:
+# Linux/macOS:
 source venv/bin/activate
 
-# Install dependencies
+# Install Python (ML + API) dependencies
 pip install -r requirements.txt
 ```
 
-### 2. Run the Interactive Dashboard
-
-Launch the Streamlit web interface:
+### 2. Start the FastAPI Backend
 
 ```bash
-streamlit run app.py
+python -m uvicorn backend_api.main:app --host 127.0.0.1 --port 8000
 ```
-Open your browser at `http://localhost:8501` (or `http://localhost:8502`).
 
-### 3. Run Command-Line Simulation Demo
+API docs will be available at `http://127.0.0.1:8000/docs`.
 
-To execute a complete multi-client FL round with all attacks and view the live firewall decision table in your terminal:
+### 3. Start the React Frontend
 
 ```bash
-python tests/run_pipeline_demo.py
+cd frontend
+npm install
+npm run dev -- --host 127.0.0.1 --port 5173
 ```
 
-### 4. Run the Full Test Suite
+Open your browser at **`http://127.0.0.1:5173`**.
 
-Execute all automated unit and integration tests:
+### 4. Run the API Test Suite
+
+```bash
+pytest tests/test_api.py -v
+```
+
+Expected output: **5/5 tests passing**.
+
+### 5. (Optional) Run the Full ML Test Suite
 
 ```bash
 pytest tests/ -v
@@ -309,24 +320,32 @@ pytest tests/ -v
 
 ---
 
-## 🖥️ Interactive Streamlit Dashboard
+## 🖥️ React Dashboard
 
-The FedSanitize dashboard gives you full observability over your federated ecosystem:
+The FedSanitize dashboard is a full SOC-style interface with real-time telemetry:
 
-| Dashboard View | Description |
+| Page | Description |
 | :--- | :--- |
-| **Overview** | High-level summary metrics: Clean Accuracy, Backdoor ASR, Defense Status, and Round-by-Round Execution Controls. |
-| **Clients** | Inspect each edge client's update norm, Dirichlet class distribution, and malicious attribution. |
-| **Defense Firewall** | Layer-by-layer audit trail: Inspect MAD outlier thresholds, MARS CBE Wasserstein distance heatmaps, and trimmed coordinates. |
-| **Attack Analysis** | Visual sample triggers, label mapping verification, and attack efficacy metrics. |
-| **Historical Analytics** | Interactive Plotly convergence curves, precision/recall curves, and ASR defense drop-off plots. |
-| **Configuration** | Dynamically adjust defense thresholds, learning rates, attack ratios, and client numbers. |
+| **Overview** | Animated KPI bar (Clean Accuracy, ASR, Rounds, Clients), "Run Secure Round" button, round history table |
+| **Client Profiling** | Per-client status badge (TRUSTED / QUARANTINED), threat tag, norm score, and Dirichlet class distribution |
+| **Defense Pipeline** | 3-Layer Firewall banner with cursor spotlight, Layer 1 MAD scores, MARS CBE Wasserstein heatmap with numeric legend, trimmed mean summary |
+| **Attack Playground** | Toggle individual attack types per client, observe real-time ASR change on next round |
+| **Analytics** | Plotly accuracy & ASR convergence curves, confusion matrix with dynamic FP/FN coloring, per-round detection stats |
+| **Configuration** | **Interactive range sliders** for all 11 hyperparameters — Federated (red), Defense (green), Attack (amber) — with live value badges and glowing thumbs |
+
+### UI Design Highlights
+- **Terminal boot screen** with sequential `INIT_KERNEL → NET_PROBE → SEC_PIPELINE → TELEMETRY` log reveal and `AnimatePresence` exit curtain
+- **`SlidingNumber`** animated KPI counters in the header
+- **`AnimatedBackground`** sliding nav indicator in the sidebar
+- **Tactical cursor spotlight** on the Defense Pipeline banner (Framer Motion `useSpring`)
+- **Threat-card hover system**: 200ms cubic-bezier lift + `#ff4d5a` border glow on every card
+- **Color-shifting slider thumbs**: red for Federated params, green for Defense thresholds, amber for Attack intensities
 
 ---
 
 ## ⚙️ Configuration Reference
 
-All settings can be customized in `config.py`:
+All settings can be customized in `config.py` or live via the dashboard sliders:
 
 ```python
 from config import FedSanitizeConfig, FederatedConfig, DefenseConfig, AttackConfig
@@ -336,19 +355,18 @@ config = FedSanitizeConfig(
         num_clients=10,
         num_rounds=15,
         local_epochs=1,
-        local_batch_size=32,
+        local_batch_size=64,
         local_lr=0.02,
-        iid=False,  # Dirichlet non-IID
+        iid=False,          # Dirichlet non-IID
     ),
     defense=DefenseConfig(
-        layer1_norm_threshold=0.6,
-        layer1_mad_multiplier=3.0,
+        layer1_mad_multiplier=3.5,
         mars_cbe_top_p=0.10,
         mars_malignity_threshold=0.015,
         trimmed_mean_beta=0.10,
     ),
     attack=AttackConfig(
-        num_malicious_clients=3,
+        num_malicious_clients=4,
         backdoor_target_class=0,
         backdoor_poison_ratio=0.40,
         extreme_update_gamma=10.0,
@@ -356,6 +374,20 @@ config = FedSanitizeConfig(
     )
 )
 ```
+
+### API Endpoints (FastAPI)
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/health` | Service health check |
+| `GET` | `/config` | Fetch current configuration |
+| `POST` | `/config` | Update configuration (partial patch) |
+| `GET` | `/clients` | List all clients with status & metrics |
+| `POST` | `/clients/{id}/attack` | Toggle attack assignment on a client |
+| `POST` | `/simulation/round` | Run one federated round |
+| `POST` | `/simulation/reset` | Reset simulation state |
+| `POST` | `/simulation/load-demo` | Load 6-round pre-computed demo telemetry |
+| `GET` | `/experiments/history` | Fetch all historical round records |
 
 ---
 

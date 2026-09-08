@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: #0a0505;
+  color: #f2e8e8;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom terminal scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0505;
+}
+::-webkit-scrollbar-thumb {
+  background: #3d1414;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7a1f1f;
+}
+
+/* Scanline / Grid texture overlay */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(61, 20, 20, 0.22) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(61, 20, 20, 0.22) 1px, transparent 1px);
+}
+
+/* Premium Threat Console Card Elevation & Responsive Hover Transitions */
+.threat-card {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(160deg, #170b0b 0%, #120808 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: border-color 200ms cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.threat-card:hover {
+  border-color: #ff4d5a !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 20px rgba(225, 29, 46, 0.28);
+  transform: translateY(-1.5px);
+}
+
+.threat-card-elevated {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 12px 32px rgba(225, 29, 46, 0.08);
+  background: linear-gradient(160deg, #1f0f0f 0%, #170b0b 100%);
+  border: 1px solid rgba(225, 29, 46, 0.25);
+  transition: border-color 200ms cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.threat-card-elevated:hover {
+  border-color: #ff4d5a;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7), 0 0 24px rgba(225, 29, 46, 0.35);
+  transform: translateY(-1.5px);
+}
+
+/* Interactive Table Row Hover with Left Red Accent Bar */
+.threat-table-row {
+  position: relative;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.threat-table-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: transparent;
+  transition: background-color 150ms ease-out;
+}
+
+.threat-table-row:hover {
+  background-color: rgba(225, 29, 46, 0.08) !important;
+}
+
+.threat-table-row:hover::before {
+  background-color: #ff4d5a;
+}
+
+/* Action Button Hover States */
+.threat-btn-primary {
+  background-color: #e11d2e;
+  transition: background-color 200ms ease, box-shadow 200ms ease, transform 150ms ease;
+}
+
+.threat-btn-primary:hover {
+  background-color: #ff334b;
+  box-shadow: 0 0 16px rgba(225, 29, 46, 0.55);
+}
+
+.threat-btn-secondary {
+  background-color: #1a0d0d;
+  border: 1px solid #3d1414;
+  transition: background-color 200ms ease, border-color 200ms ease, color 150ms ease;
+}
+
+.threat-btn-secondary:hover {
+  background-color: #251212;
+  border-color: #7a1f1f;
+  color: #ffffff;
+}
+
