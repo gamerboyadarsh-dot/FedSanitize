@@ -8,19 +8,22 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Vite](https://img.shields.io/badge/Vite-6-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev)
 [![Paper](https://img.shields.io/badge/NeurIPS%202025-MARS-green.svg)](https://arxiv.org/abs/2509.20383)
-[![Tests](https://img.shields.io/badge/API%20Tests-5%2F5%20Passing-success.svg)](https://github.com/gamerboyadarsh-dot/FedSanitize)
+[![Tests](https://img.shields.io/badge/Pytest-156%2F156%20Passing-success.svg)](https://github.com/gamerboyadarsh-dot/FedSanitize)
+[![Zero-Trust](https://img.shields.io/badge/Auth-Zero--Trust%20JWT%20RBAC-blueviolet.svg)](https://github.com/gamerboyadarsh-dot/FedSanitize)
+[![SOC](https://img.shields.io/badge/SOC-SHA--256%20Audit%20Chain-38FBDB.svg)](https://github.com/gamerboyadarsh-dot/FedSanitize)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**A production-grade, 3-layer security firewall safeguarding Federated Learning systems against Byzantine poisoning and stealthy backdoor attacks — with a real-time SOC-style React dashboard.**
+**A production-grade, 3-layer security firewall safeguarding Federated Learning systems against Byzantine poisoning and stealthy backdoor attacks — augmented with Zero-Trust JWT access control, autonomous security intelligence, tamper-evident SHA-256 audit chaining, and dual React + Streamlit SOC dashboards.**
 
 [Key Features](#-key-features) •
 [Architecture](#-system-architecture) •
 [Defense Layers](#-the-3-layer-firewall-pipeline) •
+[Security Intelligence & SOC](#-security-intelligence-zero-trust--soc-operations) •
 [Threat Models](#-adversarial-threat-models) •
 [Empirical Results](#-empirical-benchmarks) •
 [Quickstart](#-quickstart--installation) •
-[Dashboard](#-react-dashboard) •
-[Limitations & Future Work](#-anomalies-limitations--future-work) •
+[Dashboard Surfaces](#-dashboard-presentation-surfaces) •
+[File Directory & Theory](#-deep-dive-file-by-file-technical-directory--theory) •
 [Citation](#-references--citation)
 
 ---
@@ -35,7 +38,13 @@ Federated Learning (FL) enables decentralized model training across distributed 
 
 **FedSanitize** introduces a sequential, three-layer defense pipeline combining robust statistics, state-of-the-art representations (MARS, NeurIPS 2025), and coordinate-wise robust aggregation to deliver near-zero Attack Success Rate (ASR) while maintaining high clean classification accuracy.
 
-The system ships with a **full-stack React 18 + FastAPI dashboard** — a live SOC (Security Operations Center) interface with animated KPI panels, per-client profiling, defense pipeline visualization, attack playground, and interactive hyperparameter sliders.
+Beyond aggregation defense, FedSanitize incorporates an enterprise-grade **Security Intelligence Layer** featuring:
+1. **Zero-Trust Access Gateway**: Asymmetric Ed25519 & HS256 JWT role-based access control (Admin vs. Edge Client).
+2. **Dynamic Client Trust & Reputation Engine (Team A)**: Exponential reputation tracking with multi-incident escalation penalties.
+3. **Adaptive Defense Orchestrator (Team A)**: Multi-signal risk assessment with 4-tier autonomous defense routing.
+4. **Tamper-Evident Audit Trail (Team B)**: Cryptographically chained SHA-256 ledger guaranteeing audit integrity and zero model leakage.
+5. **Policy-Driven Incident Response (Team B)**: Automated, reversible quarantine lifecycle with strict no-deletion guarantees.
+6. **Dual Presentation Surfaces**: A flagship **React 18 + TypeScript Cyber-Console** alongside a standalone **Streamlit Security Operations Center (SOC)**.
 
 ---
 
@@ -45,11 +54,17 @@ The system ships with a **full-stack React 18 + FastAPI dashboard** — a live S
   1. **Layer 1: Anomaly Filter** — Fast, robust outlier elimination using Median Absolute Deviation ($\text{MAD}$) on $L_2$ update norms and directional cosine similarity against a coordinate-wise median reference.
   2. **Layer 2: MARS Defense (NeurIPS 2025)** — Deep layer-selection, Client Backdoor Energy ($\text{CBE}$) extraction, and Wasserstein distance-based agglomerative clustering to surgically isolate stealthy backdoor injections.
   3. **Layer 3: Coordinate-wise Trimmed Mean** — Parameter-level coordinate trimming removing extreme tails before final model consolidation.
+- 🔐 **Zero-Trust Access Gateway & RBAC**: Dual-algorithm cryptographic JWT engine (Ed25519 / HS256) enforcing role separation between Central Admin and Edge Clients (`C0–C9`) with interactive credential modals and demo credentials.
+- 🎖️ **Dynamic Client Trust & Reputation Engine (Feature 1)**: Computes longitudinal client reliability across training rounds with graduated trust tiers (`TRUSTED`, `MONITORED`, `SUSPICIOUS`, `HIGH_RISK`, `QUARANTINED`).
+- 🧭 **Adaptive Defense Orchestrator (Feature 2)**: Synthesizes Layer 1, MARS, CBE ratios, and client trust into a normalized round threat score with 4-tier defense routing (`STANDARD`, `HEIGHTENED_MONITORING`, `ISOLATE_SUSPECTS`, `EMERGENCY_FALLBACK`).
+- 🔗 **Tamper-Evident SHA-256 Audit Trail (Team B)**: Every security event, anomaly detection, and quarantine action is cryptographically hash-chained ($H_k = \text{SHA256}(H_{k-1} \parallel E_k \parallel T_k \parallel P_k)$) with automatic tamper detection and zero-model-leakage sanitization.
+- 🔒 **Policy-Driven Reversible Incident Response (Team B)**: Automated quarantine lifecycle (`MONITOR`, `REDUCE_WEIGHT`, `TEMPORARY_ISOLATE`, `QUARANTINE`) with strict no-deletion guarantees and round-based automated expiration.
 - ⚔️ **5 Built-in Threat Models**: Label Flipping, Sign Flipping, Gaussian Byzantine Noise, Extreme Update Amplification ($10\times$), and Subsample Backdoors (trigger patch injection).
-- 🖥️ **React 18 + TypeScript SOC Dashboard**: Six live pages — Overview, Client Profiling, Defense Pipeline, Attack Playground, Analytics, and Configuration — backed by a FastAPI REST gateway.
-- 🎛️ **Interactive Hyperparameter Sliders**: All defense thresholds, learning rates, and attack intensities are exposed as live range sliders utilizing a unified purple-to-cyan gradient track.
-- 🎨 **Motion Primitives & Custom Styling**: Features a bespoke Cybersecurity UI theme (Void Black, Signal Cyan, Stealth Purple) and an ambient gradient background with an SVG noise texture overlay, fully animated via Framer Motion.
-- 🧪 **Deterministic & Reproducible**: Fully seeded non-IID Dirichlet partitions, sample-level backdoor hashing, zero-division guards, and comprehensive pytest coverage (5/5 API tests passing).
+- 🏟️ **Interactive Live Attack Arena**: Real-time interactive simulation sandbox supporting scenario replay, dynamic network topologies, and per-client forensic dossiers.
+- 🖥️ **Dual Presentation Surfaces**:
+  - **React 18 + TypeScript Cyber-Console**: Sleek Dark-Cyber theme (Void Black `#050508`, Signal Cyan `#38FBDB`, Stealth Purple `#8E52F5`), Framer Motion transitions, interactive trigger matrices, and sub-tab SOC switcher.
+  - **Streamlit SOC & Multi-Page Dashboard**: Standalone SOC page (`dashboard/security_soc.py`) and multi-page operational suite (`app.py` on `:8502`).
+- 🧪 **156/156 Pytest Test Coverage**: 125 core/Team A tests + 31 Team B security intelligence tests passing with zero regressions.
 
 ---
 
@@ -57,6 +72,11 @@ The system ships with a **full-stack React 18 + FastAPI dashboard** — a live S
 
 ```mermaid
 flowchart TD
+    subgraph ZeroTrust["Zero-Trust Access Gateway (JWT RBAC)"]
+        AdminAuth["Admin Login (admin / admin123)\nFull Telemetry & Policy Override"]
+        ClientAuth["Edge Client Login (C0-C9 / clientsecret123)\nGradient Submission & Trust Telemetry"]
+    end
+
     subgraph EdgeClients["Distributed Edge Clients (Cohort of 10)"]
         direction TB
         H["Honest Clients (C0 - C5)\nLocal SGD on Private Shards"]
@@ -65,7 +85,7 @@ flowchart TD
         M3["Adversary 3 (C8 - C9)\nStealthy Backdoor (Trigger Patch)"]
     end
 
-    subgraph FLServer["FedSanitize Security Gateway & Server"]
+    subgraph FLServer["FedSanitize Security Gateway & Aggregator"]
         direction TB
         
         subgraph Layer1["Layer 1: Robust Statistical Anomaly Filter"]
@@ -88,34 +108,45 @@ flowchart TD
             L3_Model["Updated Global Model Parameters"]
         end
 
-        subgraph Evaluation["Real-Time Evaluation Engine"]
-            Eval_Clean["Clean Validation Accuracy (%)"]
-            Eval_ASR["Attack Success Rate (ASR %)"]
-            Eval_Metrics["Precision, Recall, F1, Detection Rate"]
+        subgraph SecIntel["Security Intelligence Layer (Team A)"]
+            TrustEngine["Client Trust & Reputation Engine\nLongitudinal Scoring (0-100)"]
+            AdaptiveOrch["Adaptive Defense Orchestrator\nMulti-Signal Risk Routing"]
+        end
+
+        subgraph SecB["Security Operations Center & Audit (Team B)"]
+            HashChain["Tamper-Evident SHA-256 Audit Trail\nCryptographic Ledger Verification"]
+            IncResponse["Incident Response & Quarantine Manager\nPolicy-Driven Reversible Isolation"]
+            ThreatScore["Multi-Signal Threat Engine\n8-Factor Posture Scoring"]
         end
     end
 
     subgraph Stack["Full-Stack Presentation Layer"]
         API["FastAPI REST Gateway\n(backend_api/main.py · port 8000)"]
-        UI["React 18 + TypeScript + Vite Dashboard\n(frontend/ · port 5173)"]
+        UI["React 18 Cyber-Console\n(frontend/ · port 5173)"]
+        SOC["Streamlit SOC Dashboard\n(app.py / security_soc.py · port 8502)"]
     end
 
-    H -->|Local Weight Deltas| L1_Norm
+    ZeroTrust --> EdgeClients
+    H -->|Authenticated Deltas| L1_Norm
     M1 -->|Amplified Deltas| L1_Norm
     M2 -->|Negative Deltas| L1_Norm
     M3 -->|Stealthy Deltas| L1_Norm
 
     L1_Norm --> L1_Cos --> L1_Gate
-    L1_Gate -- Yes --> L1_Quarantine
-    L1_Gate -- No (Pass) --> L2_Layer
+    L1_Gate -- Flagged --> L1_Quarantine
+    L1_Gate -- Passed --> L2_Layer
 
     L2_Layer --> L2_CBE --> L2_Wass --> L2_Cluster
     L2_Cluster -- Malicious Cluster --> L2_Quarantine
     L2_Cluster -- Trusted Survivors --> L3_Trim
 
+    L1_Gate & L2_Cluster --> TrustEngine & AdaptiveOrch
+    TrustEngine & AdaptiveOrch --> IncResponse & ThreatScore
+    IncResponse --> HashChain
+
     L3_Trim --> L3_Model
-    L3_Model --> Eval_Clean & Eval_ASR & Eval_Metrics
-    Eval_Clean & Eval_ASR & Eval_Metrics --> API --> UI
+    L3_Model & HashChain & ThreatScore --> API
+    API --> UI & SOC
 ```
 
 ---
@@ -145,6 +176,73 @@ For the surviving set of verified clients $\mathcal{S}_{\text{trusted}}$:
 2. Discard the smallest and largest $\beta \cdot m$ elements.
 3. Compute the arithmetic mean of the remaining interior values:
    $$\Delta_{\text{agg}, j} = \frac{1}{m - 2\lfloor\beta m\rfloor} \sum_{i = \lfloor\beta m\rfloor + 1}^{m - \lfloor\beta m\rfloor} \Delta_{(i), j}$$
+
+---
+
+## 🛡️ Security Intelligence, Zero-Trust & SOC Operations
+
+### 1. Zero-Trust Access Gateway (`backend_api/auth/`)
+FedSanitize rejects anonymous model updates. All participants and administrators must authenticate through the Zero-Trust Gateway:
+- **Dual-Engine Cryptography**: Primary asymmetric Ed25519 keypair verification with high-performance HS256 HMAC dual support.
+- **Role-Based Access Control (RBAC)**:
+  - **`Admin`**: Full telemetry observation, hyperparameter adjustment, manual quarantine overrides, and policy tuning.
+  - **`Edge Client`**: Authenticated model weight submission and localized client trust telemetry.
+- **Predictable Demo Credentials**:
+  - Central Administrator: `admin` / `admin123`
+  - Edge Clients `C0–C9`: `C0` / `clientsecret123` (seeded predictably across the cohort)
+- **First-Load Auto-Gateway**: Launches automatically upon initial entry to secure the management interface.
+
+### 2. Feature 1: Client Trust & Reputation Engine (`security_intelligence/trust_engine/`)
+Maintains an explainable, longitudinal reputation record for every participating node:
+- **Reputation Dynamics**:
+  $$T_{r+1} = \text{clamp}(T_r + \Delta_{\text{reward}} - \Delta_{\text{penalty}}, 0, 100)$$
+- **Score Modifiers**:
+  - Baseline Starting Score: $75.0$
+  - Clean Round Reward: $+3.0$ per round with zero defense flags
+  - Layer 1 Anomaly Penalty: $-10.0$
+  - MARS Backdoor Flag Penalty: $-20.0$
+  - Multiplier Penalty for Repeat Offenses: $\text{Penalty}_{\text{repeat}} = 5.0 \times (1 + \lfloor n_{\text{incidents}} / 3 \rfloor)$
+  - Quarantine Penalty: $-15.0$ applied when final status is `QUARANTINED`
+- **Reputation Tiers**:
+  - `TRUSTED`: $T \ge 80$
+  - `MONITORED`: $60 \le T < 80$
+  - `SUSPICIOUS`: $40 \le T < 60$
+  - `HIGH_RISK`: $20 \le T < 40$
+  - `QUARANTINED`: $T < 20$
+
+### 3. Feature 2: Adaptive Defense Orchestrator (`security_intelligence/adaptive_defense/`)
+Autonomously synthesizes round-level telemetry to select defense policies:
+- **Composite Threat Score Formulation**:
+  $$S_{\text{threat}} = w_{\text{L1}} \cdot R_{\text{L1}} + w_{\text{MARS}} \cdot R_{\text{MARS}} + w_{\text{CBE}} \cdot \bar{\text{CBE}} + w_{\text{trust}} \cdot R_{\text{risk}} + w_{\text{hist}} \cdot P_{\text{hist}}$$
+  *(Normalized weights: $w_{\text{L1}}=0.25$, $w_{\text{MARS}}=0.30$, $w_{\text{CBE}}=0.15$, $w_{\text{trust}}=0.20$, $w_{\text{hist}}=0.10$)*
+- **Autonomous Defense Routing**:
+  - $S < 0.25 \implies$ **`STANDARD`**: Nominal FedSanitize 3-layer execution.
+  - $0.25 \le S < 0.50 \implies$ **`HEIGHTENED_MONITORING`**: Heightened audit logging and stricter clustering thresholds.
+  - $0.50 \le S < 0.75 \implies$ **`ISOLATE_SUSPECTS`**: Preemptive exclusion of flagged nodes prior to aggregation.
+  - $S \ge 0.75 \implies$ **`EMERGENCY_FALLBACK`**: Extreme conservative trimmed mean fallback.
+- **Explainability & Missing Signals**: Decisions record full signal breakdowns and explicitly note any missing evidence sources without assuming they are benign.
+
+### 4. Team B: Tamper-Evident SHA-256 Audit Trail (`security_intelligence/audit_trail/`)
+Provides a verifiable cryptographic ledger for forensic post-mortems:
+- **Hash-Chained Blocks**:
+  $$H_k = \text{SHA256}(H_{k-1} \parallel \text{EventType}_k \parallel \text{Timestamp}_k \parallel \text{ClientID}_k \parallel \text{PayloadHash}_k)$$
+  Where $H_0 = \text{0000000000000000000000000000000000000000000000000000000000000000}$.
+- **Tamper Detection**: `IntegrityVerifier` audits the chain on demand. Any modification to disk logs or injected entries immediately triggers `INTEGRITY ALERT: TAMPERING DETECTED`.
+- **Zero Model Leakage**: Payloads are strictly sanitized: model parameters, gradient matrices, and dataset samples are stripped before logging.
+
+### 5. Team B: Policy-Driven Incident Response & Reversible Quarantine (`security_intelligence/incident_response/`)
+Enforces automated, policy-driven security actions:
+- **Action Mapping**:
+  - `LOW` Severity $\implies$ `MONITOR` (Indefinite monitoring, no restrictions)
+  - `MEDIUM` Severity $\implies$ `REDUCE_WEIGHT` (3 rounds reduced aggregation influence)
+  - `HIGH` Severity $\implies$ `TEMPORARY_ISOLATE` (5 rounds temporary isolation, human review required)
+  - `CRITICAL` Severity $\implies$ `QUARANTINE` (10 rounds strict quarantine, review required)
+- **Strict No-Deletion Guarantee**: Clients are never deleted or erased from state; quarantine is fully reversible, enabling evidence-backed release and automated expiration.
+
+### 6. Team B: Security Operations Center (SOC) Engine (`security_intelligence/soc/`)
+- Multi-signal threat scoring across 8 operational dimensions.
+- Historical security posture tracking across rounds.
+- Real-time aggregation of active incidents, audit chain verification status, and client security dossiers into unified `SOCSnapshot` data models.
 
 ---
 
@@ -180,163 +278,6 @@ R6     | FedSanitize    |      97.14%        |       0.47%      |      100.00%  
 =============================================================================================================
 ```
 
-> **Key Takeaway**: Without defense, the backdoor achieves $>99\%$ ASR while Byzantine updates degrade accuracy by $>13\%$. Under **FedSanitize**, all 4 malicious clients are isolated (100% Precision and 100% Recall), clean accuracy reaches **97.14%**, and backdoor ASR drops to **0.47%** — essentially zero backdoor footprint.
-
----
-
-### 🗂️ Complete Repository Structure
-
-```
-FedSanitize/
-├── app.py                          # Streamlit main app: session init, sidebar nav, page router
-├── config.py                       # Central typed configuration dataclasses & presets
-├── README.md                       # Complete system documentation
-├── requirements.txt                # Locked Python ML dependencies (torch, scipy, streamlit...)
-│
-├── models/
-│   └── cnn.py                      # SmallCNN: Conv2D(32) → ReLU → MaxPool → Conv2D(64) → ReLU → MaxPool → FC(128) → FC(10)
-│
-├── federated/
-│   ├── client.py                   # FLClient: local DataLoader, SGD optimizer, update container
-│   ├── server.py                   # FLServer: global model state & baseline FedAvg coordinator
-│   ├── trainer.py                  # Local training loops, clean accuracy & ASR validation
-│   ├── data_partition.py           # IID & Dirichlet Non-IID (α=0.5) MNIST partitioning
-│   ├── update_utils.py             # ΔW extraction, L2 norm, tensor flatten/unflatten helpers
-│   └── baseline_aggregation.py     # Vanilla FedAvg (McMahan et al. 2017) implementation
-│
-├── defense/
-│   ├── layer1_anomaly/             # LAYER 1: Statistical Anomaly Filter
-│   │   ├── robust_statistics.py    # Coordinate-wise median & MAD calculator
-│   │   ├── update_features.py      # L2 norm & cosine similarity feature extractors
-│   │   └── anomaly_detector.py     # Explainable scoring, quarantine tagging (EXTREME_UPDATE_NORM, LOW_DIRECTIONAL_SIMILARITY)
-│   │
-│   ├── layer2_mars/                # LAYER 2: MARS Backdoor Isolation (NeurIPS 2025)
-│   │   ├── layer_selection.py      # Gradient variance sensitivity: selects feature extractor layer
-│   │   ├── cbe.py                  # Client Backdoor Energy (CBE) — top-p% concentrated update ratio
-│   │   ├── wasserstein.py          # Pairwise 1D Wasserstein (Earth Mover's) distance matrix
-│   │   ├── clustering.py           # Agglomerative clustering with malignity threshold guard (≥0.015)
-│   │   └── mars.py                 # Unified MARS pipeline controller (calls all sub-modules)
-│   │
-│   └── layer3_robust/              # LAYER 3: Robust Aggregation
-│       └── trimmed_mean.py         # Coordinate-wise trimmed mean (β=0.10 tail discard)
-│
-├── attacks/                        # 5 ADVERSARIAL THREAT MODEL IMPLEMENTATIONS
-│   ├── backdoor.py                 # Stamps 3×3 white pixel trigger, relabels to target class 0
-│   ├── extreme_update.py           # Scales ΔW by γ=10.0 to overwhelm FedAvg
-│   ├── sign_flipping.py            # Inverts gradient direction (–γ × ΔW) as DoS attack
-│   ├── random_byzantine.py         # Injects Gaussian noise ΔW ~ N(0, σ²I)
-│   └── label_flipping.py           # Permutes local training labels (e.g. 7→1)
-│
-├── services/                       # CORE ORCHESTRATION LAYER
-│   ├── simulation_service.py       # Full FL round coordinator: client train → attack inject → defense pipeline → evaluate
-│   ├── security_service.py         # 3-Layer Firewall sequential orchestration (L1→L2→L3)
-│   └── result_service.py           # Metrics aggregator & JSON telemetry formatter
-│
-├── evaluation/                     # METRICS ENGINE
-│   ├── accuracy.py                 # Clean validation accuracy calculator
-│   ├── attack_success_rate.py      # Backdoor ASR calculator on triggered test set
-│   ├── detection_metrics.py        # Precision, Recall, F1 for defense detection
-│   ├── experiment_logger.py        # Structured JSON experiment history logger
-│   └── plots.py                    # Matplotlib/Plotly utility chart functions
-│
-├── simulation/                     # FORENSIC REPLAY ENGINE (Live Attack Arena backend)
-│   ├── event_types.py              # EventType enum: ROUND_START, CLIENT_TRAINING, LAYER1_FLAGGED, MARS_QUARANTINED, AGGREGATION_COMPLETE, etc.
-│   ├── security_event.py           # SecurityEvent dataclass: client_id, severity, layer, message, payload dict
-│   ├── event_recorder.py           # Captures & sanitizes security events emitted during a round
-│   ├── timeline_builder.py         # Converts event list → ordered TimelineStep list for playback
-│   ├── replay_engine.py            # State-machine: step_forward(), step_backward(), seek(n), set_speed()
-│   ├── network_state.py            # Tracks live node roles (honest/malicious/quarantined), active defense layer
-│   ├── scenario_engine.py          # Per-attack narrative generator: title, headline, technical explanation, forensic focus
-│   ├── serialization.py            # JSON export/import of full simulation replays for offline forensics
-│   └── simulation_adapter.py       # Converts FL round result dicts → SimulationResult (SecurityEvent stream + MARS data)
-│
-├── visualization/                  # PLOTLY CHART COMPONENTS (Live Attack Arena frontend)
-│   ├── network/
-│   │   ├── topology.py             # Builds Plotly-compatible node/edge topology from NetworkState
-│   │   ├── network_renderer.py     # Renders animated Plotly network topology graph
-│   │   └── network_fallback.py     # HTML/CSS fallback renderer for Streamlit compatibility
-│   ├── defense/
-│   │   ├── layer1_viz.py           # L2 norm bar chart & cosine similarity radar
-│   │   ├── mars_viz.py             # CBE bar chart, Wasserstein pairwise heatmap, agglomerative cluster scatter
-│   │   └── aggregation_viz.py      # Trimmed mean parameter distribution overview chart
-│   ├── attacks/
-│   │   ├── backdoor_viz.py         # Backdoor trigger injection 6-stage HTML walkthrough
-│   │   ├── extreme_update_viz.py   # Gradient norm comparison bar chart (honest vs. adversary)
-│   │   ├── sign_flip_viz.py        # Vector direction inversion arrow diagram
-│   │   └── byzantine_viz.py        # Gaussian noise scatter plot vs honest distribution
-│   ├── components/
-│   │   ├── metric_cards.py         # Arena header: Round ID, Threat Level, ASR, Clean Accuracy KPI cards
-│   │   ├── event_timeline.py       # Horizontal step-by-step HTML timeline with phase labels
-│   │   ├── client_forensics.py     # Per-client dossier card: norm score, CBE score, verdict
-│   │   ├── pipeline_status.py      # 3-Layer Pipeline horizontal status bar with blocked counts
-│   │   └── threat_panel.py         # Threat tier classifier + before/after defense comparison card
-│   └── effects/
-│       └── alerts.py               # Severity-styled alert banners & quarantine action cards
-│
-├── dashboard/                      # STREAMLIT PAGE RENDERERS (7 pages)
-│   ├── theme.py                    # Global CSS injection, color tokens (COLORS dict), apply_theme()
-│   ├── overview.py                 # Overview page: animated KPIs, round history table
-│   ├── clients.py                  # Client Profiling page: per-client status matrix & threat tags
-│   ├── defense.py                  # 3-Layer Defense page: per-layer drilldown & MARS heatmap
-│   ├── attacks.py                  # Attack Playground page: per-client attack assignment toggles
-│   ├── analytics.py                # Comparative Analytics page: ASR/accuracy convergence charts
-│   ├── config_page.py              # System Configuration page: hyperparameter sliders
-│   └── simulation_arena.py         # ⚔️ LIVE ATTACK ARENA: forensic replay centerpiece with network graph, timeline, client dossiers
-│
-├── backend_api/                    # FASTAPI REST GATEWAY
-│   ├── main.py                     # All API routes: /health /config /clients /simulation /experiments
-│   └── schemas.py                  # Pydantic v2 request/response schemas (strict type validation)
-│
-├── frontend/                       # REACT 18 + TYPESCRIPT + VITE DASHBOARD
-│   ├── src/
-│   │   ├── App.tsx                 # Root layout: ambient gradient background, SVG noise, route state
-│   │   ├── index.css               # Global Tailwind CSS, custom tokens, scrollbar, glow effects
-│   │   ├── pages/
-│   │   │   ├── Overview.tsx        # Live KPI bar, Recharts ASR vs accuracy dual-line chart, audit log
-│   │   │   ├── ClientProfiling.tsx # Per-client status pills (TRUSTED/QUARANTINED), norm scores
-│   │   │   ├── DefensePipeline.tsx # BorderTrail per-layer, Wasserstein heatmap (cyan→purple→red)
-│   │   │   ├── AttackPlayground.tsx# 14×14 CSS pixel-grid trigger matrix, per-client attack toggles
-│   │   │   ├── Analytics.tsx       # Confusion matrix (TP/FP/FN/TN) with F1 score, history table
-│   │   │   └── Configuration.tsx   # 11-param gradient-track sliders (purple→cyan unified style)
-│   │   ├── components/
-│   │   │   ├── layout/Header.tsx   # Sticky top bar: SlidingNumber KPIs, Run/Reset/Demo buttons
-│   │   │   ├── layout/Sidebar.tsx  # Animated nav with AnimatedBackground indicator, logo
-│   │   │   ├── common/StartupScreen.tsx  # Terminal boot sequence: INIT_KERNEL → TELEMETRY phases
-│   │   │   └── core/               # Motion Primitives: BorderTrail, SlidingNumber, GlowEffect, TextEffect, Spotlight, TransitionPanel
-│   │   ├── api/client.ts           # Typed Axios REST client (fetchHistory, runRound, resetSimulation, loadDemo)
-│   │   └── types/telemetry.ts      # RoundRecord & ClientSummary TypeScript interfaces
-│   ├── tailwind.config.js          # Custom tokens: void-black, signal-cyan, stealth-purple, accent-danger
-│   ├── vite.config.ts              # Vite build config with proxy to FastAPI :8000
-│   └── package.json
-│
-├── assets/                         # Static assets (logo.png, logo_icon.png — custom SVG cybersecurity logo)
-├── data/                           # MNIST dataset auto-downloaded on first run
-├── results/                        # Pre-computed 6-round demo JSON history for instant Load Demo
-├── experiments/                    # Saved experiment log JSONs
-├── scripts/                        # Utility & helper scripts
-├── utils/                          # Shared utility functions
-└── tests/
-    ├── test_api.py                         # FastAPI endpoint integration tests (5/5 passing)
-    ├── test_simulation_adapter.py          # SimulationAdapter unit tests
-    ├── test_simulation_event_system.py     # EventRecorder & SecurityEvent tests
-    ├── test_simulation_timeline_and_replay.py  # TimelineBuilder & ReplayEngine tests
-    └── test_simulation_visualization.py   # Visualization component render tests
-```
-
----
-
-## ⚠️ Anomalies, Limitations & Future Work
-
-### Current Limitations
-- **$O(N^2)$ Scalability**: Calculating pairwise Wasserstein Distances in Layer 2 across thousands of cross-device clients can become a computational bottleneck, requiring approximation layers.
-- **Non-IID Data Confusion**: High data heterogeneity (e.g., extremely rare honest datasets isolated to a single client) can occasionally trigger false positives in MARS clustering.
-- **Static Threat Models**: Backdoors are currently implemented as static visual patches (e.g. $3\times3$ grid on Class 0) rather than dynamic, semantic perturbations.
-
-### Future Roadmap
-1. **Differential Privacy (DP-SGD)**: Implement gradient clipping and Gaussian noise injection to prevent inference attacks and guarantee weight privacy.
-2. **Secure Multi-Party Computation (SMPC)**: Adopt homomorphic encryption for "Zero-Trust" aggregation, executing the Trimmed Mean on cryptographically masked tensors.
-3. **Adaptive Thresholding**: Machine learning agents that auto-tune MAD multipliers and Trimmed Mean $\beta$ based on the network's rolling volatility instead of static configurations.
-
 ---
 
 ## 🚀 Quickstart & Installation
@@ -354,17 +295,18 @@ python -m venv venv
 # Linux/macOS:
 source venv/bin/activate
 
-# Install Python (ML + API) dependencies
+# Install Python dependencies (including PyYAML, Streamlit, Pytest)
 pip install -r requirements.txt
+pip install -r requirements-team-b.txt
 ```
 
 ### 2. Start the FastAPI Backend
 
 ```bash
-python -m uvicorn backend_api.main:app --host 127.0.0.1 --port 8000
+python -m uvicorn backend_api.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-API docs will be available at `http://127.0.0.1:8000/docs`.
+Interactive OpenAPI documentation available at `http://127.0.0.1:8000/docs`.
 
 ### 3. Start the React Frontend
 
@@ -376,188 +318,181 @@ npm run dev -- --host 127.0.0.1 --port 5173
 
 Open your browser at **`http://127.0.0.1:5173`**.
 
-### 4. Run the API Test Suite
+### 4. Start the Streamlit Dashboard & Standalone SOC
 
 ```bash
-pytest tests/test_api.py -v
-```
-
-Expected output: **5/5 tests passing**.
-
----
-
-## 🐍 Streamlit Dashboard (`app.py` — port 8502)
-
-FedSanitize ships a **second, standalone dashboard** built in Streamlit for rapid forensic analysis and Live Attack Arena replay. It runs alongside the React frontend and is the primary surface used in the Live Attack Arena.
-
-**Running it:**
-```bash
+# Main Multi-Page App (including Live Attack Arena & Integrated SOC):
 streamlit run app.py --server.port 8502
+
+# Or run the Standalone SOC page directly:
+streamlit run dashboard/security_soc.py
 ```
 
-| Page | Module | Description |
-| :--- | :--- | :--- |
-| ⚔️ **Live Attack Arena** | `dashboard/simulation_arena.py` | Flagship forensic replay: animated network topology graph, step/seek playback controls, 5 scenario narratives, Layer 1 norm charts, MARS CBE heatmap, client dossiers |
-| 🏠 **Overview** | `dashboard/overview.py` | Animated KPI bar, round history table, clean accuracy & ASR trend |
-| 👥 **Client Profiling** | `dashboard/clients.py` | Per-client status matrix with TRUSTED/QUARANTINED badges, threat tags, norm scores |
-| 🛡️ **3-Layer Defense** | `dashboard/defense.py` | Layer-by-layer audit drilldown: MAD scores, CBE heatmap, trimmed mean stats |
-| 🎯 **Attack Playground** | `dashboard/attacks.py` | Per-client attack assignment toggles (Backdoor, Extreme, Sign-Flip, Byzantine) |
-| 📈 **Comparative Analytics** | `dashboard/analytics.py` | Multi-round ASR vs. accuracy convergence charts, confusion matrix |
-| ⚙️ **System Configuration** | `dashboard/config_page.py` | Live hyperparameter sliders for Federated, Defense, and Attack configs |
+### 5. Run the Test Suites (156 Passing Tests)
 
-### Session Architecture
-`app.py` initializes once per session: loads the `FLServer` into Streamlit session state, partitions MNIST with Dirichlet sampling, builds a `TriggeredTestDataset` (trigger size = 4px), and loads pre-computed demo history from `results/`. All pages share this session state, so a round run on any page updates the global history.
+```bash
+# Run Team B Security Intelligence & Audit tests (31 tests):
+python -m pytest tests/security_intelligence -v
 
----
+# Run Team A & Core evaluation tests (125 tests):
+python -m pytest tests/test_evaluation.py tests/test_security_intelligence -v
 
-## 📦 Python Dependency Stack
-
-All versions are pinned in `requirements.txt` to ensure reproducibility:
-
-| Package | Version | Role |
-| :--- | :--- | :--- |
-| `torch` | 2.3.1 | CNN model, local SGD, tensor operations |
-| `torchvision` | 0.18.1 | MNIST dataset download & transforms |
-| `numpy` | 1.26.4 | Numerical operations, norm calculations |
-| `pandas` | 2.2.2 | Round history DataFrame processing |
-| `scipy` | 1.13.1 | 1D Wasserstein distance (`wasserstein_distance`) |
-| `scikit-learn` | 1.5.0 | Agglomerative Clustering for MARS |
-| `streamlit` | 1.36.0 | Streamlit dashboard server & session state |
-| `plotly` | 5.22.0 | Interactive charts (network graph, heatmaps) |
-| `matplotlib` | 3.9.0 | Static plots & evaluation charts |
-
-**Frontend dependencies** (in `frontend/package.json`):
-
-| Package | Role |
-| :--- | :--- |
-| `react` / `react-dom` 18 | UI component framework |
-| `vite` 6 | Build tool & dev server with FastAPI proxy |
-| `typescript` | Static typing for telemetry data structures |
-| `tailwindcss` | Utility-first CSS with custom cybersecurity tokens |
-| `framer-motion` | Hardware-accelerated animations |
-| `@radix-ui` / shadcn/ui | Accessible headless components |
-| `recharts` | Cartesian charts for ASR vs. accuracy plots |
-| `axios` | Typed HTTP client to FastAPI gateway |
-| `lucide-react` | Icon library |
+# Total: 156/156 PASSED (100% passing rate)
+```
 
 ---
 
-## 🖥️ React Dashboard
+## 🖥️ Dashboard Presentation Surfaces
 
-The FedSanitize dashboard is a full SOC-style interface with real-time telemetry:
+### 1. React 18 + TypeScript Cyber-Console (`:5173`)
 
 | Page | Description |
 | :--- | :--- |
-| **Overview** | Animated KPI bar (Clean Accuracy, ASR, Rounds, Clients), "Run Secure Round" button, round history table |
-| **Client Profiling** | Per-client status badge (TRUSTED / QUARANTINED), threat tag, norm score, and Dirichlet class distribution |
-| **Defense Pipeline** | 3-Layer Firewall banner with cursor spotlight, Layer 1 MAD scores, MARS continuous-color Wasserstein heatmap with numeric legend, trimmed mean summary |
-| **Attack Playground** | View an interactive **14x14 pixel-grid trigger matrix**, toggle individual attack types per client, observe real-time ASR change on next round |
-| **Analytics** | Plotly accuracy & ASR convergence curves, confusion matrix with dynamic FP/FN coloring, per-round detection stats |
-| **Configuration** | **Interactive range sliders** for all 11 hyperparameters with a unified purple-to-cyan track |
+| **Overview** | Real-time KPI cards (Accuracy, ASR, Active Nodes), "Run Secure Round" button, and experiment history table. |
+| **Client Profiling** | Per-client status pills (`TRUSTED` / `QUARANTINED`), $L_2$ norm tracking, and Dirichlet class distribution graphs. |
+| **3-Layer Defense** | Multi-layer firewall inspection: Layer 1 MAD anomalies, Layer 2 continuous-color Wasserstein heatmap, and Layer 3 Trimmed Mean summary. |
+| **Attack Playground** | Interactive **14×14 pixel-grid trigger matrix**, per-client attack toggles, and instant next-round ASR projection. |
+| **Comparative Analytics** | Multi-round accuracy & ASR convergence curves, confusion matrix with FP/FN highlighting, and detection metrics. |
+| **Live Attack Arena** | Teammate's complete interactive simulation arena: step-by-step timeline seek bar, animated topology graph, and adversarial breakdown. |
+| **Security Intelligence & SOC** | Dual-tab operational command center: **Tab 1: Team B Security Operations Center** (SHA-256 audit chain ledger, active quarantine roster, multi-signal threat decomposition) and **Tab 2: Team A Client Trust & Policy Orchestrator** (trust spectrum bar charts, client dossiers, and adaptive defense routing history). |
+| **System Configuration** | 11 live range sliders with unified purple-to-cyan gradient tracks for real-time hyperparameter adjustments. |
 
-### UI Design Highlights
-- **Ambient Cybersecurity Theme**: Void Black (`#050508`) base with a static SVG noise texture overlay and soft radial gradient highlights in purple and deep blue. Action buttons glow with Signal Cyan (`#38FBDB`).
-- **Terminal boot screen** with sequential log reveal and `AnimatePresence` exit curtain.
-- **`SlidingNumber`** animated KPI counters in the header.
-- **Tactical cursor spotlight** on the Defense Pipeline banner (Framer Motion `useSpring`).
-- **Threat-card hover system**: 200ms cubic-bezier lift + cyan/purple border glow on every card.
+### 2. Streamlit Dashboard & Forensic Center (`:8502`)
+
+| Page | Module | Description |
+| :--- | :--- | :--- |
+| ⚔️ **Live Attack Arena** | `dashboard/simulation_arena.py` | Step-by-step forensic replay centerpiece with animated network topology, timeline seek, and 5 scenario narratives. |
+| 🛡️ **Security SOC** | `dashboard/security_soc.py` | Team B Security Operations Center: live audit chain integrity status, multi-factor threat scores, active incident table, and quarantine rosters. |
+| 🎖️ **Security Intelligence** | `dashboard/security_intelligence.py` | Team A operational view: Client Trust Spectrum (F1), Adaptive Defense Orchestrator (F2), and Zero-Trust JWT Authentication (F3). |
+| 🏠 **Overview** | `dashboard/overview.py` | Animated KPI bar, round history table, and convergence trajectory. |
+| 👥 **Client Profiling** | `dashboard/clients.py` | Client status matrix with TRUSTED/QUARANTINED badges and threat tags. |
+| 🛡️ **3-Layer Defense** | `dashboard/defense.py` | Layer-by-layer audit drilldown: MAD scores, CBE heatmap, and trimmed mean stats. |
+| 🎯 **Attack Playground** | `dashboard/attacks.py` | Per-client attack assignment toggles. |
+| 📈 **Comparative Analytics** | `dashboard/analytics.py` | Multi-round ASR vs. accuracy convergence charts and confusion matrix. |
+| ⚙️ **System Configuration** | `dashboard/config_page.py` | Live hyperparameter sliders for Federated, Defense, and Attack configs. |
 
 ---
 
-## ⚙️ Configuration Reference
+## ⚙️ Configuration Reference & API Routes
 
-All settings can be customized in `config.py` or live via the dashboard sliders:
-
-```python
-from config import FedSanitizeConfig, FederatedConfig, DefenseConfig, AttackConfig
-
-config = FedSanitizeConfig(
-    federated=FederatedConfig(
-        num_clients=10,
-        num_rounds=15,
-        local_epochs=1,
-        local_batch_size=64,
-        local_lr=0.02,
-        iid=False,          # Dirichlet non-IID
-    ),
-    defense=DefenseConfig(
-        layer1_mad_multiplier=3.5,
-        mars_cbe_top_p=0.10,
-        mars_malignity_threshold=0.015,
-        trimmed_mean_beta=0.10,
-    ),
-    attack=AttackConfig(
-        num_malicious_clients=4,
-        backdoor_target_class=0,
-        backdoor_poison_ratio=0.40,
-        extreme_update_gamma=10.0,
-        sign_flip_gamma=1.0,
-    )
-)
-```
-
-### API Endpoints (FastAPI)
+### Core API Endpoints (`FastAPI`)
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
-| `GET` | `/health` | Service health check |
-| `GET` | `/config` | Fetch current configuration |
+| `GET` | `/health` | Service health check & active telemetry summary |
+| `POST` | `/auth/login` | Administrator login (returns JWT Bearer token) |
+| `POST` | `/auth/client-login` | Edge client credentials verification |
+| `GET` | `/auth/me` | Current authenticated session identity & role |
+| `POST` | `/auth/refresh` | Issue refreshed access token |
+| `GET` | `/security/summary` | Combined trust engine & adaptive defense status |
+| `GET` | `/security/clients/trust` | Trust records for all edge clients |
+| `GET` | `/security/clients/{id}/trust` | Detailed trust dossier for a specific client |
+| `GET` | `/security/decisions` | Historical decisions from Adaptive Defense Orchestrator |
+| `GET` | `/security/soc/snapshot` | Complete Team B SOC snapshot (threat score, audit chain, quarantine) |
+| `GET` | `/simulation/arena` | Structured telemetry payload for Live Attack Arena |
+| `GET` | `/config` | Fetch current system configuration |
 | `POST` | `/config` | Update configuration (partial patch) |
 | `GET` | `/clients` | List all clients with status & metrics |
 | `POST` | `/clients/{id}/attack` | Toggle attack assignment on a client |
-| `POST` | `/simulation/round` | Run one federated round |
-| `POST` | `/simulation/reset` | Reset simulation state |
-| `POST` | `/simulation/load-demo` | Load 6-round pre-computed demo telemetry |
-| `GET` | `/experiments/history` | Fetch all historical round records |
+| `POST` | `/simulation/round` | Execute one federated learning round |
+| `POST` | `/simulation/reset` | Reset simulation state & client models |
+| `POST` | `/simulation/load-demo` | Load pre-computed 5-round demo telemetry |
+| `GET` | `/experiments/history` | Fetch cumulative round history records |
 
 ---
 
 ## 📖 Deep-Dive: File-by-File Technical Directory & Theory
 
-This section provides a granular, file-by-file breakdown of the entire FedSanitize architecture, detailing the theoretical purpose of each module and how the tech stack orchestrates the simulation.
+### 1. `backend_api/` (The REST Gateway & Auth Subsystem)
+* **Tech Stack**: FastAPI, Uvicorn, Pydantic v2, PyJWT, Cryptography.
+* **Theory**: FL requires a central aggregator to coordinate decentralized clients securely.
+  - `main.py`: The entry point. Manages global simulation state, FL neural network parameters, and mounts all REST routes.
+  - `schemas.py`: Pydantic models for strict type validation of configuration payloads and telemetry responses.
+  - `auth/router.py`: REST routes for `/auth/login`, `/auth/client-login`, `/auth/me`, and `/auth/refresh`.
+  - `auth/service.py`: Issues and cryptographically verifies JWT tokens using dual Ed25519/HS256 engines.
+  - `auth/crypto.py`: Cryptographic helpers for password hashing and signature verification.
+  - `auth/dependencies.py`: FastAPI security dependency injectors (`get_current_user`, `require_admin`, `require_client`).
+  - `auth/stores.py`: In-memory thread-safe user, client credential, and revoked token stores.
+  - `auth/bootstrap.py`: Seeds default administrative credentials (`admin` / `admin123`) and edge clients (`C0–C9` / `clientsecret123`).
+  - `auth/config.py`: Authentication settings (token expiry, dual-key selection, rate limits).
 
-### 1. `backend_api/` (The REST Gateway)
-* **Tech Stack**: FastAPI, Uvicorn, Pydantic.
-* **Theory**: FL requires a central aggregator to coordinate decentralized clients. This API acts as that central aggregator, exposing stateful endpoints to the React frontend.
-  - `main.py`: The entry point. Manages the global state of the FL simulation, holding the neural network in memory and coordinating client rounds.
-  - `schemas.py`: Uses Pydantic for strict type validation of incoming JSON configurations (e.g., hyperparameter tuning) ensuring data integrity before math execution.
+### 2. `security_intelligence/` (Autonomous Security & SOC Operations)
+* **Tech Stack**: Python stdlib, PyYAML, Dataclasses. Designed with clean interfaces to ensure zero hard couplings to training loops.
+  - `team_b_bundle.py`: Standalone composition root providing single-object access to Team B modules.
+  - `contracts/security_decision.py`: Pure dataclass contracts (`SecurityDecision`, `TrustUpdate`, `RiskLevel`, `TeamATrustInput`, `TeamARiskInput`).
+  - `contracts/events.py`: Shared event definitions (`SecurityEvent`, `EventType`, `Severity`).
+  - `contracts/client_record.py`: Longitudinal client security record data contracts.
+  - `contracts/security_context.py`: Multi-source context container passed between defense layers.
+  - `adapters/pipeline_adapter.py`: Translates raw FL pipeline dictionaries into normalized `SecurityContext` dataclasses.
+  - `trust_engine/trust_engine.py`: **Feature 1 Client Trust Engine**. Evaluates round evidence and computes trust deltas.
+  - `trust_engine/trust_models.py`: Defines 5-tier reputation levels (`TRUSTED` through `QUARANTINED`).
+  - `trust_engine/trust_policy.py`: Applies reward/penalty rules and repeat violation multipliers.
+  - `trust_engine/trust_store.py`: In-memory and JSON-persistent client record repository.
+  - `adaptive_defense/risk_assessor.py`: Evaluates multi-signal threat contributions and computes coverage.
+  - `adaptive_defense/risk_router.py`: Maps composite threat scores to defense routing decisions (`STANDARD` through `EMERGENCY_FALLBACK`).
+  - `adaptive_defense/escalation_policy.py`: Enforces escalation rules and conservative fallbacks.
+  - `adaptive_defense/routing_decision.py`: Adaptive defense orchestrator decision container.
+  - `audit_trail/hash_chain.py`: Implements SHA-256 cryptographic chaining ($H_k = \text{SHA256}(H_{k-1} \parallel \dots)$).
+  - `audit_trail/audit_logger.py`: Strips sensitive model weights and logs structured events to JSONL.
+  - `audit_trail/integrity_verifier.py`: Traverses the audit chain to verify cryptographic continuity and flag tampering.
+  - `audit_trail/audit_store.py`: Storage abstraction supporting JSONL persistence with in-memory fallback.
+  - `incident_response/response_engine.py`: Orchestrates incident registration, risk assessment, and policy execution.
+  - `incident_response/quarantine_manager.py`: Reversible quarantine lifecycle with expiry round tracking.
+  - `incident_response/incident_registry.py`: Queryable active and historical incident registry.
+  - `incident_response/response_policy.py`: Maps severity levels to actions (`MONITOR`, `REDUCE_WEIGHT`, `TEMPORARY_ISOLATE`, `QUARANTINE`).
+  - `soc/threat_engine.py`: Multi-signal scoring engine tracking 8 independent threat vectors.
+  - `soc/threat_scoring.py`: Mathematical weight renormalization over available signals.
+  - `soc/security_posture.py`: Longitudinal security posture tracking across rounds.
+  - `soc/soc_snapshot.py`: Aggregates threat scores, incidents, audit integrity, and client summaries into unified views.
+  - `config/security_config.py`: Unified YAML and dataclass configuration loader.
+  - `config/default_security.yaml`: Default thresholds and weights for Features 1 and 2.
 
-### 2. `federated/` (The Core FL Engine)
+### 3. `federated/` (The Core FL Engine)
 * **Tech Stack**: PyTorch, NumPy.
-* **Theory**: Implements the baseline FedAvg algorithm (McMahan et al., 2017) which mathematically averages weights, augmented here with attack vectors.
-  - `server.py`: The Global Model container. It distributes weights, triggers client training, and invokes the 3-Layer Defense before executing `baseline_aggregation.py`.
-  - `client.py`: The Edge Node simulation. Contains the local PyTorch `DataLoader` and optimizer. 
-  - `data_partition.py`: Theory dictates that real FL is Non-IID (Independent and Identically Distributed). This file uses a Dirichlet distribution ($\alpha=0.5$) to skew the MNIST dataset, ensuring client $C_1$ might have mostly 7s and 8s, while $C_2$ has 1s and 3s. This creates natural gradient variance, making backdoor detection mathematically harder.
-  - `update_utils.py`: Extracts the $\Delta W$ (Weight Updates) by subtracting the old global model from the new local model, flattening them into 1D tensors for distance calculations.
+* **Theory**: Implements the baseline FedAvg algorithm (McMahan et al., 2017) augmented with attack vectors.
+  - `server.py`: Global model container. Coordinates client training, defense invocation, and model consolidation.
+  - `client.py`: Edge node simulation with local PyTorch `DataLoader` and SGD optimizer.
+  - `data_partition.py`: Dirichlet non-IID partitioning ($\alpha=0.5$) creating realistic heterogeneous data distributions across clients.
+  - `update_utils.py`: Extracts weight updates ($\Delta W$), calculates $L_2$ norms, and handles tensor flattening.
+  - `baseline_aggregation.py`: Standard coordinate-wise parameter averaging.
 
-### 3. `defense/` (The 3-Layer Firewall)
+### 4. `defense/` (The 3-Layer Firewall)
 * **Tech Stack**: SciPy, Scikit-Learn, PyTorch.
-* **Theory**: The proprietary defense mechanism. Standard FL is highly susceptible to Data Poisoning (Backdoors) and Model Poisoning (Byzantine).
-  - `layer1_anomaly/robust_statistics.py & anomaly_detector.py`: **Theory:** Computes the Median Absolute Deviation (MAD) of $L_2$ norms. MAD is statistically robust against outliers (unlike standard deviation). It also calculates directional Cosine Similarity. Quarantines nodes trying to overwhelm the aggregation with massive or inverted weights.
-  - `layer2_mars/cbe.py & wasserstein.py & clustering.py`: **Theory:** MARS (NeurIPS 2025). Stealthy backdoors hide in small norms. MARS calculates *Client Backdoor Energy (CBE)* based on the variance of gradients in the final layers. It computes the 1D Wasserstein distance (Earth Mover's Distance) to measure the effort required to transform one client's energy distribution into another's. Scikit-Learn's Agglomerative Clustering partitions these distributions. If a cluster is too distant ($\ge 0.015$), it's flagged as a backdoor ring.
-  - `layer3_robust/trimmed_mean.py`: **Theory:** Trimmed Mean (ICML 2018). For the surviving clients, sorting parameter values along every coordinate and discarding the tails (top $\beta\%$, bottom $\beta\%$) structurally removes residual adversarial bias before taking the mean.
+  - `layer1_anomaly/robust_statistics.py & anomaly_detector.py`: Computes Median Absolute Deviation (MAD) of $L_2$ norms and directional Cosine Similarity.
+  - `layer2_mars/cbe.py & wasserstein.py & clustering.py`: Implements MARS (NeurIPS 2025). Calculates Client Backdoor Energy (CBE), constructs 1D Wasserstein distance matrices, and executes agglomerative clustering with a $0.015$ malignity threshold guard.
+  - `layer3_robust/trimmed_mean.py`: Coordinate-wise trimmed mean discarding extreme parameter coordinates before model consolidation.
 
-### 4. `attacks/` (The Adversarial Threat Models)
+### 5. `attacks/` (The Adversarial Threat Models)
 * **Tech Stack**: PyTorch, Torchvision.
-* **Theory**: Evaluates the defense against known threat vectors.
-  - `backdoor.py`: Injects a $3\times3$ white pixel matrix (the trigger) into the corner of training images and forcibly sets their label to a target class (e.g., 0). The goal is semantic corruption.
-  - `extreme_update.py`: Scales the client's $\Delta W$ by $\gamma=10.0$. Theory: attempts to drastically pull the global minimum toward the adversary's objective.
-  - `sign_flipping.py`: Inverts gradients. Theory: acts as a denial-of-service, forcing the model to unlearn features.
-  - `random_byzantine.py` & `label_flipping.py`: Introduce Gaussian entropy and label permutations to degrade overall accuracy.
+  - `backdoor.py`: Injects a $3\times3$ pixel patch into training images and sets their target label to class 0.
+  - `extreme_update.py`: Scales updates by $\gamma=10.0$ to destabilize global convergence.
+  - `sign_flipping.py`: Inverts gradient direction as a denial-of-service vector.
+  - `random_byzantine.py` & `label_flipping.py`: Injects Gaussian noise and label permutations to degrade clean model utility.
 
-### 5. `simulation/` & `visualization/` (The Live Attack Arena)
+### 6. `simulation/` & `visualization/` (The Live Attack Arena Backend)
 * **Tech Stack**: Python, Streamlit, Plotly.
-* **Theory**: An interactive forensic replay engine.
-  - `simulation/timeline_builder.py & replay_engine.py`: Captures the chronological execution of a federated round and builds an interactive state-machine timeline allowing step-by-step forensic rewinding of the defense algorithms.
-  - `visualization/defense/*`: Renders the high-dimensional mathematical outcomes (like the Wasserstein Pairwise Heatmap and CBE distributions) into human-readable Plotly charts.
+  - `simulation/timeline_builder.py & replay_engine.py`: Captures chronological execution of a round into an interactive state-machine timeline.
+  - `simulation/network_state.py`: Tracks live node statuses and active defense layers.
+  - `visualization/defense/*`: Renders Wasserstein distance heatmaps, CBE bar charts, and topology graphs.
 
-### 6. `frontend/` (The SOC Dashboard)
-* **Tech Stack**: React 18, Vite, TypeScript, Tailwind CSS, Framer Motion.
-* **Theory**: Translates raw JSON telemetry from the FastAPI backend into actionable intelligence.
-  - `src/App.tsx`: The root React Router and state manager. Maintains an ambient CSS gradient backdrop with a static SVG `feTurbulence` noise layer.
-  - `src/pages/DefensePipeline.tsx`: Visualizes the 3-Layer Defense. Maps Layer 1, 2, and 3 passing/quarantine rates using custom `<BorderTrail>` Framer Motion animations.
-  - `src/pages/AttackPlayground.tsx`: Uses a dynamically generated $14\times14$ CSS grid to visually simulate the Backdoor trigger matrix mapping on edge clients.
-  - `src/pages/Configuration.tsx`: The interactive hyperparameter tuning bay. Maps UI slider states directly to the Pydantic schemas in `backend_api/schemas.py`, adjusting FL learning rates and defense sensitivity live.
+### 7. `frontend/` (The React 18 Cyber-Console)
+* **Tech Stack**: React 18, Vite, TypeScript, Tailwind CSS, Framer Motion, Recharts.
+  - `src/App.tsx`: Root application shell with ambient cyber backdrop, router, and global telemetry sync.
+  - `src/components/common/AuthBadgeModal.tsx`: Zero-Trust Access Gateway modal with instant demo logins and stable hover states.
+  - `src/components/common/StartupScreen.tsx`: Modernized terminal boot screen matching the dark-cyber cyan/purple palette.
+  - `src/components/soc/SecurityOperationsCenter.tsx`: Team B SOC component rendering SHA-256 audit logs, active incidents, and threat factor breakdowns.
+  - `src/pages/SecurityIntelligence.tsx`: Dual-tab operations center housing the Team B SOC and Team A Trust Engine.
+  - `src/pages/LiveAttackArena.tsx`: Comprehensive attack simulation arena with step-by-step playback controls and client dossiers.
+  - `src/pages/DefensePipeline.tsx`: 3-Layer defense visualization with animated `<BorderTrail>` indicators.
+  - `src/pages/AttackPlayground.tsx`: Interactive $14\times14$ pixel-grid trigger matrix.
+  - `src/pages/Configuration.tsx`: 11 live hyperparameter range sliders with purple-to-cyan gradient tracks.
+
+### 8. `dashboard/` (Streamlit Forensic Suite)
+* **Tech Stack**: Streamlit, Plotly, Pandas.
+  - `security_soc.py`: Standalone Team B Security Operations Center.
+  - `security_intelligence.py`: Team A Client Trust Spectrum and Adaptive Defense dashboard.
+  - `simulation_arena.py`: Standalone Live Attack Arena forensic replay interface.
+  - `app.py`: Central multi-page Streamlit portal uniting all operational pages.
 
 ---
 
