@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import type { ArenaClientRecord } from "../../types/telemetry";
 
 interface Props {

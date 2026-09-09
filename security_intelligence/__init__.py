@@ -16,7 +16,7 @@ from .contracts.security_decision import TrustUpdate, SecurityDecision
 from .contracts.events import EventType, Severity, SecurityEvent
 from .adapters.pipeline_adapter import PipelineAdapter
 from .trust_engine import ClientTrustEngine, TrustLevel
-from .adaptive_defense import AdaptiveDefenseOrchestrator, RoutingAction
+from .adaptive_defense import AdaptiveDefenseOrchestrator, RoutingAction, ThreatLevel
 
 # Team B bundle (lazy-safe: only fails if team_b_bundle itself is broken)
 try:
@@ -39,6 +39,7 @@ __all__ = [
     "TrustLevel",
     "AdaptiveDefenseOrchestrator",
     "RoutingAction",
+    "ThreatLevel",
     # Team B
     "TeamBBundle",
 ]

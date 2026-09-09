@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import type { ArenaSecurityEvent } from "../../types/telemetry";
 
 interface AlertBannerProps {

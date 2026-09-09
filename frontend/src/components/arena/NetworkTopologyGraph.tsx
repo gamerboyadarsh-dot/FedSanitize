@@ -1,4 +1,4 @@
-﻿/**
+/**
  * NetworkTopologyGraph — SVG Radial Network Topology
  * Mirrors the Plotly network graph from the Streamlit arena.
  * Central FED SERVER + 10 client nodes in deterministic radial layout.

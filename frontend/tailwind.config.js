@@ -8,44 +8,44 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#050508',
+        background: '#000000',
         surface: {
-          DEFAULT: '#0C1E3E',
-          elevated: '#12264D',
+          DEFAULT: '#09090b', // zinc-950
+          elevated: '#18181b', // zinc-900
         },
         border: {
-          DEFAULT: 'rgba(56, 251, 219, 0.15)',
-          active: 'rgba(56, 251, 219, 0.5)',
+          DEFAULT: 'rgba(255, 255, 255, 0.1)',
+          active: 'rgba(255, 255, 255, 0.25)',
           cyan: '#38FBDB',
           purple: '#8E52F5',
         },
         text: {
-          primary: '#E8F1F5',
-          secondary: '#7B8AA3',
+          primary: '#fafafa',
+          secondary: '#a1a1aa',
         },
         primary: {
-          DEFAULT: '#38FBDB',
-          hover: '#5effe3',
-          glow: 'rgba(56, 251, 219, 0.45)',
+          DEFAULT: '#ffffff',
+          hover: '#f4f4f5',
+          glow: 'rgba(255, 255, 255, 0.1)',
         },
         secondary: {
-          DEFAULT: '#8E52F5',
-          hover: '#a26eff',
-          glow: 'rgba(142, 82, 245, 0.45)',
+          DEFAULT: '#a1a1aa',
+          hover: '#d4d4d8',
+          glow: 'rgba(161, 161, 170, 0.1)',
         },
         accent: {
-          cyan: '#38FBDB',
+          cyan: '#38FBDB', // keep for chart lines
           purple: '#8E52F5',
-          safe: '#20D9A0',
-          warning: '#F5A623',
-          danger: '#FF3B5C',
-          red: '#FF3B5C',
-          'red-hover': '#ff637e',
-          'red-glow': 'rgba(255, 59, 92, 0.45)',
+          safe: '#10b981', // modern emerald
+          warning: '#f59e0b', // modern amber
+          danger: '#ef4444', // modern red
+          red: '#ef4444',
+          'red-hover': '#f87171',
+          'red-glow': 'rgba(239, 68, 68, 0.15)',
         },
         hover: {
-          border: '#38FBDB',
-          surface: '#142952',
+          border: 'rgba(255, 255, 255, 0.2)',
+          surface: '#27272a',
         }
       },
       fontFamily: {
@@ -53,11 +53,11 @@ export default {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        'glow-cyan': '0 0 16px rgba(56, 251, 219, 0.5)',
-        'glow-cyan-lg': '0 0 24px rgba(56, 251, 219, 0.7)',
-        'glow-purple': '0 0 16px rgba(142, 82, 245, 0.5)',
-        'glow-red': '0 0 16px rgba(255, 59, 92, 0.5)',
-        'glow-green': '0 0 16px rgba(32, 217, 160, 0.5)',
+        'glow-cyan': '0 0 16px rgba(56, 251, 219, 0.1)',
+        'glow-cyan-lg': '0 0 24px rgba(56, 251, 219, 0.2)',
+        'glow-purple': '0 0 16px rgba(142, 82, 245, 0.1)',
+        'glow-red': '0 0 16px rgba(255, 59, 92, 0.1)',
+        'glow-green': '0 0 16px rgba(32, 217, 160, 0.1)',
       }
     },
   },

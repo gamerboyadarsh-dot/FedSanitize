@@ -1,4 +1,4 @@
-﻿/**
+/**
  * LiveAttackArena — React mirror of dashboard/simulation_arena.py
  * ==================================================================
  * Full interactive forensic replay & cybersecurity simulation page.

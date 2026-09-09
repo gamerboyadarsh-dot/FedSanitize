@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import type { ArenaTimelineStep } from "../../types/telemetry";
 
 interface Props {

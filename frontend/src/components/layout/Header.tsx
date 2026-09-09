@@ -44,50 +44,6 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
         </div>
-
-        {roundNum > 0 && (
-          <div className="flex items-center gap-6 border-l border-border pl-6">
-            {/* Round Stat */}
-            <div className="flex flex-col whitespace-nowrap">
-              <span className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
-                ROUND
-              </span>
-              <span className="text-sm font-mono font-bold text-primary">
-                <SlidingNumber value={roundNum} />
-              </span>
-            </div>
-
-            {/* Clean Acc Stat */}
-            <div className="flex flex-col whitespace-nowrap">
-              <span className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
-                CLEAN ACCURACY
-              </span>
-              <span className="text-sm font-mono font-bold text-accent-safe">
-                <SlidingNumber value={cleanAcc} decimalPlaces={1} suffix="%" />
-              </span>
-            </div>
-
-            {/* Backdoor ASR Stat */}
-            <div className="flex flex-col whitespace-nowrap">
-              <span className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
-                BACKDOOR ASR
-              </span>
-              <span className={`text-sm font-mono font-bold ${asr < 2.0 ? "text-accent-safe" : "text-accent-danger"}`}>
-                <SlidingNumber value={asr} decimalPlaces={2} suffix="%" />
-              </span>
-            </div>
-
-            {/* Quarantined Count */}
-            <div className="flex flex-col whitespace-nowrap">
-              <span className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
-                QUARANTINED
-              </span>
-              <span className="text-sm font-mono font-bold text-accent-danger">
-                <SlidingNumber value={totalQuarantined} suffix=" Nodes" />
-              </span>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Right: Action Buttons with whitespace-nowrap & consistent h-9 */}
