@@ -2,12 +2,49 @@
 FedSanitize — Security Intelligence: Output Decision Contracts
 ==============================================================
 Defines TrustUpdate (Feature 1 output) and SecurityDecision (Feature 2 output).
-Both are pure dataclasses with no external dependencies.
+Also defines RiskLevel, TeamATrustInput, TeamARiskInput used by Team B modules.
+All are pure dataclasses with no external dependencies.
 """
 
 from __future__ import annotations
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any, Dict, List, Optional
+
+
+class RiskLevel(str, Enum):
+    """Risk level enum shared between Team A (source) and Team B (consumer)."""
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    CRITICAL = "CRITICAL"
+
+
+@dataclass
+class TeamATrustInput:
+    """Optional normalized trust info injected by Team A when available."""
+    client_id: Optional[str] = None
+    trust_score: Optional[float] = None       # 0-100
+    trust_level: Optional[str] = None         # TRUSTED / MONITORED / ...
+    last_updated_round: Optional[int] = None
+
+    def is_present(self) -> bool:
+        return self.trust_score is not None or self.trust_level is not None
+
+
+@dataclass
+class TeamARiskInput:
+    """Optional normalized risk/routing info injected by Team A when available."""
+    risk_level: Optional[RiskLevel] = None
+    recommended_action: Optional[str] = None
+    recommended_escalation: Optional[str] = None
+    evidence: list = field(default_factory=list)
+    confidence: Optional[float] = None
+    missing_signals: list = field(default_factory=list)
+
+    def is_present(self) -> bool:
+        return self.risk_level is not None
+
 
 
 @dataclass

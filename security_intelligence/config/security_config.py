@@ -150,3 +150,90 @@ class SecurityIntelligenceConfig:
 
 # Default singleton — import in any module that needs config
 DEFAULT_SECURITY_CONFIG = SecurityIntelligenceConfig()
+
+
+# ===================================================================
+# Team B Security Configuration Support
+# ===================================================================
+import os
+
+_DEFAULT_TEAM_B_PATH = os.path.join(os.path.dirname(__file__), "default_security.yaml")
+
+
+def _minimal_yaml_fallback_note() -> dict:
+    return {
+        "audit": {
+            "storage_backend": "jsonl",
+            "storage_path": "security_intelligence_data/audit_log.jsonl",
+        },
+        "incident_response": {
+            "low": {"action": "MONITOR", "duration_rounds": None, "requires_review": False},
+            "medium": {"action": "REDUCE_WEIGHT", "duration_rounds": 3, "requires_review": False},
+            "high": {"action": "TEMPORARY_ISOLATE", "duration_rounds": 5, "requires_review": True},
+            "critical": {"action": "QUARANTINE", "duration_rounds": 10, "requires_review": True},
+            "fallback_thresholds": {
+                "mars_severity_high": 0.7,
+                "mars_severity_critical": 0.9,
+                "layer1_anomaly_high": 0.7,
+                "layer1_anomaly_critical": 0.9,
+                "repeated_incident_escalation_count": 2,
+            },
+            "quarantine_storage_path": "security_intelligence_data/quarantine_state.json",
+        },
+        "threat_intelligence": {
+            "weights": {
+                "malicious_client_ratio": 0.20,
+                "layer1_severity": 0.15,
+                "mars_severity": 0.20,
+                "incident_severity": 0.15,
+                "attack_success_rate": 0.15,
+                "quarantine_activity": 0.10,
+                "team_a_trust_distribution": 0.03,
+                "team_a_risk_distribution": 0.02,
+            },
+            "level_thresholds": {"medium": 30.0, "high": 60.0, "critical": 85.0},
+        },
+        "adaptive_defense": {"mode": "observe"},
+    }
+
+
+def load_security_config(path: Optional[str] = None) -> dict:
+    """Never raises: falls back to in-code defaults on any error."""
+    resolved_path = path or _DEFAULT_TEAM_B_PATH
+    try:
+        import yaml
+
+        if os.path.exists(resolved_path):
+            with open(resolved_path, "r", encoding="utf-8") as f:
+                data = yaml.safe_load(f)
+                if isinstance(data, dict):
+                    return data
+    except Exception:
+        pass
+    return _minimal_yaml_fallback_note()
+
+
+class SecurityConfig:
+    """Thin convenience wrapper for pulling out each module's sub-config (Team B)."""
+
+    def __init__(self, path: Optional[str] = None, overrides: Optional[dict] = None):
+        self.raw = load_security_config(path)
+        if overrides:
+            self.raw = {**self.raw, **overrides}
+
+    @property
+    def audit(self) -> dict:
+        return self.raw.get("audit", {})
+
+    @property
+    def incident_response(self) -> dict:
+        return self.raw.get("incident_response", {})
+
+    @property
+    def threat_intelligence(self) -> dict:
+        return self.raw.get("threat_intelligence", {})
+
+    @property
+    def adaptive_defense_mode(self) -> str:
+        return self.raw.get("adaptive_defense", {}).get("mode", "observe")
+

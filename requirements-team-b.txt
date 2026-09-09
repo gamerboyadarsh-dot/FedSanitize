@@ -1,0 +1,7 @@
+# Additive dependencies for the Team B security_intelligence layer.
+# Merge these into the main project's requirements.txt — nothing here
+# should conflict with the existing FL pipeline's pinned versions.
+
+PyYAML>=6.0        # config/default_security.yaml loading (falls back gracefully if absent)
+streamlit>=1.30     # only needed to run dashboard/security_soc.py
+pytest>=7.4         # only needed to run tests/security_intelligence

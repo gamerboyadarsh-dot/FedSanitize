@@ -65,3 +65,62 @@ adaptive_defense_mode: observe
 #   trust_store_path: "./security_data/trust_store.json"
 # Leave null for in-memory only.
 trust_store_path: null
+
+# -------------------------------------------------------------------
+# Team B: Audit Trail Configuration
+# -------------------------------------------------------------------
+audit:
+  # "jsonl" (default, zero extra deps) or "memory" (no persistence at all).
+  storage_backend: jsonl
+  storage_path: "security_intelligence_data/audit_log.jsonl"
+
+# -------------------------------------------------------------------
+# Team B: Incident Response Configuration
+# -------------------------------------------------------------------
+incident_response:
+  low:
+    action: MONITOR
+    duration_rounds: null
+    requires_review: false
+  medium:
+    action: REDUCE_WEIGHT
+    duration_rounds: 3
+    requires_review: false
+  high:
+    action: TEMPORARY_ISOLATE
+    duration_rounds: 5
+    requires_review: true
+  critical:
+    action: QUARANTINE
+    duration_rounds: 10
+    requires_review: true
+
+  # Only used when Team A has not supplied a risk_level for this evidence.
+  fallback_thresholds:
+    mars_severity_high: 0.7
+    mars_severity_critical: 0.9
+    layer1_anomaly_high: 0.7
+    layer1_anomaly_critical: 0.9
+    repeated_incident_escalation_count: 2
+
+  quarantine_storage_path: "security_intelligence_data/quarantine_state.json"
+
+# -------------------------------------------------------------------
+# Team B: Threat Intelligence / SOC Configuration
+# -------------------------------------------------------------------
+threat_intelligence:
+  weights:
+    malicious_client_ratio: 0.20
+    layer1_severity: 0.15
+    mars_severity: 0.20
+    incident_severity: 0.15
+    attack_success_rate: 0.15
+    quarantine_activity: 0.10
+    team_a_trust_distribution: 0.03
+    team_a_risk_distribution: 0.02
+
+  level_thresholds:
+    medium: 30.0
+    high: 60.0
+    critical: 85.0
+

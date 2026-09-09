@@ -18,6 +18,8 @@ from dashboard import (
     render_analytics_page,
     render_config_page,
     render_security_intelligence_page,
+    render_soc_page,
+    _get_bundle,
 )
 from dashboard.theme import apply_theme, COLORS
 from services import SimulationService, ResultService
@@ -111,6 +113,7 @@ def main():
             [
                 "⚔️ Live Attack Arena",
                 "🎖️ Security Intelligence",
+                "🛡️ Security SOC",
                 "🏠 Overview",
                 "👥 Client Profiling",
                 "🛡️ 3-Layer Defense",
@@ -141,6 +144,9 @@ def main():
         render_simulation_arena_page(st.session_state)
     elif page == "🎖️ Security Intelligence":
         render_security_intelligence_page(st.session_state)
+    elif page == "🛡️ Security SOC":
+        bundle = _get_bundle()
+        render_soc_page(bundle)
     elif page == "🏠 Overview":
         render_overview_page(st.session_state)
     elif page == "👥 Client Profiling":
