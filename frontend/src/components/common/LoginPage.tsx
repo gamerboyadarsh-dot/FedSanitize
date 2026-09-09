@@ -1,4 +1,4 @@
-ï»¿import React, { useState } from "react";
+import React, { useState } from "react";
 import {
   ShieldCheck, Key, Lock, User, Server,
   AlertCircle, CheckCircle2, Eye, EyeOff,
@@ -91,9 +91,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onAuthenticated, onGuest }
 
           <div className="flex flex-col gap-3 w-full">
             {[
-              { icon: "ðŸ›¡ï¸", text: "Multi-Layer Byzantine Defense" },
-              { icon: "ðŸ”", text: "MARS Backdoor Forensics" },
-              { icon: "ðŸ”", text: "JWT Role-Based Access Control" },
+              { icon: "???", text: "Multi-Layer Byzantine Defense" },
+              { icon: "??", text: "MARS Backdoor Forensics" },
+              { icon: "??", text: "JWT Role-Based Access Control" },
             ].map((f) => (
               <div key={f.text} className="flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm"
                 style={{ background: "rgba(56,251,219,0.06)", border: "1px solid rgba(56,251,219,0.12)", color: "#b0c8d4" }}>
@@ -160,7 +160,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onAuthenticated, onGuest }
                       style={{ border: "1.5px solid #e2e8f0", background: "#fff", color: "#0f172a" }}
                       onFocus={(e) => (e.target.style.borderColor = "#38fbdb")}
                       onBlur={(e) => (e.target.style.borderColor = "#e2e8f0")}
-                      placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" autoComplete="current-password" />
+                      placeholder="••••••••" autoComplete="current-password" />
                     <button type="button" onClick={() => setShowAdminPass((v) => !v)}
                       className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: "#94a3b8" }}>
                       {showAdminPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -187,7 +187,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onAuthenticated, onGuest }
                       style={{ border: "1.5px solid #e2e8f0", background: "#fff", color: "#0f172a" }}
                       onFocus={(e) => (e.target.style.borderColor = "#38fbdb")}
                       onBlur={(e) => (e.target.style.borderColor = "#e2e8f0")}
-                      placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+                      placeholder="••••••••••••••" />
                     <button type="button" onClick={() => setShowClientSecret((v) => !v)}
                       className="absolute right-3 top-1/2 -translate-y-1/2" style={{ color: "#94a3b8" }}>
                       {showClientSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}

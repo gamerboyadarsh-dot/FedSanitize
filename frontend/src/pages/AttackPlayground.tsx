@@ -48,7 +48,7 @@ export const AttackPlayground: React.FC<AttackPlaygroundProps> = ({ clients, onR
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-surface border border-border rounded-xl p-5 threat-card flex items-center justify-between">
+      <div className="bg-surface border border-border rounded-xl p-5  flex items-center justify-between">
         <div>
           <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary flex items-center gap-2">
             <Swords className="w-4 h-4 text-primary" />
@@ -65,7 +65,7 @@ export const AttackPlayground: React.FC<AttackPlaygroundProps> = ({ clients, onR
 
       <AnimatedGroup className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Threat Assignment Studio */}
-        <div className="lg:col-span-2 bg-surface border border-border rounded-xl p-5 threat-card space-y-5">
+        <div className="lg:col-span-2 bg-surface border border-border rounded-xl p-5  space-y-5">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-text-primary flex items-center gap-2">
               <Target className="w-4 h-4 text-primary" />
@@ -154,7 +154,7 @@ export const AttackPlayground: React.FC<AttackPlaygroundProps> = ({ clients, onR
             <button
               onClick={handleApplyAttack}
               disabled={isUpdating}
-              className="threat-btn-primary px-5 py-2 rounded-lg font-mono text-xs font-bold flex items-center gap-2 disabled:opacity-50"
+              className="bg-white text-black hover:bg-zinc-200 border border-white/20 transition-all shadow-md px-5 py-2 rounded-lg font-mono text-xs font-bold flex items-center gap-2 disabled:opacity-50"
             >
               {isUpdating ? (
                 <>
@@ -172,7 +172,7 @@ export const AttackPlayground: React.FC<AttackPlaygroundProps> = ({ clients, onR
         </div>
 
         {/* Right Col: Backdoor Trigger Patch Visual Preview */}
-        <div className="bg-surface border border-border rounded-xl p-5 threat-card space-y-4 font-mono text-xs">
+        <div className="bg-surface border border-border rounded-xl p-5  space-y-4 font-mono text-xs">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-text-primary flex items-center gap-2">
               <AlertOctagon className="w-4 h-4 text-secondary" />

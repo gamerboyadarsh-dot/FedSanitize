@@ -36,7 +36,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
 
 
   return (
-    <aside className="w-72 bg-surface border-r border-border flex flex-col justify-between h-screen select-none shrink-0 threat-card z-20 group">
+    <aside className="w-72 bg-surface border-r border-border flex flex-col justify-between h-screen select-none shrink-0  z-20 group">
       {/* Brand Header */}
       <div>
         <div className="p-6 border-b border-border flex items-center gap-3">

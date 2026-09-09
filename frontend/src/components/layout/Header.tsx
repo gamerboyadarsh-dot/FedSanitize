@@ -53,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onLoadDemo}
           disabled={isRunning}
-          className="threat-btn-secondary h-9 px-3.5 rounded-lg disabled:opacity-50 whitespace-nowrap font-medium flex items-center justify-center shadow-sm"
+          className="bg-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-700 border border-white/10 transition-all shadow-md h-9 px-3.5 rounded-lg disabled:opacity-50 whitespace-nowrap font-medium flex items-center justify-center shadow-sm"
         >
           Load 5-Round Demo
         </button>
@@ -61,7 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onReset}
           disabled={isRunning}
-          className="threat-btn-secondary h-9 px-3.5 rounded-lg disabled:opacity-50 flex items-center gap-1.5 whitespace-nowrap font-medium shadow-sm"
+          className="bg-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-700 border border-white/10 transition-all shadow-md h-9 px-3.5 rounded-lg disabled:opacity-50 flex items-center gap-1.5 whitespace-nowrap font-medium shadow-sm"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           Reset
@@ -70,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onRunRound}
           disabled={isRunning}
-          className={`threat-btn-primary h-9 px-4 rounded-lg font-bold flex items-center gap-2 whitespace-nowrap ${
+          className={`bg-white text-black hover:bg-zinc-200 border border-white/20 transition-all shadow-md h-9 px-4 rounded-lg font-bold flex items-center gap-2 whitespace-nowrap ${
             isRunning ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >

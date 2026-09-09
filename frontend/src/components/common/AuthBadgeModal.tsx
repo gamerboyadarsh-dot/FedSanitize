@@ -210,7 +210,7 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
                   <button
                     type='button'
                     onClick={handleLogout}
-                    className='threat-btn-secondary h-8 px-3 rounded flex items-center gap-1.5 text-accent-danger border-accent-danger/30 hover:bg-accent-danger/10 text-xs shrink-0 font-bold'
+                    className='bg-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-700 border border-white/10 transition-all shadow-md h-8 px-3 rounded flex items-center gap-1.5 text-accent-danger border-accent-danger/30 hover:bg-accent-danger/10 text-xs shrink-0 font-bold'
                   >
                     <LogOut className='w-3.5 h-3.5' />
                     Logout
@@ -291,7 +291,7 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
                   <button
                     type='submit'
                     disabled={isLoading}
-                    className='threat-btn-primary flex-1 h-9 rounded font-bold flex items-center justify-center gap-2 disabled:opacity-50'
+                    className='bg-white text-black hover:bg-zinc-200 border border-white/20 transition-all shadow-md flex-1 h-9 rounded font-bold flex items-center justify-center gap-2 disabled:opacity-50'
                   >
                     <Key className='w-3.5 h-3.5' />
                     {isLoading ? 'Authenticating...' : 'Sign In as Admin'}
@@ -303,7 +303,7 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
                       setAdminPass('admin123');
                       handleAdminLogin();
                     }}
-                    className='threat-btn-secondary h-9 px-3 rounded font-medium text-text-secondary hover:text-primary whitespace-nowrap'
+                    className='bg-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-700 border border-white/10 transition-all shadow-md h-9 px-3 rounded font-medium text-text-secondary hover:text-primary whitespace-nowrap'
                   >
                     Quick Demo Admin
                   </button>
@@ -338,7 +338,7 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
                   <button
                     type='submit'
                     disabled={isLoading}
-                    className='threat-btn-primary flex-1 h-9 rounded font-bold flex items-center justify-center gap-2 disabled:opacity-50'
+                    className='bg-white text-black hover:bg-zinc-200 border border-white/20 transition-all shadow-md flex-1 h-9 rounded font-bold flex items-center justify-center gap-2 disabled:opacity-50'
                   >
                     <Key className='w-3.5 h-3.5' />
                     {isLoading ? 'Authenticating...' : 'Sign In as Client'}
@@ -350,7 +350,7 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
                       setClientSecret('clientsecret123');
                       handleClientLogin();
                     }}
-                    className='threat-btn-secondary h-9 px-3 rounded font-medium text-text-secondary hover:text-primary whitespace-nowrap'
+                    className='bg-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-700 border border-white/10 transition-all shadow-md h-9 px-3 rounded font-medium text-text-secondary hover:text-primary whitespace-nowrap'
                   >
                     Quick Demo Client (C0)
                   </button>

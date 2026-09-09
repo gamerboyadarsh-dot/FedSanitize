@@ -60,7 +60,7 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
     <div className="space-y-6">
       {/* 3-Layer Sequential Flow Banner with Ambient Spotlight */}
       <Spotlight className="rounded-xl">
-        <div className="bg-surface border border-border rounded-xl p-6 threat-card space-y-4">
+        <div className="bg-surface border border-border rounded-xl p-6  space-y-4">
         <div className="flex items-center justify-between border-b border-border/60 pb-3">
           <div>
             <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary flex items-center gap-2">
@@ -79,7 +79,7 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
         {/* 3 Layer Boxes with BorderTrail active state */}
         <AnimatedGroup className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs pt-2">
           {/* Layer 1 Box */}
-          <div className="bg-surface-elevated border border-border rounded-xl p-4 space-y-2 relative overflow-hidden threat-card">
+          <div className="bg-surface-elevated border border-border rounded-xl p-4 space-y-2 relative overflow-hidden ">
             {isRunning && <BorderTrail trailColor="#38FBDB" size={80} />}
             <div className="flex items-center justify-between">
               <span className="text-primary font-bold text-[11px] uppercase tracking-wider">
@@ -97,7 +97,7 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
           </div>
 
           {/* Layer 2 Box */}
-          <div className="bg-surface-elevated border border-border rounded-xl p-4 space-y-2 relative overflow-hidden threat-card">
+          <div className="bg-surface-elevated border border-border rounded-xl p-4 space-y-2 relative overflow-hidden ">
             {isRunning && <BorderTrail trailColor="#8E52F5" size={80} />}
             <div className="flex items-center justify-between">
               <span className="text-secondary font-bold text-[11px] uppercase tracking-wider">
@@ -115,7 +115,7 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
           </div>
 
           {/* Layer 3 Box */}
-          <div className="bg-surface-elevated border border-border rounded-xl p-4 space-y-2 relative overflow-hidden threat-card">
+          <div className="bg-surface-elevated border border-border rounded-xl p-4 space-y-2 relative overflow-hidden ">
             {isRunning && <BorderTrail trailColor="#20D9A0" size={80} />}
             <div className="flex items-center justify-between">
               <span className="text-accent-safe font-bold text-[11px] uppercase tracking-wider">
@@ -138,7 +138,7 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
       {/* Visual Analytics Grid: L2 Norm Bar Chart & MARS Distance Heatmap */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: L2 Update Norm Profile */}
-        <div className="bg-surface border border-border rounded-xl p-5 threat-card space-y-4">
+        <div className="bg-surface border border-border rounded-xl p-5  space-y-4">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div>
               <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary">
@@ -175,7 +175,7 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
         </div>
 
         {/* Right: MARS Pairwise Wasserstein Distance Matrix Heatmap */}
-        <div className="bg-surface border border-border rounded-xl p-5 threat-card space-y-4">
+        <div className="bg-surface border border-border rounded-xl p-5  space-y-4">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div>
               <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary">

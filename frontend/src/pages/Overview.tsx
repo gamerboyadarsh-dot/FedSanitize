@@ -52,7 +52,7 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
       <AnimatedGroup className="grid grid-cols-1 md:grid-cols-5 gap-4 telemetry-live">
         {/* Card 1: Current Round */}
         <GlowEffect glowColor="rgba(56, 251, 219, 0.4)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
+          <div className="bg-surface border border-border rounded-xl p-4  hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Simulation Round</span>
@@ -74,7 +74,7 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
 
         {/* Card 2: Clean Accuracy */}
         <GlowEffect glowColor="rgba(46, 204, 113, 0.4)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
+          <div className="bg-surface border border-border rounded-xl p-4  hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Clean Accuracy</span>
@@ -97,7 +97,7 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
 
         {/* Card 3: Backdoor ASR */}
         <GlowEffect glowColor="rgba(255, 59, 92, 0.4)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
+          <div className="bg-surface border border-border rounded-xl p-4  hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Backdoor ASR</span>
@@ -120,7 +120,7 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
 
         {/* Card 4: Quarantined Clients */}
         <GlowEffect glowColor="rgba(245, 166, 35, 0.4)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
+          <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Threats Isolated</span>
@@ -138,7 +138,7 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
 
         {/* Card 5: Detection F1 */}
         <GlowEffect glowColor="rgba(46, 204, 113, 0.4)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
+          <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Defense F1-Score</span>
@@ -158,7 +158,7 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
       {/* Main Charts & Telemetry Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Dual-Line Convergence Chart */}
-        <div className="lg:col-span-2 bg-surface border border-border rounded-xl p-5 threat-card space-y-4">
+        <div className="lg:col-span-2 bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl space-y-4 flex flex-col">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div>
               <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary">

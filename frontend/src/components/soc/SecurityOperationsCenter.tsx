@@ -68,7 +68,7 @@ export const SecurityOperationsCenter: React.FC<SecurityOperationsCenterProps> =
     <div className="space-y-6">
       <AnimatedGroup className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <GlowEffect glowColor="rgba(255, 59, 92, 0.35)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card h-full flex flex-col justify-between">
+          <div className="bg-surface border border-border rounded-xl p-4  h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Threat Level</span>
@@ -91,7 +91,7 @@ export const SecurityOperationsCenter: React.FC<SecurityOperationsCenterProps> =
         </GlowEffect>
 
         <GlowEffect glowColor="rgba(56, 251, 219, 0.35)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card h-full flex flex-col justify-between">
+          <div className="bg-surface border border-border rounded-xl p-4  h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Signal Coverage</span>
@@ -113,7 +113,7 @@ export const SecurityOperationsCenter: React.FC<SecurityOperationsCenterProps> =
         </GlowEffect>
 
         <GlowEffect glowColor="rgba(32, 217, 160, 0.35)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card h-full flex flex-col justify-between">
+          <div className="bg-surface border border-border rounded-xl p-4  h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Audit Chain Hash</span>
@@ -135,7 +135,7 @@ export const SecurityOperationsCenter: React.FC<SecurityOperationsCenterProps> =
         </GlowEffect>
 
         <GlowEffect glowColor="rgba(245, 166, 35, 0.35)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card h-full flex flex-col justify-between">
+          <div className="bg-surface border border-border rounded-xl p-4  h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Incident Response</span>
@@ -158,7 +158,7 @@ export const SecurityOperationsCenter: React.FC<SecurityOperationsCenterProps> =
       </AnimatedGroup>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-surface border border-border rounded-xl p-5 threat-card space-y-4">
+        <div className="bg-surface border border-border rounded-xl p-5  space-y-4">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div className="flex items-center gap-2">
               <Layers className="w-4 h-4 text-primary" />
@@ -209,7 +209,7 @@ export const SecurityOperationsCenter: React.FC<SecurityOperationsCenterProps> =
           )}
         </div>
 
-        <div className="bg-surface border border-border rounded-xl p-5 threat-card space-y-4">
+        <div className="bg-surface border border-border rounded-xl p-5  space-y-4">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div className="flex items-center gap-2">
               <Lock className="w-4 h-4 text-amber-400" />
@@ -274,7 +274,7 @@ export const SecurityOperationsCenter: React.FC<SecurityOperationsCenterProps> =
         </div>
       </div>
 
-      <div className="bg-surface border border-border rounded-xl p-5 threat-card space-y-4">
+      <div className="bg-surface border border-border rounded-xl p-5  space-y-4">
         <div className="flex items-center justify-between border-b border-border/60 pb-3">
           <div className="flex items-center gap-2">
             <FileCheck2 className="w-4 h-4 text-accent-safe" />

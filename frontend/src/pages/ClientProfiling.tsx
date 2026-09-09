@@ -21,7 +21,7 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
   return (
     <div className="space-y-6">
       {/* Header Info */}
-      <div className="flex items-center justify-between bg-surface border border-border rounded-xl p-5 threat-card">
+      <div className="flex items-center justify-between bg-surface border border-border rounded-xl p-5 ">
         <div>
           <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary flex items-center gap-2">
             <Users className="w-4 h-4 text-primary" />
@@ -45,7 +45,7 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
 
       <AnimatedGroup className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: 10-Client Interactive Cohort Table */}
-        <div className="lg:col-span-2 bg-surface border border-border rounded-xl overflow-hidden threat-card">
+        <div className="lg:col-span-2 bg-surface border border-border rounded-xl overflow-hidden ">
           <div className="p-4 border-b border-border flex items-center justify-between">
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-text-primary">
               Client Telemetry Roster
@@ -79,7 +79,7 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
                     <tr
                       key={c.client_id}
                       onClick={() => setSelectedClientId(c.client_id)}
-                      className={`threat-table-row cursor-pointer transition-colors duration-200 ${
+                      className={`group hover:bg-white/5 transition-colors border-l-2 border-transparent hover:border-white cursor-pointer transition-colors duration-200 ${
                         isSelected 
                           ? "bg-primary/5 border-l-4 border-primary" 
                           : "border-l-4 border-transparent hover:bg-white/[0.02]"
@@ -129,7 +129,7 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
         </div>
 
         {/* Right Col: Deep-Dive Inspector for Selected Client */}
-        <div className="bg-surface border border-border rounded-xl p-5 threat-card space-y-4">
+        <div className="bg-surface border border-border rounded-xl p-5  space-y-4">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div className="flex items-center gap-2">
               <Crosshair className="w-4 h-4 text-primary" />
