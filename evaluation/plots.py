@@ -177,9 +177,8 @@ def plot_mars_distance_heatmap(
         x=labels, y=labels,
         colorscale=PLOTLY_HEATMAP_SCALE,
         colorbar=dict(
-            title="Wasserstein Dist",
+            title=dict(text="Wasserstein Dist", font=dict(color=COLORS["cyan"])),
             tickfont=dict(color=COLORS["text_muted"]),
-            titlefont=dict(color=COLORS["cyan"]),
         ),
     ))
 
