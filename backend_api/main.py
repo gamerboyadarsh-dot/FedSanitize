@@ -31,6 +31,16 @@ from backend_api.schemas import (
     ClientSummary,
 )
 
+# Team A Security Intelligence & Auth Integration
+from backend_api.auth import auth_router
+from backend_api.auth.bootstrap import bootstrap_auth
+from security_intelligence import (
+    PipelineAdapter,
+    ClientTrustEngine,
+    AdaptiveDefenseOrchestrator,
+    SecurityContext,
+)
+
 app = FastAPI(
     title="FedSanitize Threat-Defense API",
     version="1.0.0",
@@ -45,6 +55,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Initialize Auth Subsystem
+try:
+    bootstrap_auth()
+except Exception as _e:
+    print(f"[AUTH] Bootstrap notice: {_e}")
+app.include_router(auth_router)
+
 
 
 class StateManager:
@@ -97,6 +115,26 @@ class StateManager:
             except Exception:
                 self.experiment_history = []
 
+        self.trust_engine = ClientTrustEngine()
+        self.orchestrator = AdaptiveDefenseOrchestrator()
+        self.security_decisions: List[Dict[str, Any]] = []
+
+        # If demo history loaded, seed trust engine and orchestrator
+        if self.experiment_history:
+            self.eval_security_intelligence_for_history()
+
+    def eval_security_intelligence_for_history(self):
+        """Processes historical rounds through Security Intelligence components."""
+        for rec in self.experiment_history:
+            try:
+                contexts, _ = PipelineAdapter.from_round_record(rec)
+                for ctx in contexts:
+                    self.trust_engine.update(ctx)
+                decision = self.orchestrator.evaluate_round(contexts, trust_engine=self.trust_engine)
+                self.security_decisions.append(decision.to_dict())
+            except Exception as e:
+                print(f"[SEC_INTEL] History replay warning: {e}")
+
     def rebuild_clients(self):
         """Builds FLClient instances with their configured attack designations."""
         self.clients = []
@@ -111,6 +149,7 @@ class StateManager:
                 attack_type=atk
             )
             self.clients.append(client)
+
 
 
 state = StateManager()
@@ -249,6 +288,22 @@ def run_simulation_round():
         custom_attack_mapping=state.client_attack_mapping,
     )
     state.experiment_history.append(record)
+
+    # Process Security Intelligence for this round
+    try:
+        contexts, _ = PipelineAdapter.from_round_record(record)
+        trust_updates = []
+        for ctx in contexts:
+            upd = state.trust_engine.update(ctx)
+            trust_updates.append(upd.to_dict())
+        decision = state.orchestrator.evaluate_round(contexts, trust_engine=state.trust_engine)
+        decision_dict = decision.to_dict()
+        decision_dict["trust_updates"] = trust_updates
+        state.security_decisions.append(decision_dict)
+        record["security_intelligence"] = decision_dict
+    except Exception as e:
+        print(f"[SEC_INTEL] Processing warning on round {round_num}: {e}")
+
     return record
 
 
@@ -259,6 +314,9 @@ def reset_simulation():
     state.server = FLServer(device=state.config.system.device)
     state.sim_service = SimulationService(server=state.server, config=state.config)
     state.rebuild_clients()
+    state.trust_engine.reset()
+    state.orchestrator = AdaptiveDefenseOrchestrator()
+    state.security_decisions = []
     return {"status": "success", "message": "Simulation reset successfully", "round": 0}
 
 
@@ -276,6 +334,11 @@ def load_demo_experiment():
         demo_data = json.load(f)
 
     state.experiment_history = demo_data
+    state.trust_engine.reset()
+    state.orchestrator = AdaptiveDefenseOrchestrator()
+    state.security_decisions = []
+    state.eval_security_intelligence_for_history()
+
     return {
         "status": "success",
         "message": f"Loaded {len(demo_data)} demo rounds successfully",
@@ -288,3 +351,54 @@ def load_demo_experiment():
 def get_experiment_history():
     """Returns cumulative round-by-round experiment history."""
     return state.experiment_history
+
+
+# ---------------------------------------------------------------------------
+# Team A: Security Intelligence Endpoints
+# ---------------------------------------------------------------------------
+
+@app.get("/security/summary")
+def get_security_summary():
+    """Returns combined trust and adaptive defense status."""
+    trust_summary = state.trust_engine.get_summary()
+    latest_decision = state.orchestrator.get_last_decision()
+    threat_trend = state.orchestrator.get_threat_trend()
+    active_defenses = state.orchestrator.get_active_defenses()
+
+    return {
+        "trust_summary": trust_summary,
+        "latest_decision": latest_decision.to_dict() if latest_decision else None,
+        "threat_trend": threat_trend,
+        "is_escalated": state.orchestrator.is_escalated(),
+        "mode": state.orchestrator.get_mode(),
+        "active_defenses": active_defenses,
+    }
+
+
+@app.get("/security/clients/trust")
+def get_all_client_trust():
+    """Returns current trust records for all tracked edge clients."""
+    records = state.trust_engine.get_all_clients()
+    return [r.to_dict() for r in records]
+
+
+@app.get("/security/clients/{client_id}/trust")
+def get_client_trust(client_id: str):
+    """Returns trust dossier for a specific client."""
+    rec = state.trust_engine.get_client(client_id)
+    if not rec:
+        # Check alternative casing
+        rec = state.trust_engine.get_client(client_id.upper())
+    if not rec:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No trust record for client '{client_id}'"
+        )
+    return rec.to_dict()
+
+
+@app.get("/security/decisions")
+def get_security_decisions():
+    """Returns historical security decisions generated by the Adaptive Defense Orchestrator."""
+    return state.security_decisions
+

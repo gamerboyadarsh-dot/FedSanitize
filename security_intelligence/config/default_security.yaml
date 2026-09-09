@@ -1,0 +1,67 @@
+# FedSanitize — Security Intelligence Default Configuration
+# ==========================================================
+# Edit these values to tune trust scoring and adaptive defense thresholds.
+# All values match SecurityIntelligenceConfig dataclass defaults.
+
+# -------------------------------------------------------------------
+# Feature 1: Client Trust & Reputation Engine
+# -------------------------------------------------------------------
+
+# Starting trust score for newly-seen clients (range: 0-100)
+initial_score: 75.0
+
+# Score penalties applied when defense layers flag a client
+layer1_anomaly_penalty: 10.0      # Layer 1 statistical anomaly
+mars_suspect_penalty: 20.0        # Layer 2 MARS backdoor suspect
+repeated_incident_penalty: 5.0    # Additional penalty per prior offense
+                                   # (multiplied: x1 first, x2 after 3, x3 after 6)
+quarantine_penalty: 15.0          # Applied when final_status == QUARANTINED
+
+# Score reward for a fully clean round (no L1 or MARS flags)
+clean_round_reward: 3.0
+max_reward_per_round: 3.0
+
+# -------------------------------------------------------------------
+# Trust Level Thresholds (defined in trust_models.py — not override-able)
+# -------------------------------------------------------------------
+# TRUSTED      >= 80
+# MONITORED    >= 60
+# SUSPICIOUS   >= 40
+# HIGH_RISK    >= 20
+# QUARANTINED   < 20
+
+# -------------------------------------------------------------------
+# Feature 2: Adaptive Defense Orchestrator
+# -------------------------------------------------------------------
+
+# Signal weights for threat score computation (should sum to 1.0)
+w_layer1_anomaly_rate: 0.25       # Layer 1 anomaly client fraction
+w_mars_suspect_rate: 0.30         # MARS suspect client fraction
+w_mean_cbe_ratio: 0.15            # Normalized mean CBE concentration ratio
+w_trust_risk_rate: 0.20           # HIGH_RISK + QUARANTINED client fraction
+w_history_penalty: 0.10           # Escalation history penalty
+
+# Routing decision thresholds (threat_score is in [0.0, 1.0])
+escalation_threshold: 0.75        # >= → EMERGENCY_FALLBACK
+isolate_threshold: 0.50           # >= → ISOLATE_SUSPECTS
+monitoring_threshold: 0.25        # >= → HEIGHTENED_MONITORING
+                                   # <  → STANDARD
+
+# Advanced escalation guards
+escalation_requires_mars: false   # If true: EMERGENCY requires MARS to also flag suspects
+min_suspect_rate_for_escalation: 0.0  # Minimum MARS rate to allow ISOLATE/EMERGENCY
+
+# Adaptive defense mode. "observe" is the ONLY supported value in this
+# version — the orchestrator only ever recommends, it never enforces
+# (no quarantine, no forced aggregation change, no bypass of Layer 1 /
+# MARS / Layer 3). Any other value here is downgraded to "observe" with
+# a loud warning rather than silently accepted.
+adaptive_defense_mode: observe
+
+# -------------------------------------------------------------------
+# Persistence
+# -------------------------------------------------------------------
+# Set to a file path to enable JSON persistence, e.g.:
+#   trust_store_path: "./security_data/trust_store.json"
+# Leave null for in-memory only.
+trust_store_path: null

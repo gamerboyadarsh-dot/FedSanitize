@@ -1,4 +1,4 @@
-﻿"""
+"""
 FedSanitize — Evaluation: Interactive Plotly Visualizations
 ==========================================================
 All figures use the shared dark template defined in dashboard/theme.py.
@@ -12,14 +12,58 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 
-from dashboard.theme import COLORS, PLOTLY_SERIES, PLOTLY_HEATMAP_SCALE, get_plotly_layout_defaults
+# Shared dark styling constants for evaluation plots
+COLORS = {
+    "void_black": "#050508",
+    "midnight_blue": "#0C1E3E",
+    "cyan": "#38FBDB",
+    "purple": "#8E52F5",
+    "text_primary": "#E8F1F5",
+    "text_muted": "#7B8AA3",
+    "success": "#20D9A0",
+    "danger": "#FF3B5C",
+    "warning": "#F5A623",
+    "border_dim": "rgba(56,251,219,0.15)",
+    "border_bright": "#38FBDB",
+}
+PLOTLY_SERIES = ["#38FBDB", "#8E52F5", "#7B8AA3", "#20D9A0", "#FF3B5C"]
+PLOTLY_HEATMAP_SCALE = [
+    [0.0, "#050508"],
+    [0.25, "#0C1E3E"],
+    [0.5, "#8E52F5"],
+    [0.75, "#38FBDB"],
+    [1.0, "#E8F1F5"],
+]
 
 
 def _base_layout(**extra) -> dict:
     """Merge shared layout defaults with any figure-specific overrides."""
-    d = get_plotly_layout_defaults()
+    d = dict(
+        paper_bgcolor=COLORS["void_black"],
+        plot_bgcolor=COLORS["void_black"],
+        font=dict(color=COLORS["text_primary"], family="monospace"),
+        title_font=dict(color=COLORS["cyan"], family="monospace"),
+        xaxis=dict(
+            gridcolor="rgba(56,251,219,0.10)",
+            zerolinecolor="rgba(56,251,219,0.20)",
+            tickfont=dict(color=COLORS["text_muted"]),
+        ),
+        yaxis=dict(
+            gridcolor="rgba(56,251,219,0.10)",
+            zerolinecolor="rgba(56,251,219,0.20)",
+            tickfont=dict(color=COLORS["text_muted"]),
+        ),
+        legend=dict(
+            bgcolor="rgba(12,30,62,0.8)",
+            bordercolor=COLORS["border_dim"],
+            borderwidth=1,
+            font=dict(color=COLORS["text_primary"]),
+        ),
+        margin=dict(l=40, r=40, t=50, b=40),
+    )
     d.update(extra)
     return d
+
 
 
 def plot_accuracy_curve(

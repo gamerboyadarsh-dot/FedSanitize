@@ -9,11 +9,12 @@ import {
   Sliders, 
   Cpu, 
   Database, 
-  BookOpen 
+  BookOpen,
+  Award
 } from "lucide-react";
 import { AnimatedBackground } from "../core/AnimatedBackground";
 
-export type NavPage = "overview" | "clients" | "defense" | "attacks" | "analytics" | "config";
+export type NavPage = "overview" | "clients" | "defense" | "attacks" | "analytics" | "security-intelligence" | "config";
 
 interface SidebarProps {
   currentPage: NavPage;
@@ -28,8 +29,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
     { id: "defense", label: "3-Layer Defense", icon: ShieldCheck },
     { id: "attacks", label: "Attack Playground", icon: Swords },
     { id: "analytics", label: "Comparative Analytics", icon: BarChart3 },
+    { id: "security-intelligence", label: "Security Intelligence", icon: Award },
     { id: "config", label: "System Configuration", icon: Sliders },
   ];
+
 
   return (
     <aside className="w-72 bg-surface border-r border-border flex flex-col justify-between h-screen select-none shrink-0 threat-card z-20 group">

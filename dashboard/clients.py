@@ -85,5 +85,20 @@ def render_clients_page(session_state):
     c2.metric("Cosine Sim to Median", f"{c_rec.get('cosine_similarity', 0.0):.4f}")
     c3.metric("Final Security Status", c_rec.get("final_status", "TRUSTED"))
 
+    # Team A Feature 1 Trust Score Integration
+    try:
+        from security_intelligence import ClientTrustEngine, PipelineAdapter
+        if "arena_trust_engine" in st.session_state:
+            t_eng = st.session_state["arena_trust_engine"]
+            tr_rec = t_eng.get_client(inspected_cid)
+            if tr_rec:
+                t1, t2, t3 = st.columns(3)
+                t1.metric("🛡️ Trust Score (F1)", f"{tr_rec.trust_score:.1f} / 100")
+                t2.metric("Reputation Tier", tr_rec.trust_level)
+                t3.metric("Clean Rounds Streak", tr_rec.clean_round_count)
+    except Exception:
+        pass
+
     st.markdown(f"**Layer 1 Explanation:** `{c_rec.get('layer1_reason', 'N/A')}`")
     st.markdown(f"**MARS Explanation:** `{c_rec.get('mars_reason', 'N/A')}`")
+

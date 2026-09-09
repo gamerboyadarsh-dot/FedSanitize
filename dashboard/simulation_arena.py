@@ -372,12 +372,13 @@ ENGINE ACTIVE & READY
     # -----------------------------------------------------------------
     render_html("<hr style='border-color: #30363D; margin: 20px 0;'>")
 
-    tab_story, tab_forensics, tab_l1, tab_mars, tab_agg = st.tabs([
+    tab_story, tab_forensics, tab_l1, tab_mars, tab_agg, tab_intel = st.tabs([
         "📜 Attack Scenario Storyline",
         "🔬 Client Forensic Dossier",
         "🛡️ Layer 1 Anomaly Analytics",
         "🧬 MARS Backdoor Forensics (NeurIPS 2025)",
         "⚖️ Robust Aggregation & Benchmark",
+        "🎖️ Security Intelligence (F1 & F2)",
     ])
 
     with tab_story:
@@ -488,3 +489,83 @@ ENGINE ACTIVE & READY
                     trusted_clients=trusted_clients,
                 )
             )
+
+    with tab_intel:
+        st.markdown("### 🎖️ Security Intelligence: Trust Engine (F1) & Adaptive Defense (F2)")
+        st.caption("Team A architecture: Dynamic client reputation scoring, stateful trust memory, and multi-signal risk routing.")
+
+        try:
+            from security_intelligence import PipelineAdapter, ClientTrustEngine, AdaptiveDefenseOrchestrator
+            
+            # Use session state cached trust engine & orchestrator
+            if "arena_trust_engine" not in st.session_state:
+                st.session_state["arena_trust_engine"] = ClientTrustEngine()
+            if "arena_orchestrator" not in st.session_state:
+                st.session_state["arena_orchestrator"] = AdaptiveDefenseOrchestrator()
+
+            t_engine: ClientTrustEngine = st.session_state["arena_trust_engine"]
+            orch: AdaptiveDefenseOrchestrator = st.session_state["arena_orchestrator"]
+
+            # Process active round
+            contexts, warnings = PipelineAdapter.from_round_record(active_rec)
+            for ctx in contexts:
+                t_engine.update(ctx)
+            current_decision = orch.evaluate_round(contexts, trust_engine=t_engine)
+            dec_dict = current_decision.to_dict()
+
+            # Top Metrics
+            i_m1, i_m2, i_m3, i_m4 = st.columns(4)
+            i_m1.metric("Threat Level", dec_dict.get("threat_level", "LOW"), f"Score: {dec_dict.get('threat_score', 0.0):.2f}")
+            i_m2.metric("Routing Decision", dec_dict.get("routing_action", "STANDARD"))
+            i_m3.metric("Policy Mode", dec_dict.get("mode", "observe").upper(), "Non-binding")
+            i_m4.metric("Incident Escalated", "🚨 YES" if dec_dict.get("escalation_triggered") else "✅ NO")
+
+            st.markdown(f"**Orchestrator Rationale:** `{dec_dict.get('reason', 'Normal round profile.')}`")
+            st.markdown(f"**Recommended Aggregation Policy:** `{dec_dict.get('aggregation_recommendation', 'USE_DEFAULT_AGGREGATION')}`")
+
+            # Client Trust Spectrum
+            st.markdown("#### 🛡️ Client Trust Spectrum (Feature 1)")
+            all_trust = t_engine.get_all_clients()
+            if all_trust:
+                import pandas as pd
+                trust_data = []
+                for tr in all_trust:
+                    trust_data.append({
+                        "Client ID": tr.client_id,
+                        "Trust Score": round(tr.trust_score, 1),
+                        "Reputation Tier": tr.trust_level,
+                        "L1 Anomalies": tr.anomaly_count,
+                        "MARS Incidents": tr.mars_incident_count,
+                        "Clean Rounds": tr.clean_round_count,
+                        "Total Penalties": tr.incident_count,
+                    })
+                df_trust = pd.DataFrame(trust_data)
+                st.dataframe(df_trust, use_container_width=True)
+
+                # Visual Trust Score Chart
+                import plotly.express as px
+                fig_trust = px.bar(
+                    df_trust,
+                    x="Client ID",
+                    y="Trust Score",
+                    color="Reputation Tier",
+                    color_discrete_map={
+                        "TRUSTED": "#20D9A0",
+                        "MONITORED": "#38FBDB",
+                        "SUSPICIOUS": "#F5A623",
+                        "HIGH_RISK": "#FF3B5C",
+                        "QUARANTINED": "#D32F2F"
+                    },
+                    title="Edge Node Trust & Reputation Distribution",
+                    range_y=[0, 100]
+                )
+                fig_trust.update_layout(
+                    paper_bgcolor="#050508",
+                    plot_bgcolor="#050508",
+                    font=dict(color="#E8F1F5", family="monospace"),
+                )
+                st.plotly_chart(fig_trust, use_container_width=True)
+
+        except Exception as ex:
+            st.error(f"Security intelligence visualizer notice: {ex}")
+
