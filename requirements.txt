@@ -12,3 +12,12 @@ scikit-learn==1.5.0
 streamlit==1.36.0
 plotly==5.22.0
 matplotlib==3.9.0
+
+# Web API, Authentication & Configuration
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+pydantic>=2.7.0
+PyJWT>=2.8.0
+cryptography>=42.0.0
+PyYAML>=6.0
+
