@@ -335,7 +335,8 @@ def run_simulation_round():
         trust_updates = []
         for ctx in contexts:
             upd = state.trust_engine.update(ctx)
-            trust_updates.append(upd.to_dict())
+            if upd is not None:
+                trust_updates.append(upd.to_dict())
         decision = state.orchestrator.evaluate_round(contexts, trust_engine=state.trust_engine)
         decision_dict = decision.to_dict()
         decision_dict["trust_updates"] = trust_updates

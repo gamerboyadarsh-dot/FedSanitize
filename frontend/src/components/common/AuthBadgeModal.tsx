@@ -110,7 +110,7 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
           setSuccessMsg(null);
           setIsOpen(true);
         }}
-        className={'h-9 px-3.5 rounded-lg border font-mono text-xs flex items-center gap-2 transition-all duration-200 select-none shadow-sm ' + (
+        className={'h-9 px-3.5 rounded-lg border font-mono text-xs flex items-center gap-2 transition-colors duration-200 select-none shadow-sm ' + (
           auth
             ? auth.role === 'admin'
               ? 'border-accent-safe/60 text-accent-safe bg-accent-safe/10 hover:bg-accent-safe/25 shadow-[0_0_12px_rgba(32,217,160,0.2)]'
