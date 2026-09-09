@@ -108,6 +108,7 @@ def main():
         page = st.radio(
             "Navigation",
             [
+                "⚔️ Live Attack Arena",
                 "🏠 Overview",
                 "👥 Client Profiling",
                 "🛡️ 3-Layer Defense",
@@ -132,7 +133,10 @@ def main():
         st.markdown("<hr style='border-color:rgba(56,251,219,0.15);margin:12px 0;'/>", unsafe_allow_html=True)
         st.markdown("<p style='color:#7B8AA3;font-family:monospace;font-size:0.65rem;'>Pair programming build complete.</p>", unsafe_allow_html=True)
 
-    if page == "🏠 Overview":
+    if page == "⚔️ Live Attack Arena":
+        from dashboard import render_simulation_arena_page
+        render_simulation_arena_page(st.session_state)
+    elif page == "🏠 Overview":
         render_overview_page(st.session_state)
     elif page == "👥 Client Profiling":
         render_clients_page(st.session_state)
