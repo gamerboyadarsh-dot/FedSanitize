@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { AnimatedBackground } from "../core/AnimatedBackground";
 
-export type NavPage = "overview" | "clients" | "defense" | "attacks" | "analytics" | "config";
+export type NavPage = "overview" | "clients" | "defense" | "attacks" | "analytics" | "config" | "arena";
 
 interface SidebarProps {
   currentPage: NavPage;
@@ -28,6 +28,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
     { id: "defense", label: "3-Layer Defense", icon: ShieldCheck },
     { id: "attacks", label: "Attack Playground", icon: Swords },
     { id: "analytics", label: "Comparative Analytics", icon: BarChart3 },
+    { id: "arena", label: "Live Attack Arena", icon: ShieldAlert },
     { id: "config", label: "System Configuration", icon: Sliders },
   ];
 

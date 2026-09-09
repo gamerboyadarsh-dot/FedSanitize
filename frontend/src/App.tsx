@@ -8,6 +8,7 @@ import { DefensePipeline } from "./pages/DefensePipeline";
 import { AttackPlayground } from "./pages/AttackPlayground";
 import { Analytics } from "./pages/Analytics";
 import { Configuration } from "./pages/Configuration";
+import { LiveAttackArena } from "./pages/LiveAttackArena";
 import { StartupScreen } from "./components/common/StartupScreen";
 import { TransitionPanel } from "./components/core/TransitionPanel";
 import type { RoundRecord, ClientSummary } from "./types/telemetry";
@@ -19,7 +20,7 @@ import {
   loadDemo 
 } from "./api/client";
 
-const pageOrder: NavPage[] = ["overview", "clients", "defense", "attacks", "analytics", "config"];
+const pageOrder: NavPage[] = ["overview", "clients", "defense", "attacks", "analytics", "arena", "config"];
 
 export function App() {
   const [currentPage, setCurrentPage] = useState<NavPage>("overview");
@@ -145,6 +146,7 @@ export function App() {
             <DefensePipeline latestRound={latestRound} isRunning={isRunning} />
             <AttackPlayground clients={clients} onRefreshClients={refreshData} />
             <Analytics history={history} latestRound={latestRound} />
+            <LiveAttackArena />
             <Configuration />
           </TransitionPanel>
         </main>
