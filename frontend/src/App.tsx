@@ -11,8 +11,10 @@ import { Configuration } from "./pages/Configuration";
 import { SecurityIntelligence } from "./pages/SecurityIntelligence";
 import { LiveAttackArena } from "./pages/LiveAttackArena";
 import { StartupScreen } from "./components/common/StartupScreen";
+import { LoginPage } from "./components/common/LoginPage";
 import { TransitionPanel } from "./components/core/TransitionPanel";
 import type { RoundRecord, ClientSummary } from "./types/telemetry";
+import { getAuth } from "./api/auth";
 import { 
   fetchHistory, 
   fetchClients, 
@@ -30,6 +32,8 @@ export function App() {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isInitializing, setIsInitializing] = useState<boolean>(true);
+  // Show the login page unless the user already has a stored auth token
+  const [showLogin, setShowLogin] = useState<boolean>(!getAuth());
 
   const refreshData = async () => {
     try {
@@ -105,6 +109,14 @@ export function App() {
 
   return (
     <>
+      {/* Full-page login — shown before dashboard if not authenticated */}
+      {showLogin && !isInitializing && (
+        <LoginPage
+          onAuthenticated={() => setShowLogin(false)}
+          onGuest={() => setShowLogin(false)}
+        />
+      )}
+
       <AnimatePresence mode="wait">
         {isInitializing && (
           <StartupScreen statusText={errorMsg ? "Connecting to backend gateway..." : "Cohort telemetry synchronized. Launching console..."} />
