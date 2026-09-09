@@ -32,8 +32,8 @@ export function App() {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isInitializing, setIsInitializing] = useState<boolean>(true);
-  // Show the login page unless the user already has a stored auth token
-  const [showLogin, setShowLogin] = useState<boolean>(!getAuth());
+  // Always show login page on fresh app load
+  const [showLogin, setShowLogin] = useState<boolean>(true);
 
   const refreshData = async () => {
     try {

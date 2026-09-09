@@ -25,8 +25,8 @@ interface AuthBadgeModalProps {
 }
 
 export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) => {
-  // Show authentication gateway immediately upon entering the app
-  const [isOpen, setIsOpen] = useState(true);
+  // Modal is opened by clicking the badge in the header (no longer auto-opens)
+  const [isOpen, setIsOpen] = useState(false);
   const [auth, setAuth] = useState<StoredAuth | null>(null);
   const [me, setMe] = useState<{ subject: string; role: string; client_id?: string; auth_type: string } | null>(null);
   const [activeTab, setActiveTab] = useState<'admin' | 'client'>('admin');
