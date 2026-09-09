@@ -25,7 +25,8 @@ interface AuthBadgeModalProps {
 }
 
 export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  // Show authentication gateway immediately upon entering the app
+  const [isOpen, setIsOpen] = useState(true);
   const [auth, setAuth] = useState<StoredAuth | null>(null);
   const [me, setMe] = useState<{ subject: string; role: string; client_id?: string; auth_type: string } | null>(null);
   const [activeTab, setActiveTab] = useState<'admin' | 'client'>('admin');
@@ -65,7 +66,7 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
       setTimeout(() => {
         setSuccessMsg(null);
         setIsOpen(false);
-      }, 1000);
+      }, 900);
     } catch (err: any) {
       setError(err.message || 'Admin login failed');
     } finally {
@@ -86,7 +87,7 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
       setTimeout(() => {
         setSuccessMsg(null);
         setIsOpen(false);
-      }, 1000);
+      }, 900);
     } catch (err: any) {
       setError(err.message || 'Client login failed');
     } finally {
@@ -112,15 +113,15 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
         className={'h-9 px-3.5 rounded-lg border font-mono text-xs flex items-center gap-2 transition-all duration-200 select-none shadow-sm ' + (
           auth
             ? auth.role === 'admin'
-              ? 'border-accent-safe/60 text-accent-safe bg-accent-safe/10 hover:bg-accent-safe/20'
-              : 'border-primary/60 text-primary bg-primary/10 hover:bg-primary/20'
-            : 'border-border text-text-secondary hover:text-text-primary hover:border-text-secondary/40'
+              ? 'border-accent-safe/60 text-accent-safe bg-accent-safe/10 hover:bg-accent-safe/25 shadow-[0_0_12px_rgba(32,217,160,0.2)]'
+              : 'border-primary/60 text-primary bg-primary/10 hover:bg-primary/25 shadow-[0_0_12px_rgba(56,251,219,0.2)]'
+            : 'border-border text-text-secondary hover:text-text-primary hover:border-primary/40'
         )}
         title='Zero-Trust Authentication Gateway'
       >
         {auth ? (
           <>
-            <span className='w-2 h-2 rounded-full bg-accent-safe animate-pulse' />
+            <span className='w-2 h-2 rounded-full bg-accent-safe shadow-[0_0_8px_#20D9A0]' />
             <ShieldCheck className='w-3.5 h-3.5' />
             <span className='font-bold uppercase tracking-wider'>
               {auth.role === 'admin' ? 'ADMIN' : ('CLIENT: ' + (auth.clientId || 'EDGE'))}
@@ -135,40 +136,46 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
       </button>
 
       {isOpen && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md'>
-          <div className='bg-surface border border-border rounded-xl shadow-2xl max-w-lg w-full p-6 relative flex flex-col gap-5 text-text-primary threat-card'>
-            <div className='flex items-center justify-between border-b border-border pb-4'>
+        <div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md transition-all'>
+          {/* Static, solid modal container with NO hover translation jitter */}
+          <div className='bg-gradient-to-b from-[#0C1E3E] to-[#07152b] border border-primary/30 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.85),0_0_24px_rgba(56,251,219,0.15)] max-w-lg w-full p-6 relative flex flex-col gap-5 text-text-primary'>
+            <div className='flex items-center justify-between border-b border-border/80 pb-4'>
               <div className='flex items-center gap-3'>
-                <div className='w-10 h-10 rounded-lg bg-surface-elevated border border-border flex items-center justify-center text-primary'>
+                <div className='w-10 h-10 rounded-lg bg-surface-elevated border border-primary/30 flex items-center justify-center text-primary shadow-[0_0_12px_rgba(56,251,219,0.2)]'>
                   <Fingerprint className='w-5 h-5' />
                 </div>
                 <div>
-                  <h3 className='font-mono text-sm font-bold text-text-primary uppercase tracking-wider'>
+                  <h3 className='font-mono text-sm font-bold text-text-primary uppercase tracking-wider flex items-center gap-2'>
                     Zero-Trust Access Gateway
+                    <span className='text-[9px] px-1.5 py-0.5 rounded bg-primary/10 border border-primary/30 text-primary font-bold'>
+                      JWT RBAC
+                    </span>
                   </h3>
                   <p className='font-mono text-xs text-text-secondary'>
-                    JWT Auth and Role-Based Access Control
+                    Cryptographic Role-Based Access Control
                   </p>
                 </div>
               </div>
               <button
+                type='button'
                 onClick={() => setIsOpen(false)}
                 className='p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-elevated transition-colors'
+                title='Close'
               >
                 <X className='w-4 h-4' />
               </button>
             </div>
 
             {auth ? (
-              <div className='bg-surface-elevated/70 border border-border/80 rounded-lg p-4 font-mono flex flex-col gap-3'>
+              <div className='bg-surface-elevated/80 border border-border/80 rounded-lg p-4 font-mono flex flex-col gap-3'>
                 <div className='flex items-center justify-between'>
                   <div className='flex items-center gap-2'>
-                    <span className='w-2.5 h-2.5 rounded-full bg-accent-safe animate-pulse' />
+                    <span className='w-2.5 h-2.5 rounded-full bg-accent-safe shadow-[0_0_8px_#20D9A0]' />
                     <span className='text-xs font-bold text-accent-safe uppercase tracking-wider'>
                       Active JWT Session
                     </span>
                   </div>
-                  <span className='text-[10px] px-2 py-0.5 rounded bg-surface border border-border text-text-secondary uppercase'>
+                  <span className='text-[10px] px-2 py-0.5 rounded bg-surface border border-border text-text-secondary uppercase font-bold'>
                     Role: {auth.role}
                   </span>
                 </div>
@@ -188,7 +195,7 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
                   </div>
                   <div className='col-span-2'>
                     <span className='text-text-secondary block text-[10px] uppercase'>Token Preview</span>
-                    <span className='text-[10px] text-primary/80 truncate block font-mono bg-background/50 px-2 py-1 rounded mt-0.5'>
+                    <span className='text-[10px] text-primary/90 truncate block font-mono bg-background/70 px-2 py-1 rounded mt-0.5 border border-border/50'>
                       {auth.accessToken.slice(0, 32)}...
                     </span>
                   </div>
@@ -201,8 +208,9 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
                       : 'Permissions: Edge model weights submission, local trust telemetry'}
                   </span>
                   <button
+                    type='button'
                     onClick={handleLogout}
-                    className='threat-btn-secondary h-8 px-3 rounded flex items-center gap-1.5 text-accent-danger border-accent-danger/30 hover:bg-accent-danger/10 text-xs shrink-0'
+                    className='threat-btn-secondary h-8 px-3 rounded flex items-center gap-1.5 text-accent-danger border-accent-danger/30 hover:bg-accent-danger/10 text-xs shrink-0 font-bold'
                   >
                     <LogOut className='w-3.5 h-3.5' />
                     Logout
@@ -233,9 +241,9 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
               <button
                 type='button'
                 onClick={() => { setActiveTab('admin'); setError(null); }}
-                className={'flex-1 pb-2 font-bold transition-colors border-b-2 flex items-center justify-center gap-1.5 ' + (
+                className={'flex-1 pb-2.5 font-bold transition-colors border-b-2 flex items-center justify-center gap-1.5 ' + (
                   activeTab === 'admin'
-                    ? 'border-primary text-primary'
+                    ? 'border-primary text-primary shadow-[0_2px_8px_rgba(56,251,219,0.3)]'
                     : 'border-transparent text-text-secondary hover:text-text-primary'
                 )}
               >
@@ -245,9 +253,9 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
               <button
                 type='button'
                 onClick={() => { setActiveTab('client'); setError(null); }}
-                className={'flex-1 pb-2 font-bold transition-colors border-b-2 flex items-center justify-center gap-1.5 ' + (
+                className={'flex-1 pb-2.5 font-bold transition-colors border-b-2 flex items-center justify-center gap-1.5 ' + (
                   activeTab === 'client'
-                    ? 'border-primary text-primary'
+                    ? 'border-primary text-primary shadow-[0_2px_8px_rgba(56,251,219,0.3)]'
                     : 'border-transparent text-text-secondary hover:text-text-primary'
                 )}
               >
@@ -264,7 +272,7 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
                     type='text'
                     value={adminUser}
                     onChange={(e) => setAdminUser(e.target.value)}
-                    className='w-full bg-surface-elevated border border-border rounded px-3 py-2 text-text-primary focus:outline-none focus:border-primary'
+                    className='w-full bg-surface-elevated border border-border rounded px-3 py-2 text-text-primary focus:outline-none focus:border-primary transition-colors'
                     placeholder='admin'
                   />
                 </div>
@@ -274,7 +282,7 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
                     type='password'
                     value={adminPass}
                     onChange={(e) => setAdminPass(e.target.value)}
-                    className='w-full bg-surface-elevated border border-border rounded px-3 py-2 text-text-primary focus:outline-none focus:border-primary'
+                    className='w-full bg-surface-elevated border border-border rounded px-3 py-2 text-text-primary focus:outline-none focus:border-primary transition-colors'
                     placeholder='password'
                   />
                 </div>
@@ -311,7 +319,7 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
                     type='text'
                     value={clientId}
                     onChange={(e) => setClientId(e.target.value)}
-                    className='w-full bg-surface-elevated border border-border rounded px-3 py-2 text-text-primary focus:outline-none focus:border-primary'
+                    className='w-full bg-surface-elevated border border-border rounded px-3 py-2 text-text-primary focus:outline-none focus:border-primary transition-colors'
                     placeholder='C0'
                   />
                 </div>
@@ -321,7 +329,7 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
                     type='password'
                     value={clientSecret}
                     onChange={(e) => setClientSecret(e.target.value)}
-                    className='w-full bg-surface-elevated border border-border rounded px-3 py-2 text-text-primary focus:outline-none focus:border-primary'
+                    className='w-full bg-surface-elevated border border-border rounded px-3 py-2 text-text-primary focus:outline-none focus:border-primary transition-colors'
                     placeholder='secret'
                   />
                 </div>
@@ -349,6 +357,11 @@ export const AuthBadgeModal: React.FC<AuthBadgeModalProps> = ({ onAuthChange }) 
                 </div>
               </form>
             )}
+
+            <div className='flex items-center justify-between text-[10px] font-mono text-text-secondary pt-2 border-t border-border/40'>
+              <span>JWT Secret: Ed25519/HS256 Dual-Key</span>
+              <span className='text-primary'>Expiry: 120m</span>
+            </div>
           </div>
         </div>
       )}

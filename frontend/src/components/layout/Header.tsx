@@ -25,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
   const totalQuarantined = currentRoundData?.quarantined_clients.length ?? 0;
 
   return (
-    <header className="h-20 bg-surface border-b border-border px-6 flex items-center justify-between shrink-0 threat-card z-10">
+    <header className="h-20 bg-surface border-b border-border px-6 flex items-center justify-between shrink-0 z-10">
       {/* Left: Gateway status & Stacked Stat Items */}
       <div className="flex items-center gap-6 min-w-0">
         <div className="flex items-center gap-2.5 shrink-0">
