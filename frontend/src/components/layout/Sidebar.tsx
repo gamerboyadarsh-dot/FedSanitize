@@ -136,6 +136,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
             <div className="truncate text-text-secondary/70">arXiv:2509.20383</div>
           </div>
         </div>
+        <div className="mt-3 text-[10px] font-mono text-text-secondary/50 text-center tracking-tight">
+          © 2026 FedSanitize. All rights reserved.
+        </div>
       </div>
     </aside>
   );

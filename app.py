@@ -143,7 +143,7 @@ def main():
         st.write(f"**Active Defense:** L1 + MARS + L3")
         st.write(f"**MARS:** Wan et al., NeurIPS 2025")
         st.markdown("---")
-        st.caption("Pair programming build complete.")
+        st.caption("© 2026 FedSanitize · All rights reserved.")
 
     # -------------------------------------------------------------
     # Page Router
@@ -164,6 +164,17 @@ def main():
     elif page == "⚙️ System Configuration":
         render_config_page(st.session_state)
 
+    # -------------------------------------------------------------
+    # Global Footer
+    # -------------------------------------------------------------
+    st.markdown(
+        "<div style='text-align: center; color: #6E7681; font-size: 11px; margin-top: 40px; padding: 16px 0; border-top: 1px solid #21262D; font-family: monospace;'>"
+        "© 2026 FedSanitize · Multi-Layer Byzantine & Backdoor Defense Framework · All rights reserved."
+        "</div>",
+        unsafe_allow_html=True,
+    )
+
 
 if __name__ == "__main__":
     main()
+

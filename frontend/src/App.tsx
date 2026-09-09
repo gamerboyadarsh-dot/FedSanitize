@@ -150,6 +150,12 @@ export function App() {
             <Configuration />
           </TransitionPanel>
         </main>
+
+        {/* Global Copyright & Architecture Footer */}
+        <footer className="border-t border-border/40 py-2 px-8 text-xs font-mono text-text-secondary/60 flex items-center justify-between shrink-0 bg-surface/30 backdrop-blur-sm select-none">
+          <span>© 2026 FedSanitize · Multi-Layer Byzantine &amp; Backdoor Defense Framework</span>
+          <span className="text-[11px] text-text-secondary/50">NeurIPS 2025 MARS Forensics · All rights reserved.</span>
+        </footer>
       </div>
     </div>
     </>
