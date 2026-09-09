@@ -1,6 +1,6 @@
 import { RoundRecord, ClientSummary, ConfigData, ArenaData } from "../types/telemetry";
 
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/+$/, "") || "http://127.0.0.1:8000";
 
 export async function fetchHealth() {
   const res = await fetch(`${API_BASE}/health`);

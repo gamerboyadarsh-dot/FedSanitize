@@ -41,8 +41,8 @@ export function App() {
       setClients(clientsData);
       setErrorMsg(null);
     } catch (err: any) {
-      console.warn("Backend API not reachable:", err.message);
-      setErrorMsg("Connecting to FedSanitize API gateway at http://127.0.0.1:8000...");
+      const activeApi = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/+$/, "") || "http://127.0.0.1:8000";
+      setErrorMsg(`Connecting to FedSanitize API gateway at ${activeApi}...`);
     }
   };
 

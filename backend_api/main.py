@@ -60,14 +60,41 @@ app = FastAPI(
     description="REST backend for the FedSanitize Federated Learning Security Console"
 )
 
-# Enable CORS for local Vite development
+# Configure CORS for local development and cloud PaaS (Vercel, Netlify, Render, etc.)
+raw_origins = os.getenv("CORS_ORIGINS", "")
+if raw_origins:
+    cors_origins = [orig.strip() for orig in raw_origins.split(",") if orig.strip()]
+else:
+    cors_origins = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8502",
+        "http://127.0.0.1:8502",
+    ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=cors_origins,
+    allow_origin_regex=r"^https?://.*(vercel\.app|netlify\.app|onrender\.com|railway\.app|localhost|127\.0\.0\.1)(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+def root_info():
+    """Service information and status check."""
+    return {
+        "status": "online",
+        "service": "FedSanitize Threat-Defense API Gateway",
+        "version": "1.0.0",
+        "docs_url": "/docs",
+        "health_url": "/health",
+        "active_clients": len(state.clients) if 'state' in globals() and hasattr(state, 'clients') else 0,
+    }
+
 
 # Initialize Auth Subsystem
 try:

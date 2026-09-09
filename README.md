@@ -24,6 +24,7 @@
 [Quickstart](#-quickstart--installation) •
 [Dashboard Surfaces](#-dashboard-presentation-surfaces) •
 [File Directory & Theory](#-deep-dive-file-by-file-technical-directory--theory) •
+[Cloud Deployment](DEPLOYMENT.md) •
 [Citation](#-references--citation)
 
 ---
@@ -339,6 +340,20 @@ python -m pytest tests/test_evaluation.py tests/test_security_intelligence -v
 
 # Total: 156/156 PASSED (100% passing rate)
 ```
+
+---
+
+## 🌐 Production Cloud Deployment (Free Tier)
+
+FedSanitize is pre-configured with zero-configuration manifests for free-tier cloud deployment across modern PaaS platforms:
+
+| Component | Target Platform | Manifest Files |
+| :--- | :--- | :--- |
+| **React Frontend** | **Vercel** / **Netlify** | `vercel.json`, `frontend/vercel.json`, `frontend/public/_redirects` |
+| **FastAPI Backend** | **Render** / **Railway** | `render.yaml`, `Procfile`, `Dockerfile`, `runtime.txt` |
+| **Streamlit SOC Console** | **Streamlit Community Cloud** | `.streamlit/config.toml`, `app.py`, `dashboard/security_soc.py` |
+
+👉 **Read the complete step-by-step instructions in the [Cloud Deployment Guide (DEPLOYMENT.md)](DEPLOYMENT.md).**
 
 ---
 
