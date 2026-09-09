@@ -102,7 +102,9 @@ class StateManager:
         self.rebuild_clients()
 
         # Load pre-generated demo telemetry if available so UI has instant rich visuals
-        demo_path = os.path.join(PROJECT_ROOT, "experiments", "demo_experiment.json")
+        demo_path = os.path.join(PROJECT_ROOT, "results", "FedSanitize_MultiRound_Demo_history.json")
+        if not os.path.exists(demo_path):
+            demo_path = os.path.join(PROJECT_ROOT, "experiments", "demo_experiment.json")
         if os.path.exists(demo_path) and not self.experiment_history:
             try:
                 with open(demo_path, "r") as f:
@@ -278,11 +280,13 @@ def reset_simulation():
 @app.post("/simulation/load-demo")
 def load_demo_experiment():
     """Loads the pre-generated 5-round demo telemetry from disk."""
-    demo_path = os.path.join(PROJECT_ROOT, "experiments", "demo_experiment.json")
+    demo_path = os.path.join(PROJECT_ROOT, "results", "FedSanitize_MultiRound_Demo_history.json")
+    if not os.path.exists(demo_path):
+        demo_path = os.path.join(PROJECT_ROOT, "experiments", "demo_experiment.json")
     if not os.path.exists(demo_path):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Demo experiment dataset not found at experiments/demo_experiment.json"
+            detail="Demo experiment dataset not found"
         )
 
     with open(demo_path, "r") as f:
@@ -421,7 +425,7 @@ def get_arena_data(round_index: int = Query(default=3, ge=0)):
         threat_tier = "LOW"
         threat_score = 22
 
-    return {
+    response_payload = {
         "round_index": idx,
         "total_rounds": len(history),
         "round_record": rec,
@@ -458,3 +462,27 @@ def get_arena_data(round_index: int = Query(default=3, ge=0)):
             for i, h in enumerate(history)
         },
     }
+
+    def to_serializable(val: Any) -> Any:
+        if val is None:
+            return None
+        if isinstance(val, (int, str, bool)):
+            return val
+        if isinstance(val, float):
+            if math.isnan(val) or math.isinf(val):
+                return 0.0
+            return val
+        if hasattr(val, "tolist"):
+            return to_serializable(val.tolist())
+        if hasattr(val, "item"):
+            return to_serializable(val.item())
+        if hasattr(val, "__dataclass_fields__"):
+            return to_serializable(asdict(val))
+        if isinstance(val, dict):
+            return {str(k): to_serializable(v) for k, v in val.items()}
+        if isinstance(val, (list, tuple, set)):
+            return [to_serializable(x) for x in val]
+        return str(val)
+
+    return to_serializable(response_payload)
+

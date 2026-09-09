@@ -20,10 +20,10 @@ import {
   loadDemo 
 } from "./api/client";
 
-const pageOrder: NavPage[] = ["overview", "clients", "defense", "attacks", "analytics", "arena", "config"];
+const pageOrder: NavPage[] = ["arena", "overview", "clients", "defense", "attacks", "analytics", "config"];
 
 export function App() {
-  const [currentPage, setCurrentPage] = useState<NavPage>("overview");
+  const [currentPage, setCurrentPage] = useState<NavPage>("arena");
   const [history, setHistory] = useState<RoundRecord[]>([]);
   const [clients, setClients] = useState<ClientSummary[]>([]);
   const [isRunning, setIsRunning] = useState<boolean>(false);
@@ -141,12 +141,12 @@ export function App() {
         {/* Scrollable Page Body animated with TransitionPanel */}
         <main className="flex-1 overflow-y-auto p-8">
           <TransitionPanel activeIndex={activePageIndex}>
+            <LiveAttackArena />
             <Overview history={history} latestRound={latestRound} />
             <ClientProfiling clients={clients} latestRound={latestRound} />
             <DefensePipeline latestRound={latestRound} isRunning={isRunning} />
             <AttackPlayground clients={clients} onRefreshClients={refreshData} />
             <Analytics history={history} latestRound={latestRound} />
-            <LiveAttackArena />
             <Configuration />
           </TransitionPanel>
         </main>

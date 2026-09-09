@@ -23,12 +23,12 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, activeRounds }) => {
   const navItems = [
+    { id: "arena", label: "Live Attack Arena", icon: ShieldAlert, isLive: true },
     { id: "overview", label: "Overview", icon: LayoutDashboard },
     { id: "clients", label: "Client Profiling", icon: Users },
     { id: "defense", label: "3-Layer Defense", icon: ShieldCheck },
     { id: "attacks", label: "Attack Playground", icon: Swords },
     { id: "analytics", label: "Comparative Analytics", icon: BarChart3 },
-    { id: "arena", label: "Live Attack Arena", icon: ShieldAlert },
     { id: "config", label: "System Configuration", icon: Sliders },
   ];
 
@@ -87,6 +87,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
                         : "text-zinc-500 group-hover:text-red-400"
                     }`} />
                     <span className="truncate">{item.label}</span>
+                    {item.id === "arena" && (
+                      <span className="ml-auto text-[9px] bg-red-600/30 text-accent-red border border-red-500/50 px-1.5 py-0.2 rounded font-bold shrink-0 flex items-center gap-1 animate-pulse">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent-red" />
+                        LIVE
+                      </span>
+                    )}
                     {item.id === "overview" && activeRounds > 0 && (
                       <span className="ml-auto text-[10px] bg-accent-red/20 text-accent-red border border-accent-red/40 px-1.5 py-0.5 rounded font-bold shrink-0">
                         R{activeRounds}
