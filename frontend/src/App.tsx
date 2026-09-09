@@ -49,9 +49,9 @@ export function App() {
   useEffect(() => {
     const startTime = Date.now();
     refreshData().finally(() => {
-      // Respect the minimum ~500ms startup screen floor so logo animation finishes cleanly
+      // Allow startup screen to display smoothly for 2.6 seconds
       const elapsed = Date.now() - startTime;
-      const remaining = Math.max(0, 750 - elapsed);
+      const remaining = Math.max(0, 2600 - elapsed);
       setTimeout(() => {
         setIsInitializing(false);
       }, remaining);

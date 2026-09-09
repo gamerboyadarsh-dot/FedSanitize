@@ -24,7 +24,7 @@ export const StartupScreen: React.FC<StartupScreenProps> = ({
   useEffect(() => {
     const interval = setInterval(() => {
       setLogIndex((prev) => (prev < BOOT_LOGS.length - 1 ? prev + 1 : prev));
-    }, 140);
+    }, 460);
     return () => clearInterval(interval);
   }, []);
 
@@ -101,10 +101,23 @@ export const StartupScreen: React.FC<StartupScreenProps> = ({
           </div>
         </div>
 
-        {/* Status Indicator Floor */}
-        <div className="flex items-center gap-2 text-xs text-[#7B8AA3] font-mono">
-          <span className="w-2 h-2 rounded-full bg-accent-safe shadow-[0_0_8px_#20D9A0]" />
-          <span>{statusText}</span>
+        {/* Animated Cyber Progress Bar */}
+        <div className="w-full max-w-sm space-y-2">
+          <div className="w-full h-1.5 bg-[#0C1E3E] border border-primary/30 rounded-full overflow-hidden shadow-[0_0_12px_rgba(56,251,219,0.15)]">
+            <motion.div
+              className="h-full bg-gradient-to-r from-primary via-secondary to-accent-safe rounded-full"
+              initial={{ width: "8%" }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 2.5, ease: "easeInOut" }}
+            />
+          </div>
+          <div className="flex items-center justify-between text-[10px] text-[#7B8AA3] font-mono">
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent-safe shadow-[0_0_8px_#20D9A0]" />
+              {statusText}
+            </span>
+            <span className="text-primary font-bold">2.5s boot sequence</span>
+          </div>
         </div>
       </AnimatedGroup>
     </motion.div>
