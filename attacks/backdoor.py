@@ -92,21 +92,32 @@ class TriggeredTestDataset(Dataset):
         trigger_size: int = 4,
         exclude_target_class: bool = True,
     ):
-        self.samples: List[Tuple[torch.Tensor, int]] = []
-        for i in range(len(base_dataset)):
-            image, label = base_dataset[i]
-            if isinstance(label, torch.Tensor):
-                label = int(label.item())
-            if exclude_target_class and label == target_class:
-                continue  # Exclude natural target class samples so ASR only measures false flips
-            triggered_image = add_trigger(image, trigger_size=trigger_size)
-            self.samples.append((triggered_image, target_class))
+        self.base_dataset = base_dataset
+        self.target_class = target_class
+        self.trigger_size = trigger_size
+        self.exclude_target_class = exclude_target_class
+        
+        # Fast index filtering using dataset targets if available
+        if hasattr(base_dataset, "targets"):
+            targets = base_dataset.targets
+            if isinstance(targets, torch.Tensor):
+                targets = targets.cpu().numpy()
+            if exclude_target_class:
+                self.indices = [i for i, t in enumerate(targets) if int(t) != target_class]
+            else:
+                self.indices = list(range(len(targets)))
+        else:
+            self.indices = list(range(len(base_dataset)))
 
     def __len__(self) -> int:
-        return len(self.samples)
+        return len(self.indices)
 
     def __getitem__(self, idx: int) -> Tuple[torch.Tensor, int]:
-        return self.samples[idx]
+        real_idx = self.indices[idx]
+        image, _ = self.base_dataset[real_idx]
+        triggered_image = add_trigger(image, trigger_size=self.trigger_size)
+        return triggered_image, self.target_class
+
 
 
 def evaluate_asr(
