@@ -125,6 +125,7 @@ def main():
         page = st.radio(
             "Navigation",
             [
+                "⚔️ Live Attack Arena",
                 "🏠 Overview",
                 "👥 Client Profiling",
                 "🛡️ 3-Layer Defense",
@@ -147,7 +148,10 @@ def main():
     # -------------------------------------------------------------
     # Page Router
     # -------------------------------------------------------------
-    if page == "🏠 Overview":
+    if page == "⚔️ Live Attack Arena":
+        from dashboard import render_simulation_arena_page
+        render_simulation_arena_page(st.session_state)
+    elif page == "🏠 Overview":
         render_overview_page(st.session_state)
     elif page == "👥 Client Profiling":
         render_clients_page(st.session_state)
