@@ -399,6 +399,55 @@ config = FedSanitizeConfig(
 
 ---
 
+## 📖 Deep-Dive: File-by-File Technical Directory & Theory
+
+This section provides a granular, file-by-file breakdown of the entire FedSanitize architecture, detailing the theoretical purpose of each module and how the tech stack orchestrates the simulation.
+
+### 1. `backend_api/` (The REST Gateway)
+* **Tech Stack**: FastAPI, Uvicorn, Pydantic.
+* **Theory**: FL requires a central aggregator to coordinate decentralized clients. This API acts as that central aggregator, exposing stateful endpoints to the React frontend.
+  - `main.py`: The entry point. Manages the global state of the FL simulation, holding the neural network in memory and coordinating client rounds.
+  - `schemas.py`: Uses Pydantic for strict type validation of incoming JSON configurations (e.g., hyperparameter tuning) ensuring data integrity before math execution.
+
+### 2. `federated/` (The Core FL Engine)
+* **Tech Stack**: PyTorch, NumPy.
+* **Theory**: Implements the baseline FedAvg algorithm (McMahan et al., 2017) which mathematically averages weights, augmented here with attack vectors.
+  - `server.py`: The Global Model container. It distributes weights, triggers client training, and invokes the 3-Layer Defense before executing `baseline_aggregation.py`.
+  - `client.py`: The Edge Node simulation. Contains the local PyTorch `DataLoader` and optimizer. 
+  - `data_partition.py`: Theory dictates that real FL is Non-IID (Independent and Identically Distributed). This file uses a Dirichlet distribution ($\alpha=0.5$) to skew the MNIST dataset, ensuring client $C_1$ might have mostly 7s and 8s, while $C_2$ has 1s and 3s. This creates natural gradient variance, making backdoor detection mathematically harder.
+  - `update_utils.py`: Extracts the $\Delta W$ (Weight Updates) by subtracting the old global model from the new local model, flattening them into 1D tensors for distance calculations.
+
+### 3. `defense/` (The 3-Layer Firewall)
+* **Tech Stack**: SciPy, Scikit-Learn, PyTorch.
+* **Theory**: The proprietary defense mechanism. Standard FL is highly susceptible to Data Poisoning (Backdoors) and Model Poisoning (Byzantine).
+  - `layer1_anomaly/robust_statistics.py & anomaly_detector.py`: **Theory:** Computes the Median Absolute Deviation (MAD) of $L_2$ norms. MAD is statistically robust against outliers (unlike standard deviation). It also calculates directional Cosine Similarity. Quarantines nodes trying to overwhelm the aggregation with massive or inverted weights.
+  - `layer2_mars/cbe.py & wasserstein.py & clustering.py`: **Theory:** MARS (NeurIPS 2025). Stealthy backdoors hide in small norms. MARS calculates *Client Backdoor Energy (CBE)* based on the variance of gradients in the final layers. It computes the 1D Wasserstein distance (Earth Mover's Distance) to measure the effort required to transform one client's energy distribution into another's. Scikit-Learn's Agglomerative Clustering partitions these distributions. If a cluster is too distant ($\ge 0.015$), it's flagged as a backdoor ring.
+  - `layer3_robust/trimmed_mean.py`: **Theory:** Trimmed Mean (ICML 2018). For the surviving clients, sorting parameter values along every coordinate and discarding the tails (top $\beta\%$, bottom $\beta\%$) structurally removes residual adversarial bias before taking the mean.
+
+### 4. `attacks/` (The Adversarial Threat Models)
+* **Tech Stack**: PyTorch, Torchvision.
+* **Theory**: Evaluates the defense against known threat vectors.
+  - `backdoor.py`: Injects a $3\times3$ white pixel matrix (the trigger) into the corner of training images and forcibly sets their label to a target class (e.g., 0). The goal is semantic corruption.
+  - `extreme_update.py`: Scales the client's $\Delta W$ by $\gamma=10.0$. Theory: attempts to drastically pull the global minimum toward the adversary's objective.
+  - `sign_flipping.py`: Inverts gradients. Theory: acts as a denial-of-service, forcing the model to unlearn features.
+  - `random_byzantine.py` & `label_flipping.py`: Introduce Gaussian entropy and label permutations to degrade overall accuracy.
+
+### 5. `simulation/` & `visualization/` (The Live Attack Arena)
+* **Tech Stack**: Python, Streamlit, Plotly.
+* **Theory**: An interactive forensic replay engine.
+  - `simulation/timeline_builder.py & replay_engine.py`: Captures the chronological execution of a federated round and builds an interactive state-machine timeline allowing step-by-step forensic rewinding of the defense algorithms.
+  - `visualization/defense/*`: Renders the high-dimensional mathematical outcomes (like the Wasserstein Pairwise Heatmap and CBE distributions) into human-readable Plotly charts.
+
+### 6. `frontend/` (The SOC Dashboard)
+* **Tech Stack**: React 18, Vite, TypeScript, Tailwind CSS, Framer Motion.
+* **Theory**: Translates raw JSON telemetry from the FastAPI backend into actionable intelligence.
+  - `src/App.tsx`: The root React Router and state manager. Maintains an ambient CSS gradient backdrop with a static SVG `feTurbulence` noise layer.
+  - `src/pages/DefensePipeline.tsx`: Visualizes the 3-Layer Defense. Maps Layer 1, 2, and 3 passing/quarantine rates using custom `<BorderTrail>` Framer Motion animations.
+  - `src/pages/AttackPlayground.tsx`: Uses a dynamically generated $14\times14$ CSS grid to visually simulate the Backdoor trigger matrix mapping on edge clients.
+  - `src/pages/Configuration.tsx`: The interactive hyperparameter tuning bay. Maps UI slider states directly to the Pydantic schemas in `backend_api/schemas.py`, adjusting FL learning rates and defense sensitivity live.
+
+---
+
 ## 📚 References & Citation
 
 1. **MARS (Layer 2 Reference)**:
