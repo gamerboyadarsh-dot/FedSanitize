@@ -10,6 +10,7 @@ interface HeaderProps {
   onRunRound: () => void;
   onReset: () => void;
   onLoadDemo: () => void;
+  authVersion?: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -18,6 +19,7 @@ export const Header: React.FC<HeaderProps> = ({
   onRunRound,
   onReset,
   onLoadDemo,
+  authVersion = 0,
 }) => {
   const roundNum = currentRoundData?.round ?? 0;
   const cleanAcc = currentRoundData?.clean_accuracy ?? 0;
@@ -90,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Right: Action Buttons with whitespace-nowrap & consistent h-9 */}
       <div className="flex items-center gap-3 font-mono text-xs shrink-0">
-        <AuthBadgeModal />
+        <AuthBadgeModal key={authVersion} />
 
         <button
           onClick={onLoadDemo}

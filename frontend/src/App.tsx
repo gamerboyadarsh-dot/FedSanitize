@@ -34,6 +34,8 @@ export function App() {
   const [isInitializing, setIsInitializing] = useState<boolean>(true);
   // Always show login page on fresh app load
   const [showLogin, setShowLogin] = useState<boolean>(true);
+  // Incremented after login/guest so AuthBadgeModal in Header remounts and re-reads auth
+  const [authVersion, setAuthVersion] = useState<number>(0);
 
   const refreshData = async () => {
     try {
@@ -112,8 +114,8 @@ export function App() {
       {/* Full-page login — shown before dashboard if not authenticated */}
       {showLogin && !isInitializing && (
         <LoginPage
-          onAuthenticated={() => setShowLogin(false)}
-          onGuest={() => setShowLogin(false)}
+          onAuthenticated={() => { setShowLogin(false); setAuthVersion((v) => v + 1); }}
+          onGuest={() => { setShowLogin(false); setAuthVersion((v) => v + 1); }}
         />
       )}
 
@@ -163,6 +165,7 @@ export function App() {
               onRunRound={handleRunRound}
               onReset={handleReset}
               onLoadDemo={handleLoadDemo}
+              authVersion={authVersion}
             />
 
             {errorMsg && (
