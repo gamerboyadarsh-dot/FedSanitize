@@ -72,21 +72,23 @@ def render_attacks_page(session_state):
         fig_c, ax_c = plt.subplots(figsize=(3, 3))
         ax_c.imshow(clean_img, cmap="gray", vmin=0, vmax=1)
         ax_c.axis("off")
-        ax_c.set_title("Original Image (Label: 7)", color="white")
-        fig_c.patch.set_facecolor("#1E1E1E")
+        ax_c.set_title("Original Image (Label: 7)", color="#38FBDB", fontfamily="monospace", fontsize=9)
+        fig_c.patch.set_facecolor("#050508")
+        ax_c.set_facecolor("#0C1E3E")
         st.pyplot(fig_c)
 
     with col_v2:
         st.markdown("**Trojaned Input Sample (Target: 0)**")
         fig_t, ax_t = plt.subplots(figsize=(3, 3))
         ax_t.imshow(triggered_img, cmap="gray", vmin=0, vmax=1)
-        # Highlight trigger area
+        # Highlight trigger area with palette danger color
         from matplotlib.patches import Rectangle
-        rect = Rectangle((28 - trigger_size - 0.5, 28 - trigger_size - 0.5), trigger_size, trigger_size, linewidth=1.5, edgecolor="red", facecolor="none")
+        rect = Rectangle((28 - trigger_size - 0.5, 28 - trigger_size - 0.5), trigger_size, trigger_size, linewidth=1.5, edgecolor="#FF3B5C", facecolor="none")
         ax_t.add_patch(rect)
         ax_t.axis("off")
-        ax_t.set_title("Trigger Stamped (Label: 0)", color="white")
-        fig_t.patch.set_facecolor("#1E1E1E")
+        ax_t.set_title("Trigger Stamped (Label: 0)", color="#FF3B5C", fontfamily="monospace", fontsize=9)
+        fig_t.patch.set_facecolor("#050508")
+        ax_t.set_facecolor("#0C1E3E")
         st.pyplot(fig_t)
 
     st.caption("Trigger details: 4x4 white patch placed in bottom-right corner. Defended by Layer 2 MARS via Concentrated Backdoor Energy (CBE) isolation.")

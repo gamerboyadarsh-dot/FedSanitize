@@ -24,7 +24,7 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
       <div className="flex items-center justify-between bg-surface border border-border rounded-xl p-5 threat-card">
         <div>
           <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary flex items-center gap-2">
-            <Users className="w-4 h-4 text-accent-red" />
+            <Users className="w-4 h-4 text-primary" />
             Distributed Client Cohort Matrix (10 Edge Nodes)
           </h2>
           <p className="text-xs text-text-secondary font-mono mt-1">
@@ -75,31 +75,24 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
                   const l1Status = rec?.layer1_status ?? (c.attack_type === "EXTREME_UPDATE" || c.attack_type === "SIGN_FLIPPING" ? "FLAGGED" : "PASS");
                   const marsStatus = rec?.mars_status ?? (c.attack_type === "BACKDOOR" ? "FLAGGED" : l1Status === "FLAGGED" ? "SKIPPED" : "PASS");
 
-                  // Color mapping
-                  const statusColor = finalStatus === "TRUSTED" ? "text-accent-safe bg-accent-safe/10 border-accent-safe/30" : "text-accent-danger bg-accent-danger/10 border-accent-danger/30";
-
                   return (
                     <tr
                       key={c.client_id}
                       onClick={() => setSelectedClientId(c.client_id)}
-                      className={`threat-table-row cursor-pointer ${
+                      className={`threat-table-row cursor-pointer transition-colors duration-200 ${
                         isSelected 
-                          ? "bg-[#251212] border-l-4 border-accent-red" 
-                          : "border-b border-[#251010]"
+                          ? "bg-primary/5 border-l-4 border-primary" 
+                          : "border-l-4 border-transparent hover:bg-white/[0.02]"
                       }`}
                     >
                       <td className="px-4 py-3 font-bold text-text-primary flex items-center gap-2">
                         <span>{c.client_id}</span>
                         {c.is_malicious && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-accent-danger" title="Malicious Client" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-accent-danger shadow-glow-red" title="Malicious Client" />
                         )}
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`px-2 py-0.5 rounded text-[10px] border ${
-                          c.attack_type === "NONE"
-                            ? "bg-surface-elevated text-text-secondary border-border"
-                            : "bg-accent-danger/10 text-accent-danger border-accent-danger/30 font-bold"
-                        }`}>
+                        <span className={c.attack_type === "NONE" ? "pill-pass" : "pill-quarantined"}>
                           {c.attack_type}
                         </span>
                       </td>
@@ -107,27 +100,23 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
                         {rec?.update_norm ? rec.update_norm.toFixed(2) : "~5.10"}
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`px-2 py-0.5 rounded text-[10px] border ${
-                          l1Status === "PASS"
-                            ? "text-accent-safe bg-accent-safe/10 border-accent-safe/30"
-                            : "text-accent-danger bg-accent-danger/10 border-accent-danger/30 font-bold"
-                        }`}>
+                        <span className={l1Status === "PASS" ? "pill-pass" : "pill-quarantined"}>
                           {l1Status}
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`px-2 py-0.5 rounded text-[10px] border ${
-                          marsStatus === "PASS"
-                            ? "text-accent-safe bg-accent-safe/10 border-accent-safe/30"
-                            : marsStatus === "FLAGGED"
-                            ? "text-accent-warning bg-accent-warning/10 border-accent-warning/30 font-bold"
-                            : "text-text-secondary bg-surface-elevated border-border"
-                        }`}>
+                        <span className={
+                          marsStatus === "PASS" 
+                            ? "pill-pass" 
+                            : marsStatus === "FLAGGED" 
+                            ? "pill-quarantined" 
+                            : "pill-skipped"
+                        }>
                           {marsStatus}
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`px-2.5 py-1 rounded text-[10px] font-bold border ${statusColor}`}>
+                        <span className={finalStatus === "TRUSTED" ? "pill-pass" : "pill-quarantined"}>
                           {finalStatus}
                         </span>
                       </td>
@@ -143,7 +132,7 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
         <div className="bg-surface border border-border rounded-xl p-5 threat-card space-y-4">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div className="flex items-center gap-2">
-              <Crosshair className="w-4 h-4 text-accent-red" />
+              <Crosshair className="w-4 h-4 text-primary" />
               <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary">
                 Node Inspector: {selectedClientId}
               </h3>

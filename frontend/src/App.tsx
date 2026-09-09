@@ -9,6 +9,8 @@ import { AttackPlayground } from "./pages/AttackPlayground";
 import { Analytics } from "./pages/Analytics";
 import { Configuration } from "./pages/Configuration";
 import { LiveAttackArena } from "./pages/LiveAttackArena";
+import { SecurityIntelligence } from "./pages/SecurityIntelligence";
+
 import { StartupScreen } from "./components/common/StartupScreen";
 import { TransitionPanel } from "./components/core/TransitionPanel";
 import type { RoundRecord, ClientSummary } from "./types/telemetry";
@@ -20,7 +22,17 @@ import {
   loadDemo 
 } from "./api/client";
 
-const pageOrder: NavPage[] = ["arena", "overview", "clients", "defense", "attacks", "analytics", "config"];
+const pageOrder: NavPage[] = [
+  "arena",
+  "overview",
+  "clients",
+  "defense",
+  "attacks",
+  "analytics",
+  "security-intelligence",
+  "config",
+];
+
 
 export function App() {
   const [currentPage, setCurrentPage] = useState<NavPage>("arena");
@@ -110,54 +122,79 @@ export function App() {
         )}
       </AnimatePresence>
 
-      <div className="flex h-screen bg-background text-text-primary overflow-hidden font-sans bg-grid-pattern selection:bg-accent-red selection:text-white">
-      {/* Persistent Left Sidebar with AnimatedBackground */}
-      <Sidebar 
-        currentPage={currentPage} 
-        onSelectPage={setCurrentPage} 
-        activeRounds={history.length} 
-      />
+      {/* Root Layout Wrapper with Ambient Gradient Background */}
+      <div 
+        className="h-screen w-full text-text-primary overflow-hidden font-sans selection:bg-primary selection:text-black relative"
+        style={{
+          backgroundColor: "#050508",
+          backgroundImage: `
+            radial-gradient(ellipse 60% 45% at 15% 10%, hsl(262 75% 60% / 0.35), transparent 70%),
+            radial-gradient(ellipse 65% 50% at 85% 90%, hsl(217 85% 45% / 0.30), transparent 70%)
+          `,
+          backgroundAttachment: "fixed"
+        }}
+      >
+        {/* SVG Noise Texture Layer */}
+        <div className="pointer-events-none absolute inset-0 z-0 opacity-5 mix-blend-overlay">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <filter id="noiseFilter">
+              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+          </svg>
+        </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Top Header Controls with Stacked Stats & No-Wrap */}
-        <Header 
-          currentRoundData={latestRound}
-          isRunning={isRunning}
-          onRunRound={handleRunRound}
-          onReset={handleReset}
-          onLoadDemo={handleLoadDemo}
-        />
+        {/* Existing App Container (z-10 to sit above background layer) */}
+        <div className="flex w-full h-full relative z-10">
+          {/* Persistent Left Sidebar with AnimatedBackground */}
+          <Sidebar 
+            currentPage={currentPage} 
+            onSelectPage={setCurrentPage} 
+            activeRounds={history.length} 
+          />
 
-        {errorMsg && (
-          <div className="bg-accent-warning/10 border-b border-accent-warning/30 px-6 py-2 text-xs font-mono text-accent-warning flex items-center justify-between shrink-0">
-            <span>{errorMsg}</span>
-            <button onClick={refreshData} className="underline hover:text-white">
-              Retry Connection
-            </button>
+          {/* Main Content Area */}
+          <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+            {/* Top Header Controls with Stacked Stats & No-Wrap */}
+            <Header 
+              currentRoundData={latestRound}
+              isRunning={isRunning}
+              onRunRound={handleRunRound}
+              onReset={handleReset}
+              onLoadDemo={handleLoadDemo}
+            />
+
+            {errorMsg && (
+              <div className="bg-accent-warning/10 border-b border-accent-warning/30 px-6 py-2 text-xs font-mono text-accent-warning flex items-center justify-between shrink-0">
+                <span>{errorMsg}</span>
+                <button onClick={refreshData} className="underline hover:text-white">
+                  Retry Connection
+                </button>
+              </div>
+            )}
+
+            {/* Scrollable Page Body animated with TransitionPanel */}
+            <main className="flex-1 overflow-y-auto p-8">
+              <TransitionPanel activeIndex={activePageIndex}>
+                <LiveAttackArena />
+                <Overview history={history} latestRound={latestRound} />
+                <ClientProfiling clients={clients} latestRound={latestRound} />
+                <DefensePipeline latestRound={latestRound} isRunning={isRunning} />
+                <AttackPlayground clients={clients} onRefreshClients={refreshData} />
+                <Analytics history={history} latestRound={latestRound} />
+                <SecurityIntelligence latestRound={latestRound} />
+                <Configuration />
+              </TransitionPanel>
+            </main>
+
+            {/* Global Copyright & Architecture Footer */}
+            <footer className="border-t border-border/40 py-2 px-8 text-xs font-mono text-text-secondary/60 flex items-center justify-between shrink-0 bg-surface/30 backdrop-blur-sm select-none">
+              <span>© 2026 FedSanitize · Multi-Layer Byzantine &amp; Backdoor Defense Framework</span>
+              <span className="text-[11px] text-text-secondary/50">NeurIPS 2025 MARS Forensics · All rights reserved.</span>
+            </footer>
           </div>
-        )}
-
-        {/* Scrollable Page Body animated with TransitionPanel */}
-        <main className="flex-1 overflow-y-auto p-8">
-          <TransitionPanel activeIndex={activePageIndex}>
-            <LiveAttackArena />
-            <Overview history={history} latestRound={latestRound} />
-            <ClientProfiling clients={clients} latestRound={latestRound} />
-            <DefensePipeline latestRound={latestRound} isRunning={isRunning} />
-            <AttackPlayground clients={clients} onRefreshClients={refreshData} />
-            <Analytics history={history} latestRound={latestRound} />
-            <Configuration />
-          </TransitionPanel>
-        </main>
-
-        {/* Global Copyright & Architecture Footer */}
-        <footer className="border-t border-border/40 py-2 px-8 text-xs font-mono text-text-secondary/60 flex items-center justify-between shrink-0 bg-surface/30 backdrop-blur-sm select-none">
-          <span>© 2026 FedSanitize · Multi-Layer Byzantine &amp; Backdoor Defense Framework</span>
-          <span className="text-[11px] text-text-secondary/50">NeurIPS 2025 MARS Forensics · All rights reserved.</span>
-        </footer>
+        </div>
       </div>
-    </div>
     </>
   );
 }

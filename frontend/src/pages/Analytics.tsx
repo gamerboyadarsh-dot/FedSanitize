@@ -29,7 +29,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ history, latestRound }) =>
       <div className="bg-surface border border-border rounded-xl p-5 threat-card flex items-center justify-between">
         <div>
           <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary flex items-center gap-2">
-            <BarChart3 className="w-4 h-4 text-accent-red" />
+            <BarChart3 className="w-4 h-4 text-primary" />
             Comparative Defense & Confusion Matrix Analytics
           </h2>
           <p className="text-xs text-text-secondary font-mono mt-1">
@@ -154,13 +154,15 @@ export const Analytics: React.FC<AnalyticsProps> = ({ history, latestRound }) =>
               </thead>
               <tbody className="divide-y divide-border/60">
                 {history.map((r, i) => (
-                  <tr key={i} className="threat-table-row">
-                    <td className="px-3 py-2.5 font-bold text-accent-red">R{r.round}</td>
+                  <tr key={i} className="threat-table-row hover:bg-white/[0.02] transition-colors">
+                    <td className="px-3 py-2.5 font-bold text-primary">R{r.round}</td>
                     <td className="px-3 py-2.5 text-[10px] text-text-secondary truncate max-w-[140px]">
                       {r.attack_type || "MIXED_ATTACKS"}
                     </td>
                     <td className="px-3 py-2.5 text-accent-safe font-bold">{r.clean_accuracy.toFixed(1)}%</td>
-                    <td className="px-3 py-2.5 text-accent-safe">{r.backdoor_asr.toFixed(2)}%</td>
+                    <td className={`px-3 py-2.5 ${r.backdoor_asr < 2.0 ? "text-accent-safe" : "text-accent-danger font-bold"}`}>
+                      {r.backdoor_asr.toFixed(2)}%
+                    </td>
                     <td className="px-3 py-2.5">{((r.detection?.precision ?? 1.0) * 100).toFixed(0)}%</td>
                     <td className="px-3 py-2.5">{((r.detection?.recall ?? 1.0) * 100).toFixed(0)}%</td>
                     <td className="px-3 py-2.5 font-bold text-accent-safe">

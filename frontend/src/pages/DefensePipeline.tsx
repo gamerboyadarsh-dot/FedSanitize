@@ -64,7 +64,7 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
         <div className="flex items-center justify-between border-b border-border/60 pb-3">
           <div>
             <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary flex items-center gap-2">
-              <Layers className="w-4 h-4 text-accent-red" />
+              <Layers className="w-4 h-4 text-primary" />
               Sequential 3-Layer Security Pipeline
             </h2>
             <p className="text-xs text-text-secondary font-mono mt-1">
@@ -80,12 +80,12 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
         <AnimatedGroup className="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs pt-2">
           {/* Layer 1 Box */}
           <div className="bg-surface-elevated border border-border rounded-xl p-4 space-y-2 relative overflow-hidden threat-card">
-            {isRunning && <BorderTrail trailColor="#e11d2e" size={80} />}
+            {isRunning && <BorderTrail trailColor="#38FBDB" size={80} />}
             <div className="flex items-center justify-between">
-              <span className="text-accent-red font-bold text-[11px] uppercase tracking-wider">
+              <span className="text-primary font-bold text-[11px] uppercase tracking-wider">
                 Layer 1: Anomaly Filter
               </span>
-              <Filter className="w-4 h-4 text-accent-red" />
+              <Filter className="w-4 h-4 text-primary" />
             </div>
             <div className="text-text-primary text-xs font-semibold">MAD Norm & Cosine Shield</div>
             <p className="text-[11px] text-text-secondary leading-relaxed">
@@ -98,12 +98,12 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
 
           {/* Layer 2 Box */}
           <div className="bg-surface-elevated border border-border rounded-xl p-4 space-y-2 relative overflow-hidden threat-card">
-            {isRunning && <BorderTrail trailColor="#f5a623" size={80} />}
+            {isRunning && <BorderTrail trailColor="#8E52F5" size={80} />}
             <div className="flex items-center justify-between">
-              <span className="text-accent-warning font-bold text-[11px] uppercase tracking-wider">
+              <span className="text-secondary font-bold text-[11px] uppercase tracking-wider">
                 Layer 2: MARS Defense
               </span>
-              <Activity className="w-4 h-4 text-accent-warning" />
+              <Activity className="w-4 h-4 text-secondary" />
             </div>
             <div className="text-text-primary text-xs font-semibold">NeurIPS 2025 CBE Clustering</div>
             <p className="text-[11px] text-text-secondary leading-relaxed">
@@ -116,7 +116,7 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
 
           {/* Layer 3 Box */}
           <div className="bg-surface-elevated border border-border rounded-xl p-4 space-y-2 relative overflow-hidden threat-card">
-            {isRunning && <BorderTrail trailColor="#2ecc71" size={80} />}
+            {isRunning && <BorderTrail trailColor="#20D9A0" size={80} />}
             <div className="flex items-center justify-between">
               <span className="text-accent-safe font-bold text-[11px] uppercase tracking-wider">
                 Layer 3: Robust Aggregation
@@ -156,17 +156,17 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
           <div className="h-64 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={displayNormData} margin={{ top: 10, right: 20, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#3d1414" opacity={0.5} />
-                <XAxis dataKey="clientId" stroke="#a88888" tick={{ fill: "#a88888", fontSize: 11, fontFamily: "monospace" }} />
-                <YAxis stroke="#a88888" tick={{ fill: "#a88888", fontSize: 11, fontFamily: "monospace" }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" opacity={0.5} />
+                <XAxis dataKey="clientId" stroke="#64748b" tick={{ fill: "#64748b", fontSize: 11, fontFamily: "monospace" }} />
+                <YAxis stroke="#64748b" tick={{ fill: "#64748b", fontSize: 11, fontFamily: "monospace" }} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: "#150a0a", borderColor: "#7a1f1f", borderRadius: "8px", fontFamily: "monospace", fontSize: "12px" }}
+                  contentStyle={{ backgroundColor: "#050508", borderColor: "#38FBDB", borderRadius: "8px", fontFamily: "monospace", fontSize: "12px", boxShadow: "0 0 10px rgba(56,251,219,0.2)" }}
                 />
-                <ReferenceLine y={10.0} stroke="#e11d2e" strokeDasharray="4 4" label={{ value: "Rejection Threshold", fill: "#e11d2e", fontSize: 10, fontFamily: "monospace" }} />
+                <ReferenceLine y={10.0} stroke="#FF3B5C" strokeDasharray="4 4" label={{ value: "Rejection Threshold", fill: "#FF3B5C", fontSize: 10, fontFamily: "monospace" }} />
                 <Bar 
                   dataKey="update_norm" 
                   name="L2 Norm" 
-                  fill="#e11d2e"
+                  fill="#38FBDB"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
@@ -185,7 +185,7 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
                 Pairwise energy distribution distances between client representations
               </p>
             </div>
-            <span className="text-[10px] font-mono text-accent-warning bg-accent-warning/10 border border-accent-warning/30 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-mono text-secondary bg-secondary/10 border border-secondary/30 px-2 py-0.5 rounded">
               Gap &ge; 0.015
             </span>
           </div>
@@ -194,19 +194,22 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
             <div className="grid grid-cols-4 gap-2 w-full max-w-sm">
               {distMatrix.slice(0, 4).map((row, rIdx) =>
                 row.slice(0, 4).map((val, cIdx) => {
-                  const isHigh = val > 0.02;
+                  const isHigh = val > 0.015;
+                  const alpha = Math.min(1, 0.1 + (val / 0.015) * 0.9);
                   return (
                     <div
                       key={`${rIdx}-${cIdx}`}
-                      className={`p-3 rounded text-center transition-all ${
+                      className={`p-3 rounded text-center transition-all cursor-pointer hover:scale-105 ${
                         isHigh
-                          ? "bg-accent-danger/20 text-accent-danger border border-accent-danger/40 font-bold"
-                          : val === 0
-                          ? "bg-surface-elevated text-text-secondary/50 border border-border"
-                          : "bg-accent-safe/10 text-accent-safe border border-accent-safe/30"
+                          ? "bg-accent-danger/20 text-accent-danger border border-accent-danger/40 font-bold hover:shadow-glow-red"
+                          : "text-white border hover:shadow-glow-purple"
                       }`}
+                      style={!isHigh ? {
+                        backgroundColor: val === 0 ? '#0C1E3E' : `rgba(142, 82, 245, ${alpha})`,
+                        borderColor: `rgba(142, 82, 245, ${Math.max(0.2, alpha)})`
+                      } : undefined}
                     >
-                      <div className="text-[10px] text-text-secondary">{`C${rIdx}-C${cIdx}`}</div>
+                      <div className={`text-[10px] ${isHigh ? "text-accent-danger/80" : "text-white/60"}`}>{`C${rIdx}-C${cIdx}`}</div>
                       <div className="font-bold">{val.toFixed(4)}</div>
                     </div>
                   );
@@ -214,8 +217,8 @@ export const DefensePipeline: React.FC<DefensePipelineProps> = ({ latestRound, i
               )}
             </div>
             <div className="w-full flex items-center justify-between text-[10px] text-zinc-500 font-mono mt-4 pt-3 border-t border-border/50 max-w-sm">
-              <span className="flex items-center gap-1.5 text-accent-safe">
-                <span className="w-2 h-2 rounded bg-accent-safe/30 border border-accent-safe" />
+              <span className="flex items-center gap-1.5 text-secondary">
+                <span className="w-2 h-2 rounded bg-[#8E52F5]/50 border border-[#8E52F5]" />
                 <span>Low (&lt;0.015) Benign</span>
               </span>
               <span className="flex items-center gap-1.5 text-accent-danger">

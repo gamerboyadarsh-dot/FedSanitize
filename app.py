@@ -1,20 +1,11 @@
 """
-FedSanitize — Streamlit Main Application
-========================================
-Interactive enterprise dashboard for real-time monitoring and defense
-of federated learning systems against adversarial model poisoning and backdoors.
-
-Grounded in:
-  - Layer 1: Statistical Anomaly Filter (L2 Norm, MAD, Cosine Direction)
-  - Layer 2: MARS Backdoor Defense (Wan et al., NeurIPS 2025)
-  - Layer 3: Robust Coordinate-wise Trimmed Mean Aggregation
+FedSanitize Streamlit Main Application
 """
 
 import os
 import sys
 import streamlit as st
 
-# Ensure project root is in sys.path
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
@@ -27,27 +18,24 @@ from dashboard import (
     render_analytics_page,
     render_config_page,
 )
+from dashboard.theme import apply_theme, COLORS
 from services import SimulationService, ResultService
 from federated import get_mnist_datasets, partition_data, FLClient, FLServer
 from attacks import TriggeredTestDataset
 from config import DEFAULT_CONFIG
-from utils.seed import set_seed
 
-# -------------------------------------------------------------
-# Streamlit Page Configuration
-# -------------------------------------------------------------
 st.set_page_config(
-    page_title="FedSanitize — FL Threat Defense Platform",
-    page_icon="🛡️",
+    page_title="FedSanitize - FL Threat Defense Platform",
+    page_icon="assets/logo_icon.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
+apply_theme(st)
+
 
 def initialize_session():
-    """Initializes global simulation and experiment state."""
     if "history" not in st.session_state:
-        # Automatically load pre-generated demo history if available so all pages render with rich real data
         res_svc = ResultService()
         demo_history = res_svc.load_run_history("./results/FedSanitize_MultiRound_Demo_history.json")
         st.session_state["history"] = demo_history if demo_history else []
@@ -56,8 +44,6 @@ def initialize_session():
         server = FLServer(device=DEFAULT_CONFIG.system.device)
         st.session_state["server"] = server
         st.session_state["simulation_service"] = SimulationService(server=server, config=DEFAULT_CONFIG)
-
-        # Pre-partition MNIST dataset once
         try:
             train_ds, test_ds = get_mnist_datasets("./data")
             partitions = partition_data(train_ds, num_clients=10, iid=True, seed=42)
@@ -65,7 +51,7 @@ def initialize_session():
             st.session_state["test_ds"] = test_ds
             st.session_state["partitions"] = partitions
             st.session_state["triggered_test_ds"] = TriggeredTestDataset(test_ds, target_class=0, trigger_size=4)
-        except Exception as e:
+        except Exception:
             st.session_state["train_ds"] = None
             st.session_state["test_ds"] = None
             st.session_state["partitions"] = {}
@@ -73,21 +59,16 @@ def initialize_session():
 
 
 def execute_simulated_round():
-    """Executes a single federated learning round on demand."""
     if st.session_state.get("run_round_trigger", False):
         st.session_state["run_round_trigger"] = False
         partitions = st.session_state.get("partitions")
         test_ds = st.session_state.get("test_ds")
         triggered_ds = st.session_state.get("triggered_test_ds")
-        sim_svc: SimulationService = st.session_state.get("simulation_service")
-
+        sim_svc = st.session_state.get("simulation_service")
         if not partitions or test_ds is None:
             st.error("MNIST data partitions not initialized.")
             return
-
         round_idx = len(st.session_state["history"]) + 1
-
-        # Configure 10 clients: 6 honest, 1 extreme, 1 sign flip, 2 backdoor
         clients = [
             FLClient(0, partitions[0]),
             FLClient(1, partitions[1]),
@@ -100,7 +81,6 @@ def execute_simulated_round():
             FLClient(8, partitions[8], is_malicious=True, attack_type="BACKDOOR"),
             FLClient(9, partitions[9], is_malicious=True, attack_type="BACKDOOR"),
         ]
-
         round_record = sim_svc.run_round(
             clients=clients,
             clean_test_dataset=test_ds,
@@ -114,13 +94,16 @@ def main():
     initialize_session()
     execute_simulated_round()
 
-    # -------------------------------------------------------------
-    # Sidebar Navigation & Branding
-    # -------------------------------------------------------------
     with st.sidebar:
-        st.title("🛡️ FedSanitize")
-        st.caption("v1.0.0 | FL Defense Platform")
-        st.markdown("---")
+        logo_path = os.path.join(PROJECT_ROOT, "assets", "logo.png")
+        if os.path.exists(logo_path):
+            st.image(logo_path, width=140)
+        st.markdown(
+            "<p style='color:#38FBDB;font-family:monospace;font-weight:700;font-size:1.1rem;margin:4px 0 0 0;letter-spacing:0.1em;'>FedSanitize</p>"
+            "<p style='color:#7B8AA3;font-family:monospace;font-size:0.7rem;margin:0;letter-spacing:0.08em;'>v1.0.0 | FL Defense Platform</p>",
+            unsafe_allow_html=True,
+        )
+        st.markdown("<hr style='border-color:rgba(56,251,219,0.15);margin:12px 0;'/>", unsafe_allow_html=True)
 
         page = st.radio(
             "Navigation",
@@ -136,18 +119,21 @@ def main():
             index=0,
         )
 
-        st.markdown("---")
-        st.markdown("### System Telemetry")
-        st.write(f"**Model:** SmallCNN (2 Conv, 2 FC)")
-        st.write(f"**Dataset:** MNIST (60k Train / 10k Test)")
-        st.write(f"**Active Defense:** L1 + MARS + L3")
-        st.write(f"**MARS:** Wan et al., NeurIPS 2025")
-        st.markdown("---")
-        st.caption("© 2026 FedSanitize · All rights reserved.")
+        st.markdown("<hr style='border-color:rgba(56,251,219,0.15);margin:12px 0;'/>", unsafe_allow_html=True)
+        st.markdown(
+            "<p style='color:#38FBDB;font-family:monospace;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 8px 0;'>System Telemetry</p>"
+            "<div style='color:#7B8AA3;font-family:monospace;font-size:0.75rem;line-height:1.8;'>"
+            "<span style='color:#38FBDB;'>MODEL</span>   SmallCNN (2 Conv, 2 FC)<br/>"
+            "<span style='color:#38FBDB;'>DATA</span>    MNIST 60k / 10k Test<br/>"
+            "<span style='color:#38FBDB;'>DEFENSE</span> L1 + MARS + L3<br/>"
+            "<span style='color:#8E52F5;'>REF</span>     Wan et al., NeurIPS 2025"
+            "</div>",
+            unsafe_allow_html=True,
+        )
+        st.markdown("<hr style='border-color:rgba(56,251,219,0.15);margin:12px 0;'/>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#7B8AA3;font-family:monospace;font-size:0.65rem;'>© 2026 FedSanitize · All rights reserved.</p>", unsafe_allow_html=True)
 
-    # -------------------------------------------------------------
-    # Page Router
-    # -------------------------------------------------------------
+
     if page == "⚔️ Live Attack Arena":
         from dashboard import render_simulation_arena_page
         render_simulation_arena_page(st.session_state)

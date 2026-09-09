@@ -75,3 +75,28 @@ export async function fetchArenaData(roundIndex: number = 3): Promise<ArenaData>
   if (!res.ok) throw new Error("Failed to fetch arena simulation data");
   return res.json();
 }
+
+export async function fetchSecuritySummary(): Promise<any> {
+  const res = await fetch(`${API_BASE}/security/summary`);
+  if (!res.ok) throw new Error("Failed to fetch security summary");
+  return res.json();
+}
+
+export async function fetchClientTrust(clientId: string): Promise<any> {
+  const res = await fetch(`${API_BASE}/security/clients/${clientId}/trust`);
+  if (!res.ok) throw new Error(`Failed to fetch trust for ${clientId}`);
+  return res.json();
+}
+
+export async function fetchAllClientTrust(): Promise<any[]> {
+  const res = await fetch(`${API_BASE}/security/clients/trust`);
+  if (!res.ok) throw new Error("Failed to fetch all client trust records");
+  return res.json();
+}
+
+export async function fetchSecurityDecisions(): Promise<any[]> {
+  const res = await fetch(`${API_BASE}/security/decisions`);
+  if (!res.ok) throw new Error("Failed to fetch security decisions");
+  return res.json();
+}
+

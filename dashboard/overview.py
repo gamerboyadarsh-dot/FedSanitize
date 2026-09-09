@@ -40,12 +40,20 @@ def render_overview_page(session_state):
         total_clients = 10
         trusted_count = 10
 
+    is_running = session_state.get("run_round_trigger", False)
+    if is_running:
+        st.markdown("<div class='telemetry-live'>", unsafe_allow_html=True)
+
     col1, col2, col3, col4, col5 = st.columns(5)
     col1.metric("Current Round", f"Round {current_round}", delta=f"+1" if current_round > 0 else None)
     col2.metric("Clean Accuracy", f"{clean_acc:.2f}%", delta="Normal" if clean_acc > 90 else None)
     col3.metric("Backdoor ASR", f"{backdoor_asr:.2f}%", delta="Suppressed" if backdoor_asr < 5 else "Threat", delta_color="inverse")
     col4.metric("Threat Quarantine", f"{total_quarantined} / {total_clients}", delta=f"{trusted_count} Trusted")
     col5.metric("Detection F1", f"{det.get('f1_score', 1.0):.2f}", delta="100% Prec" if det.get("precision", 1.0) == 1.0 else None)
+
+    if is_running:
+        st.markdown("</div>", unsafe_allow_html=True)
+
 
     st.markdown("---")
 

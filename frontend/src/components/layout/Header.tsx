@@ -29,7 +29,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="flex items-center gap-6 min-w-0">
         <div className="flex items-center gap-2.5 shrink-0">
           <div className="w-8 h-8 rounded-lg bg-surface-elevated border border-border flex items-center justify-center">
-            <Activity className="w-4 h-4 text-accent-red animate-pulse" />
+            <Activity className="w-4 h-4 text-primary animate-pulse" />
           </div>
           <div>
             <div className="text-[10px] font-mono uppercase tracking-widest text-text-secondary whitespace-nowrap">
@@ -49,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
                 ROUND
               </span>
-              <span className="text-sm font-mono font-bold text-accent-red">
+              <span className="text-sm font-mono font-bold text-primary">
                 <SlidingNumber value={roundNum} />
               </span>
             </div>
@@ -92,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onLoadDemo}
           disabled={isRunning}
-          className="h-9 px-3.5 rounded-lg bg-[#170b0b] hover:bg-[#251212] text-zinc-300 hover:text-white border border-[#3d1414] hover:border-[#7a1f1f] transition-all duration-200 disabled:opacity-50 whitespace-nowrap font-medium flex items-center justify-center shadow-sm"
+          className="threat-btn-secondary h-9 px-3.5 rounded-lg disabled:opacity-50 whitespace-nowrap font-medium flex items-center justify-center shadow-sm"
         >
           Load 5-Round Demo
         </button>
@@ -100,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onReset}
           disabled={isRunning}
-          className="h-9 px-3.5 rounded-lg bg-[#170b0b] hover:bg-[#251212] text-zinc-400 hover:text-white border border-[#3d1414] hover:border-[#7a1f1f] transition-all duration-200 disabled:opacity-50 flex items-center gap-1.5 whitespace-nowrap font-medium shadow-sm"
+          className="threat-btn-secondary h-9 px-3.5 rounded-lg disabled:opacity-50 flex items-center gap-1.5 whitespace-nowrap font-medium shadow-sm"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           Reset
@@ -109,10 +109,8 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onRunRound}
           disabled={isRunning}
-          className={`h-9 px-4 rounded-lg font-bold transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${
-            isRunning
-              ? "bg-accent-red/50 text-text-primary cursor-not-allowed border border-accent-red/50"
-              : "bg-accent-red hover:bg-[#ff334b] text-white shadow-glow-red hover:shadow-glow-red-lg border border-accent-red hover:border-[#ff4d5a]"
+          className={`threat-btn-primary h-9 px-4 rounded-lg font-bold flex items-center gap-2 whitespace-nowrap ${
+            isRunning ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
           {isRunning ? (
