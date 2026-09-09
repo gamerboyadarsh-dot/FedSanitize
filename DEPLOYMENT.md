@@ -23,50 +23,44 @@ This guide provides step-by-step instructions for deploying the complete **FedSa
 
 ---
 
-## 1. Deploy the Backend (Render Free Tier)
+## 1. Deploy the Backend (Railway — Recommended)
 
-The backend provides the REST API gateway, Zero-Trust authentication, and federated simulation engine.
+Railway offers faster build times, zero cold starts, and immediate Docker container deployment.
 
-### Step 1: Push Repository to GitHub
-Ensure all recent changes are pushed to your GitHub repository:
-```bash
-git push origin main
-```
+### Step 1: Open Railway
+1. Go to [railway.app](https://railway.app) and sign in with your GitHub account.
+2. Click **+ New Project** → **Deploy from GitHub repo**.
+3. Select your **`FedSanitize`** repository.
 
-### Step 2: Create Web Service on Render
-1. Go to [dashboard.render.com](https://dashboard.render.com) and click **New +** → **Web Service**.
-2. Connect your GitHub account and select your **`FedSanitize`** repository.
-3. Configure the service settings:
-   - **Name**: `fedsanitize-backend` (or your choice)
-   - **Region**: Closest to you (e.g., `Oregon (US West)` or `Frankfurt (EU)`)
-   - **Branch**: `main`
-   - **Root Directory**: *(Leave blank)*
-   - **Runtime**: `Python 3`
-   - **Build Command**:
-     ```bash
-     pip install -r requirements.txt
-     ```
-   - **Start Command**:
-     ```bash
-     uvicorn backend_api.main:app --host 0.0.0.0 --port $PORT
-     ```
-   - **Instance Type**: `Free`
+### Step 2: Railway Automatic Build & Deploy
+- Railway will automatically detect [`railway.json`](railway.json) and [`Dockerfile`](Dockerfile).
+- Click **Deploy Now**. Railway will build the container with Python 3.11-slim, install all dependencies, and launch FastAPI on `$PORT`.
 
-### Step 3: Configure Environment Variables
-Under the **Environment Variables** section on Render, add:
-| Key | Value | Description |
-| :--- | :--- | :--- |
-| `PYTHON_VERSION` | `3.11.9` | Ensures clean C-extension builds |
-| `CORS_ORIGINS` | `*` | Or specify your Vercel URL once deployed |
-
-4. Click **Create Web Service**. Render will build and deploy the container.
-5. Once deployed, copy your backend URL (e.g., `https://fedsanitize-backend.onrender.com`).
-6. Test in your browser: `https://fedsanitize-backend.onrender.com/health` should return:
+### Step 3: Generate Domain & Public URL
+1. In your Railway project, click on your deployed **FedSanitize** service box.
+2. Go to the **Settings** tab.
+3. Scroll down to **Networking** → Click **Generate Domain**.
+4. Railway will assign an instant public URL (e.g. `https://fedsanitize-production.up.railway.app`).
+5. Verify in your browser: `https://<YOUR-RAILWAY-DOMAIN>/health` should return:
    ```json
    {"status":"online","service":"FedSanitize Threat-Defense API","version":"1.0.0"}
    ```
 
-*(Alternative: You can also deploy directly using `render.yaml` Blueprint or via Docker using the included `Dockerfile`)*.
+---
+
+### Alternative: Deploy Backend on Render
+
+If you prefer Render:
+1. Go to [dashboard.render.com](https://dashboard.render.com) and click **New +** → **Web Service**.
+2. Connect your GitHub account and select **`FedSanitize`**.
+3. Configure:
+   - **Runtime**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn backend_api.main:app --host 0.0.0.0 --port $PORT`
+   - **Instance Type**: `Free`
+   - **Environment Variables**: `PYTHON_VERSION=3.11.9`, `CORS_ORIGINS=*`
+4. Click **Create Web Service**. Copy the generated Render URL (e.g. `https://fedsanitize-backend.onrender.com`).
+
 
 ---
 
