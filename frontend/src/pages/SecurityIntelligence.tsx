@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ShieldAlert,
   ShieldCheck,
@@ -18,7 +18,8 @@ import {
   Bar,
   Cell
 } from "recharts";
-import { fetchSecuritySummary, fetchAllClientTrust, fetchSecurityDecisions } from "../api/client";
+import { fetchSecuritySummary, fetchAllClientTrust, fetchSecurityDecisions, fetchSocSnapshot } from "../api/client";
+import { SecurityOperationsCenter } from "../components/soc/SecurityOperationsCenter";
 import type { RoundRecord } from "../types/telemetry";
 import { SlidingNumber } from "../components/core/SlidingNumber";
 import { AnimatedGroup } from "../components/core/AnimatedGroup";
@@ -29,23 +30,27 @@ interface SecurityIntelligenceProps {
 }
 
 export const SecurityIntelligence: React.FC<SecurityIntelligenceProps> = ({ latestRound }) => {
+  const [activeSubTab, setActiveSubTab] = useState<"soc" | "trust">("soc");
   const [summary, setSummary] = useState<any>(null);
   const [trustRecords, setTrustRecords] = useState<any[]>([]);
   const [decisions, setDecisions] = useState<any[]>([]);
+  const [socSnapshot, setSocSnapshot] = useState<any>(null);
   const [selectedClientId, setSelectedClientId] = useState<string>("C0");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [sumData, trustData, decData] = await Promise.all([
+      const [sumData, trustData, decData, socData] = await Promise.all([
         fetchSecuritySummary().catch(() => null),
         fetchAllClientTrust().catch(() => []),
         fetchSecurityDecisions().catch(() => []),
+        fetchSocSnapshot().catch(() => null),
       ]);
       setSummary(sumData);
       setTrustRecords(trustData);
       setDecisions(decData);
+      setSocSnapshot(socData);
       if (trustData.length > 0 && !selectedClientId) {
         setSelectedClientId(trustData[0].client_id);
       }
@@ -55,6 +60,7 @@ export const SecurityIntelligence: React.FC<SecurityIntelligenceProps> = ({ late
       setIsLoading(false);
     }
   };
+
 
   useEffect(() => {
     loadData();
@@ -113,7 +119,7 @@ export const SecurityIntelligence: React.FC<SecurityIntelligenceProps> = ({ late
           <div className="flex items-center gap-2.5">
             <Award className="w-5 h-5 text-primary" />
             <h2 className="text-base font-mono font-bold uppercase tracking-wider text-text-primary">
-              Security Intelligence Engine (Team A: Feature 1 & 2)
+              Security Intelligence & Operations Center
             </h2>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-primary/10 border border-primary/30 text-primary uppercase font-bold">
               Mode: {mode}
@@ -125,7 +131,7 @@ export const SecurityIntelligence: React.FC<SecurityIntelligenceProps> = ({ late
             )}
           </div>
           <p className="text-xs text-text-secondary font-mono mt-1">
-            Dynamic Client Trust Scoring (F1) & Multi-Signal Adaptive Defense Orchestration (F2).
+            Dynamic Client Trust Scoring (F1), Multi-Signal Defense (F2), and Cryptographic SOC Audit (Team B).
           </p>
         </div>
         <button
@@ -138,7 +144,42 @@ export const SecurityIntelligence: React.FC<SecurityIntelligenceProps> = ({ late
         </button>
       </div>
 
-      <AnimatedGroup className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Sub-tab Navigation */}
+      <div className="flex items-center gap-2 border-b border-border/80 pb-3">
+        <button
+          onClick={() => setActiveSubTab("soc")}
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-2 transition-all ${
+            activeSubTab === "soc"
+              ? "bg-primary text-black shadow-glow-cyan"
+              : "bg-surface text-text-secondary border border-border hover:text-white"
+          }`}
+        >
+          <ShieldAlert className="w-3.5 h-3.5" />
+          🛡️ Team B: Security Operations Center (SOC)
+        </button>
+        <button
+          onClick={() => setActiveSubTab("trust")}
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-2 transition-all ${
+            activeSubTab === "trust"
+              ? "bg-primary text-black shadow-glow-cyan"
+              : "bg-surface text-text-secondary border border-border hover:text-white"
+          }`}
+        >
+          <Award className="w-3.5 h-3.5" />
+          🎖️ Team A: Client Trust & Policy Orchestrator
+        </button>
+      </div>
+
+      {activeSubTab === "soc" ? (
+        <SecurityOperationsCenter
+          snapshot={socSnapshot}
+          isLoading={isLoading}
+          onRefresh={loadData}
+        />
+      ) : (
+        <>
+          <AnimatedGroup className="grid grid-cols-1 md:grid-cols-4 gap-4">
+
         <GlowEffect glowColor="rgba(56, 251, 219, 0.4)">
           <div className="bg-surface border border-border rounded-xl p-4 threat-card h-full flex flex-col justify-between">
             <div>
@@ -420,6 +461,9 @@ export const SecurityIntelligence: React.FC<SecurityIntelligenceProps> = ({ late
           </div>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 };
+

@@ -417,6 +417,37 @@ def get_security_decisions():
 
 
 # ---------------------------------------------------------------------------
+# Team B: Security Operations Center (SOC) Endpoints
+# ---------------------------------------------------------------------------
+
+try:
+    from security_intelligence.team_b_bundle import TeamBBundle
+    team_b_bundle = TeamBBundle(use_disk_persistence=True)
+    if not team_b_bundle.posture.timeline():
+        demo_rounds = [
+            {"round_id": 1, "evidence": {"layer1_anomaly_score": 0.2}, "signals": {"layer1_severity": 0.2, "mars_severity": 0.1}, "client": "C1"},
+            {"round_id": 2, "evidence": {"mars_severity": 0.8, "layer1_anomaly_score": 0.6}, "signals": {"layer1_severity": 0.6, "mars_severity": 0.8, "incident_severity": 0.5}, "client": "C6"},
+            {"round_id": 3, "evidence": {"attack_confirmed": True, "mars_severity": 0.95}, "signals": {"layer1_severity": 0.7, "mars_severity": 0.95, "incident_severity": 0.9, "malicious_client_ratio": 0.3}, "client": "C8"},
+        ]
+        for r in demo_rounds:
+            team_b_bundle.incident_engine.handle(r["evidence"], round_id=r["round_id"], client_id=r["client"])
+            team_b_bundle.threat_engine.assess(r["signals"], round_id=r["round_id"])
+except Exception as e:
+    team_b_bundle = None
+
+
+@app.get("/security/soc/snapshot")
+def get_soc_snapshot():
+    """Returns the full Team B SOC snapshot (threat intelligence, audit trail, incidents, quarantine)."""
+    if team_b_bundle is None:
+        raise HTTPException(status_code=503, detail="Team B SOC bundle unavailable")
+    trust_records = [r.to_dict() for r in state.trust_engine.get_all_clients()]
+    snap = team_b_bundle.snapshot(team_a_trust_records=trust_records)
+    return snap.to_dict()
+
+
+
+# ---------------------------------------------------------------------------
 # Simulation Arena Endpoints (React Live Attack Arena)
 # ---------------------------------------------------------------------------
 

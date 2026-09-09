@@ -100,3 +100,10 @@ export async function fetchArenaData(roundIndex: number = 3): Promise<ArenaData>
   return res.json();
 }
 
+export async function fetchSocSnapshot(): Promise<any> {
+  const res = await fetch(`${API_BASE}/security/soc/snapshot`);
+  if (!res.ok) throw new Error("Failed to fetch SOC snapshot");
+  return res.json();
+}
+
+
