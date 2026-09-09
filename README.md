@@ -184,86 +184,143 @@ R6     | FedSanitize    |      97.14%        |       0.47%      |      100.00%  
 
 ---
 
-## 🗂️ Repository Structure
+### 🗂️ Complete Repository Structure
 
 ```
 FedSanitize/
+├── app.py                          # Streamlit main app: session init, sidebar nav, page router
 ├── config.py                       # Central typed configuration dataclasses & presets
 ├── README.md                       # Complete system documentation
-├── requirements.txt                # Locked Python ML dependencies
+├── requirements.txt                # Locked Python ML dependencies (torch, scipy, streamlit...)
 │
 ├── models/
-│   └── cnn.py                      # SmallCNN: Conv2D → ReLU → MaxPool → FC
+│   └── cnn.py                      # SmallCNN: Conv2D(32) → ReLU → MaxPool → Conv2D(64) → ReLU → MaxPool → FC(128) → FC(10)
 │
 ├── federated/
-│   ├── client.py                   # FLClient: local training & update container
-│   ├── server.py                   # FLServer: global model state & baseline FedAvg
-│   ├── trainer.py                  # Local training loops & validation routines
-│   ├── data_partition.py           # IID & Dirichlet Non-IID data distribution
-│   ├── update_utils.py             # Delta computation, L2 norm, flattening/unflattening
-│   └── baseline_aggregation.py     # Standard FedAvg aggregation implementation
+│   ├── client.py                   # FLClient: local DataLoader, SGD optimizer, update container
+│   ├── server.py                   # FLServer: global model state & baseline FedAvg coordinator
+│   ├── trainer.py                  # Local training loops, clean accuracy & ASR validation
+│   ├── data_partition.py           # IID & Dirichlet Non-IID (α=0.5) MNIST partitioning
+│   ├── update_utils.py             # ΔW extraction, L2 norm, tensor flatten/unflatten helpers
+│   └── baseline_aggregation.py     # Vanilla FedAvg (McMahan et al. 2017) implementation
 │
 ├── defense/
 │   ├── layer1_anomaly/             # LAYER 1: Statistical Anomaly Filter
 │   │   ├── robust_statistics.py    # Coordinate-wise median & MAD calculator
-│   │   ├── update_features.py      # Norm & cosine similarity feature extractors
-│   │   └── anomaly_detector.py     # Explainable scoring and quarantine tagging
+│   │   ├── update_features.py      # L2 norm & cosine similarity feature extractors
+│   │   └── anomaly_detector.py     # Explainable scoring, quarantine tagging (EXTREME_UPDATE_NORM, LOW_DIRECTIONAL_SIMILARITY)
 │   │
 │   ├── layer2_mars/                # LAYER 2: MARS Backdoor Isolation (NeurIPS 2025)
-│   │   ├── layer_selection.py      # Gradient variance sensitivity layer selector
-│   │   ├── cbe.py                  # Client Backdoor Energy (CBE) metric
-│   │   ├── wasserstein.py          # Pairwise 1D Wasserstein distance matrix
-│   │   ├── clustering.py           # Agglomerative clustering with malignity guards
-│   │   └── mars.py                 # Unified MARS pipeline controller
+│   │   ├── layer_selection.py      # Gradient variance sensitivity: selects feature extractor layer
+│   │   ├── cbe.py                  # Client Backdoor Energy (CBE) — top-p% concentrated update ratio
+│   │   ├── wasserstein.py          # Pairwise 1D Wasserstein (Earth Mover's) distance matrix
+│   │   ├── clustering.py           # Agglomerative clustering with malignity threshold guard (≥0.015)
+│   │   └── mars.py                 # Unified MARS pipeline controller (calls all sub-modules)
 │   │
 │   └── layer3_robust/              # LAYER 3: Robust Aggregation
-│       └── trimmed_mean.py         # Coordinate-wise trimmed mean aggregator
+│       └── trimmed_mean.py         # Coordinate-wise trimmed mean (β=0.10 tail discard)
 │
-├── attacks/                        # 5 ADVERSARIAL THREAT MODELS
-│   ├── label_flipping.py
-│   ├── sign_flipping.py
-│   ├── random_byzantine.py
-│   ├── extreme_update.py
-│   └── backdoor.py
+├── attacks/                        # 5 ADVERSARIAL THREAT MODEL IMPLEMENTATIONS
+│   ├── backdoor.py                 # Stamps 3×3 white pixel trigger, relabels to target class 0
+│   ├── extreme_update.py           # Scales ΔW by γ=10.0 to overwhelm FedAvg
+│   ├── sign_flipping.py            # Inverts gradient direction (–γ × ΔW) as DoS attack
+│   ├── random_byzantine.py         # Injects Gaussian noise ΔW ~ N(0, σ²I)
+│   └── label_flipping.py           # Permutes local training labels (e.g. 7→1)
 │
-├── services/                       # CORE ORCHESTRATION PIPELINES
-│   ├── security_service.py         # 3-Layer Firewall orchestration
-│   ├── simulation_service.py       # Full FL round coordinator & attack injector
-│   └── result_service.py           # Metrics aggregator & telemetry formatter
+├── services/                       # CORE ORCHESTRATION LAYER
+│   ├── simulation_service.py       # Full FL round coordinator: client train → attack inject → defense pipeline → evaluate
+│   ├── security_service.py         # 3-Layer Firewall sequential orchestration (L1→L2→L3)
+│   └── result_service.py           # Metrics aggregator & JSON telemetry formatter
 │
-├── evaluation/                     # METRICS & VISUALIZATION ENGINE
-│   ├── accuracy.py
-│   ├── attack_success_rate.py
-│   ├── detection_metrics.py
-│   ├── experiment_logger.py
-│   └── plots.py
+├── evaluation/                     # METRICS ENGINE
+│   ├── accuracy.py                 # Clean validation accuracy calculator
+│   ├── attack_success_rate.py      # Backdoor ASR calculator on triggered test set
+│   ├── detection_metrics.py        # Precision, Recall, F1 for defense detection
+│   ├── experiment_logger.py        # Structured JSON experiment history logger
+│   └── plots.py                    # Matplotlib/Plotly utility chart functions
+│
+├── simulation/                     # FORENSIC REPLAY ENGINE (Live Attack Arena backend)
+│   ├── event_types.py              # EventType enum: ROUND_START, CLIENT_TRAINING, LAYER1_FLAGGED, MARS_QUARANTINED, AGGREGATION_COMPLETE, etc.
+│   ├── security_event.py           # SecurityEvent dataclass: client_id, severity, layer, message, payload dict
+│   ├── event_recorder.py           # Captures & sanitizes security events emitted during a round
+│   ├── timeline_builder.py         # Converts event list → ordered TimelineStep list for playback
+│   ├── replay_engine.py            # State-machine: step_forward(), step_backward(), seek(n), set_speed()
+│   ├── network_state.py            # Tracks live node roles (honest/malicious/quarantined), active defense layer
+│   ├── scenario_engine.py          # Per-attack narrative generator: title, headline, technical explanation, forensic focus
+│   ├── serialization.py            # JSON export/import of full simulation replays for offline forensics
+│   └── simulation_adapter.py       # Converts FL round result dicts → SimulationResult (SecurityEvent stream + MARS data)
+│
+├── visualization/                  # PLOTLY CHART COMPONENTS (Live Attack Arena frontend)
+│   ├── network/
+│   │   ├── topology.py             # Builds Plotly-compatible node/edge topology from NetworkState
+│   │   ├── network_renderer.py     # Renders animated Plotly network topology graph
+│   │   └── network_fallback.py     # HTML/CSS fallback renderer for Streamlit compatibility
+│   ├── defense/
+│   │   ├── layer1_viz.py           # L2 norm bar chart & cosine similarity radar
+│   │   ├── mars_viz.py             # CBE bar chart, Wasserstein pairwise heatmap, agglomerative cluster scatter
+│   │   └── aggregation_viz.py      # Trimmed mean parameter distribution overview chart
+│   ├── attacks/
+│   │   ├── backdoor_viz.py         # Backdoor trigger injection 6-stage HTML walkthrough
+│   │   ├── extreme_update_viz.py   # Gradient norm comparison bar chart (honest vs. adversary)
+│   │   ├── sign_flip_viz.py        # Vector direction inversion arrow diagram
+│   │   └── byzantine_viz.py        # Gaussian noise scatter plot vs honest distribution
+│   ├── components/
+│   │   ├── metric_cards.py         # Arena header: Round ID, Threat Level, ASR, Clean Accuracy KPI cards
+│   │   ├── event_timeline.py       # Horizontal step-by-step HTML timeline with phase labels
+│   │   ├── client_forensics.py     # Per-client dossier card: norm score, CBE score, verdict
+│   │   ├── pipeline_status.py      # 3-Layer Pipeline horizontal status bar with blocked counts
+│   │   └── threat_panel.py         # Threat tier classifier + before/after defense comparison card
+│   └── effects/
+│       └── alerts.py               # Severity-styled alert banners & quarantine action cards
+│
+├── dashboard/                      # STREAMLIT PAGE RENDERERS (7 pages)
+│   ├── theme.py                    # Global CSS injection, color tokens (COLORS dict), apply_theme()
+│   ├── overview.py                 # Overview page: animated KPIs, round history table
+│   ├── clients.py                  # Client Profiling page: per-client status matrix & threat tags
+│   ├── defense.py                  # 3-Layer Defense page: per-layer drilldown & MARS heatmap
+│   ├── attacks.py                  # Attack Playground page: per-client attack assignment toggles
+│   ├── analytics.py                # Comparative Analytics page: ASR/accuracy convergence charts
+│   ├── config_page.py              # System Configuration page: hyperparameter sliders
+│   └── simulation_arena.py         # ⚔️ LIVE ATTACK ARENA: forensic replay centerpiece with network graph, timeline, client dossiers
 │
 ├── backend_api/                    # FASTAPI REST GATEWAY
-│   ├── main.py                     # All API routes: /config /clients /simulation /experiments
-│   └── schemas.py                  # Pydantic request/response schemas
+│   ├── main.py                     # All API routes: /health /config /clients /simulation /experiments
+│   └── schemas.py                  # Pydantic v2 request/response schemas (strict type validation)
 │
 ├── frontend/                       # REACT 18 + TYPESCRIPT + VITE DASHBOARD
 │   ├── src/
+│   │   ├── App.tsx                 # Root layout: ambient gradient background, SVG noise, route state
+│   │   ├── index.css               # Global Tailwind CSS, custom tokens, scrollbar, glow effects
 │   │   ├── pages/
-│   │   │   ├── Overview.tsx        # Live KPI panel + run controls
-│   │   │   ├── ClientProfiling.tsx # Per-client status table & threat tags
-│   │   │   ├── DefensePipeline.tsx # Layer-by-layer audit with MARS heatmap
-│   │   │   ├── AttackPlayground.tsx# Attack toggle & live ASR readout
-│   │   │   ├── Analytics.tsx       # Historical trend charts & confusion matrix
-│   │   │   └── Configuration.tsx   # Hyperparameter sliders
+│   │   │   ├── Overview.tsx        # Live KPI bar, Recharts ASR vs accuracy dual-line chart, audit log
+│   │   │   ├── ClientProfiling.tsx # Per-client status pills (TRUSTED/QUARANTINED), norm scores
+│   │   │   ├── DefensePipeline.tsx # BorderTrail per-layer, Wasserstein heatmap (cyan→purple→red)
+│   │   │   ├── AttackPlayground.tsx# 14×14 CSS pixel-grid trigger matrix, per-client attack toggles
+│   │   │   ├── Analytics.tsx       # Confusion matrix (TP/FP/FN/TN) with F1 score, history table
+│   │   │   └── Configuration.tsx   # 11-param gradient-track sliders (purple→cyan unified style)
 │   │   ├── components/
-│   │   │   ├── layout/             # Header (KPI bar), Sidebar (animated nav)
-│   │   │   ├── common/             # StartupScreen, shared UI primitives
-│   │   │   └── core/               # Motion Primitives: AnimatedGroup, SlidingNumber,
-│   │   │                           #   BorderTrail, GlowEffect, TextEffect, Spotlight
-│   │   ├── api/client.ts           # Typed Axios API client
-│   │   └── types/telemetry.ts      # Round record & config TypeScript types
-│   ├── package.json
-│   └── vite.config.ts
+│   │   │   ├── layout/Header.tsx   # Sticky top bar: SlidingNumber KPIs, Run/Reset/Demo buttons
+│   │   │   ├── layout/Sidebar.tsx  # Animated nav with AnimatedBackground indicator, logo
+│   │   │   ├── common/StartupScreen.tsx  # Terminal boot sequence: INIT_KERNEL → TELEMETRY phases
+│   │   │   └── core/               # Motion Primitives: BorderTrail, SlidingNumber, GlowEffect, TextEffect, Spotlight, TransitionPanel
+│   │   ├── api/client.ts           # Typed Axios REST client (fetchHistory, runRound, resetSimulation, loadDemo)
+│   │   └── types/telemetry.ts      # RoundRecord & ClientSummary TypeScript interfaces
+│   ├── tailwind.config.js          # Custom tokens: void-black, signal-cyan, stealth-purple, accent-danger
+│   ├── vite.config.ts              # Vite build config with proxy to FastAPI :8000
+│   └── package.json
 │
+├── assets/                         # Static assets (logo.png, logo_icon.png — custom SVG cybersecurity logo)
+├── data/                           # MNIST dataset auto-downloaded on first run
+├── results/                        # Pre-computed 6-round demo JSON history for instant Load Demo
+├── experiments/                    # Saved experiment log JSONs
+├── scripts/                        # Utility & helper scripts
+├── utils/                          # Shared utility functions
 └── tests/
-    ├── test_api.py                 # FastAPI endpoint integration tests (5/5 passing)
-    └── ...                         # ML unit tests (CNN, data, attacks, defense layers)
+    ├── test_api.py                         # FastAPI endpoint integration tests (5/5 passing)
+    ├── test_simulation_adapter.py          # SimulationAdapter unit tests
+    ├── test_simulation_event_system.py     # EventRecorder & SecurityEvent tests
+    ├── test_simulation_timeline_and_replay.py  # TimelineBuilder & ReplayEngine tests
+    └── test_simulation_visualization.py   # Visualization component render tests
 ```
 
 ---
@@ -326,6 +383,62 @@ pytest tests/test_api.py -v
 ```
 
 Expected output: **5/5 tests passing**.
+
+---
+
+## 🐍 Streamlit Dashboard (`app.py` — port 8502)
+
+FedSanitize ships a **second, standalone dashboard** built in Streamlit for rapid forensic analysis and Live Attack Arena replay. It runs alongside the React frontend and is the primary surface used in the Live Attack Arena.
+
+**Running it:**
+```bash
+streamlit run app.py --server.port 8502
+```
+
+| Page | Module | Description |
+| :--- | :--- | :--- |
+| ⚔️ **Live Attack Arena** | `dashboard/simulation_arena.py` | Flagship forensic replay: animated network topology graph, step/seek playback controls, 5 scenario narratives, Layer 1 norm charts, MARS CBE heatmap, client dossiers |
+| 🏠 **Overview** | `dashboard/overview.py` | Animated KPI bar, round history table, clean accuracy & ASR trend |
+| 👥 **Client Profiling** | `dashboard/clients.py` | Per-client status matrix with TRUSTED/QUARANTINED badges, threat tags, norm scores |
+| 🛡️ **3-Layer Defense** | `dashboard/defense.py` | Layer-by-layer audit drilldown: MAD scores, CBE heatmap, trimmed mean stats |
+| 🎯 **Attack Playground** | `dashboard/attacks.py` | Per-client attack assignment toggles (Backdoor, Extreme, Sign-Flip, Byzantine) |
+| 📈 **Comparative Analytics** | `dashboard/analytics.py` | Multi-round ASR vs. accuracy convergence charts, confusion matrix |
+| ⚙️ **System Configuration** | `dashboard/config_page.py` | Live hyperparameter sliders for Federated, Defense, and Attack configs |
+
+### Session Architecture
+`app.py` initializes once per session: loads the `FLServer` into Streamlit session state, partitions MNIST with Dirichlet sampling, builds a `TriggeredTestDataset` (trigger size = 4px), and loads pre-computed demo history from `results/`. All pages share this session state, so a round run on any page updates the global history.
+
+---
+
+## 📦 Python Dependency Stack
+
+All versions are pinned in `requirements.txt` to ensure reproducibility:
+
+| Package | Version | Role |
+| :--- | :--- | :--- |
+| `torch` | 2.3.1 | CNN model, local SGD, tensor operations |
+| `torchvision` | 0.18.1 | MNIST dataset download & transforms |
+| `numpy` | 1.26.4 | Numerical operations, norm calculations |
+| `pandas` | 2.2.2 | Round history DataFrame processing |
+| `scipy` | 1.13.1 | 1D Wasserstein distance (`wasserstein_distance`) |
+| `scikit-learn` | 1.5.0 | Agglomerative Clustering for MARS |
+| `streamlit` | 1.36.0 | Streamlit dashboard server & session state |
+| `plotly` | 5.22.0 | Interactive charts (network graph, heatmaps) |
+| `matplotlib` | 3.9.0 | Static plots & evaluation charts |
+
+**Frontend dependencies** (in `frontend/package.json`):
+
+| Package | Role |
+| :--- | :--- |
+| `react` / `react-dom` 18 | UI component framework |
+| `vite` 6 | Build tool & dev server with FastAPI proxy |
+| `typescript` | Static typing for telemetry data structures |
+| `tailwindcss` | Utility-first CSS with custom cybersecurity tokens |
+| `framer-motion` | Hardware-accelerated animations |
+| `@radix-ui` / shadcn/ui | Accessible headless components |
+| `recharts` | Cartesian charts for ASR vs. accuracy plots |
+| `axios` | Typed HTTP client to FastAPI gateway |
+| `lucide-react` | Icon library |
 
 ---
 
