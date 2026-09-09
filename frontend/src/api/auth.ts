@@ -21,7 +21,7 @@
 const API_BASE = "http://127.0.0.1:8000";
 const STORAGE_KEY = "fedsanitize_auth";
 
-interface StoredAuth {
+export interface StoredAuth {
   accessToken: string;
   refreshToken: string;
   role: "admin" | "client";
@@ -42,6 +42,10 @@ function writeAuth(auth: StoredAuth): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(auth));
 }
 
+export function getAuth(): StoredAuth | null {
+  return readAuth();
+}
+
 export function logout(): void {
   localStorage.removeItem(STORAGE_KEY);
 }
@@ -52,6 +56,16 @@ export function getRole(): "admin" | "client" | null {
 
 export function isAuthenticated(): boolean {
   return readAuth() !== null;
+}
+
+export async function fetchMe(): Promise<{ subject: string; role: string; client_id?: string; auth_type: string } | null> {
+  try {
+    const res = await authFetch(`${API_BASE}/auth/me`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
 }
 
 /** Admin login — username/password (OAuth2 form-encoded, per FastAPI's OAuth2PasswordRequestForm). */

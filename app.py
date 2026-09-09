@@ -17,6 +17,7 @@ from dashboard import (
     render_attacks_page,
     render_analytics_page,
     render_config_page,
+    render_security_intelligence_page,
 )
 from dashboard.theme import apply_theme, COLORS
 from services import SimulationService, ResultService
@@ -109,6 +110,7 @@ def main():
             "Navigation",
             [
                 "⚔️ Live Attack Arena",
+                "🎖️ Security Intelligence",
                 "🏠 Overview",
                 "👥 Client Profiling",
                 "🛡️ 3-Layer Defense",
@@ -126,16 +128,19 @@ def main():
             "<span style='color:#38FBDB;'>MODEL</span>   SmallCNN (2 Conv, 2 FC)<br/>"
             "<span style='color:#38FBDB;'>DATA</span>    MNIST 60k / 10k Test<br/>"
             "<span style='color:#38FBDB;'>DEFENSE</span> L1 + MARS + L3<br/>"
+            "<span style='color:#20D9A0;'>AUTH</span>    JWT (Role: Admin)<br/>"
             "<span style='color:#8E52F5;'>REF</span>     Wan et al., NeurIPS 2025"
             "</div>",
             unsafe_allow_html=True,
         )
         st.markdown("<hr style='border-color:rgba(56,251,219,0.15);margin:12px 0;'/>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#7B8AA3;font-family:monospace;font-size:0.65rem;'>Pair programming build complete.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#7B8AA3;font-family:monospace;font-size:0.65rem;'>© 2026 FedSanitize · All rights reserved.</p>", unsafe_allow_html=True)
 
     if page == "⚔️ Live Attack Arena":
         from dashboard import render_simulation_arena_page
         render_simulation_arena_page(st.session_state)
+    elif page == "🎖️ Security Intelligence":
+        render_security_intelligence_page(st.session_state)
     elif page == "🏠 Overview":
         render_overview_page(st.session_state)
     elif page == "👥 Client Profiling":
@@ -149,6 +154,17 @@ def main():
     elif page == "⚙️ System Configuration":
         render_config_page(st.session_state)
 
+    # -------------------------------------------------------------
+    # Global Footer
+    # -------------------------------------------------------------
+    st.markdown(
+        "<div style='text-align: center; color: #6E7681; font-size: 11px; margin-top: 40px; padding: 16px 0; border-top: 1px solid #21262D; font-family: monospace;'>"
+        "© 2026 FedSanitize · Multi-Layer Byzantine & Backdoor Defense Framework · All rights reserved."
+        "</div>",
+        unsafe_allow_html=True,
+    )
+
 
 if __name__ == "__main__":
     main()
+

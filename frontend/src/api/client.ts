@@ -1,4 +1,4 @@
-import { RoundRecord, ClientSummary, ConfigData } from "../types/telemetry";
+import { RoundRecord, ClientSummary, ConfigData, ArenaData } from "../types/telemetry";
 
 const API_BASE = "http://127.0.0.1:8000";
 
@@ -91,6 +91,12 @@ export async function fetchAllClientTrust(): Promise<any[]> {
 export async function fetchSecurityDecisions(): Promise<any[]> {
   const res = await fetch(`${API_BASE}/security/decisions`);
   if (!res.ok) throw new Error("Failed to fetch security decisions");
+  return res.json();
+}
+
+export async function fetchArenaData(roundIndex: number = 3): Promise<ArenaData> {
+  const res = await fetch(`${API_BASE}/simulation/arena?round_index=${roundIndex}`);
+  if (!res.ok) throw new Error("Failed to fetch arena simulation data");
   return res.json();
 }
 

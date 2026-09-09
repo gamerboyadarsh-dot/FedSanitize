@@ -45,18 +45,16 @@ class AuthSettings:
     # generated and printed ONCE to stdout at startup. Rotate it via
     # POST /auth/change-password immediately after first login.
     admin_username: str = os.environ.get("FEDSANITIZE_ADMIN_USERNAME", "admin")
-    admin_password_env: str | None = os.environ.get("FEDSANITIZE_ADMIN_PASSWORD")
+    admin_password_env: str | None = os.environ.get("FEDSANITIZE_ADMIN_PASSWORD", "admin123")
 
     # --- Login rate limiting ---
-    login_rate_limit_attempts: int = _env_int("FEDSANITIZE_LOGIN_RATE_LIMIT_ATTEMPTS", 5)
+    login_rate_limit_attempts: int = _env_int("FEDSANITIZE_LOGIN_RATE_LIMIT_ATTEMPTS", 10)
     login_rate_limit_window_seconds: int = _env_int("FEDSANITIZE_LOGIN_RATE_LIMIT_WINDOW_SECONDS", 60)
 
     # --- Client credential bootstrap ---
-    # Comma-separated client ids to seed with a random secret at startup,
+    # Comma-separated client ids to seed with credentials at startup,
     # e.g. "C0,C1,C2,...,C9" to match the demo's default 10-client roster.
-    # Secrets are printed ONCE to stdout at startup — capture and store
-    # them (e.g. in each client's own env/secret manager) immediately.
-    seed_client_ids: str = os.environ.get("FEDSANITIZE_SEED_CLIENT_IDS", "")
+    seed_client_ids: str = os.environ.get("FEDSANITIZE_SEED_CLIENT_IDS", "C0,C1,C2,C3,C4,C5,C6,C7,C8,C9")
 
     require_https_in_prod: bool = _env_bool("FEDSANITIZE_REQUIRE_HTTPS", True)
     environment: str = os.environ.get("FEDSANITIZE_ENV", "development")

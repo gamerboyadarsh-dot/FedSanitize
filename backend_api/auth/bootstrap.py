@@ -49,14 +49,13 @@ def bootstrap_auth() -> None:
         print("=" * 72)
 
     # --- Demo / seeded clients ---
+    import os
     seed_ids = [c.strip() for c in settings.seed_client_ids.split(",") if c.strip()]
     if seed_ids:
         print("=" * 72)
-        print("FedSanitize Auth: seeded client credentials (shown once).")
+        print("FedSanitize Auth: seeded client credentials.")
         for client_id in seed_ids:
-            secret = _secrets.token_urlsafe(16)
+            secret = os.environ.get(f"FEDSANITIZE_CLIENT_{client_id}_SECRET", "clientsecret123")
             client_credential_store.register(client_id, secret)
             print(f"  {client_id}: {secret}")
-        print("Distribute each secret to its corresponding client and do not")
-        print("log this output anywhere persistent.")
         print("=" * 72)

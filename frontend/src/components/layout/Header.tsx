@@ -2,6 +2,7 @@ import React from "react";
 import { ShieldAlert, Activity, RefreshCw } from "lucide-react";
 import type { RoundRecord } from "../../types/telemetry";
 import { SlidingNumber } from "../core/SlidingNumber";
+import { AuthBadgeModal } from "../common/AuthBadgeModal";
 
 interface HeaderProps {
   currentRoundData?: RoundRecord | null;
@@ -89,6 +90,8 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Right: Action Buttons with whitespace-nowrap & consistent h-9 */}
       <div className="flex items-center gap-3 font-mono text-xs shrink-0">
+        <AuthBadgeModal />
+
         <button
           onClick={onLoadDemo}
           disabled={isRunning}

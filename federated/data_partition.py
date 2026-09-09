@@ -25,9 +25,14 @@ def get_mnist_datasets(data_dir: str = "./data") -> Tuple[Dataset, Dataset]:
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])
-    train_dataset = datasets.MNIST(root=data_dir, train=True, download=True, transform=transform)
-    test_dataset = datasets.MNIST(root=data_dir, train=False, download=True, transform=transform)
+    try:
+        train_dataset = datasets.MNIST(root=data_dir, train=True, download=False, transform=transform)
+        test_dataset = datasets.MNIST(root=data_dir, train=False, download=False, transform=transform)
+    except Exception:
+        train_dataset = datasets.MNIST(root=data_dir, train=True, download=True, transform=transform)
+        test_dataset = datasets.MNIST(root=data_dir, train=False, download=True, transform=transform)
     return train_dataset, test_dataset
+
 
 
 def partition_data(

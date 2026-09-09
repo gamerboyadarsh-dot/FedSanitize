@@ -152,3 +152,89 @@ export interface SecurityIntelligenceSummary {
   active_defenses: string[];
 }
 
+// ─────────────────────────────────────────────────────────────
+// Live Attack Arena Types
+// ─────────────────────────────────────────────────────────────
+
+
+export type VisualState = "TRUSTED" | "FLAGGED" | "QUARANTINED" | "TRAINING" | "TRANSMITTING";
+
+export interface ArenaNetworkNode {
+  client_id: string;
+  x: number;
+  y: number;
+  visual_state: VisualState;
+  is_malicious: boolean;
+}
+
+export interface ArenaSecurityEvent {
+  event_type: string;
+  severity: "INFO" | "WARNING" | "HIGH" | "CRITICAL";
+  message: string;
+  client_id: string | null;
+  layer: string | null;
+  timestamp: number;
+  payload: Record<string, unknown>;
+}
+
+export interface ArenaTimelineStep {
+  step_index: number;
+  scene: string;
+  description: string;
+  event: ArenaSecurityEvent;
+}
+
+export interface ArenaClientRecord {
+  attack_type: string;
+  is_malicious: boolean;
+  update_norm: number;
+  cosine_similarity: number;
+  layer1_status: "PASS" | "FLAGGED";
+  layer1_reason: string;
+  cbe_concentration_ratio: number;
+  cluster_id: number | null;
+  mars_status: "PASS" | "FLAGGED" | "SKIPPED";
+  mars_reason: string;
+  final_status: "TRUSTED" | "QUARANTINED";
+}
+
+export interface ArenaScenarioNarrative {
+  attack_type: string;
+  title: string;
+  headline: string;
+  story_steps: string[];
+  mitigating_layer: string;
+  forensic_focus: string;
+  technical_explanation: string;
+  threat_severity: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+}
+
+export interface ArenaSummary {
+  round_id: number;
+  attack_type: string;
+  clean_accuracy: number;
+  backdoor_asr: number;
+  threat_tier: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  threat_score: number;
+  quarantined_count: number;
+  trusted_count: number;
+  quarantined_clients: string[];
+  trusted_clients: string[];
+  l1_quarantined: string[];
+  mars_quarantined: string[];
+}
+
+export interface ArenaData {
+  round_index: number;
+  total_rounds: number;
+  round_record: Record<string, unknown>;
+  network_nodes: Record<string, ArenaNetworkNode>;
+  timeline_steps: ArenaTimelineStep[];
+  client_security_records: Record<string, ArenaClientRecord>;
+  mars_data: Record<string, unknown>;
+  scenario_narrative: ArenaScenarioNarrative;
+  summary: ArenaSummary;
+  scenario_labels: Record<string, string>;
+}
+
+

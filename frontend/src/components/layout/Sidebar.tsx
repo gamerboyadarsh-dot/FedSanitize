@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { AnimatedBackground } from "../core/AnimatedBackground";
 
-export type NavPage = "overview" | "clients" | "defense" | "attacks" | "analytics" | "security-intelligence" | "config";
+export type NavPage = "overview" | "clients" | "defense" | "attacks" | "analytics" | "arena" | "security-intelligence" | "config";
 
 interface SidebarProps {
   currentPage: NavPage;
@@ -29,6 +29,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
     { id: "defense", label: "3-Layer Defense", icon: ShieldCheck },
     { id: "attacks", label: "Attack Playground", icon: Swords },
     { id: "analytics", label: "Comparative Analytics", icon: BarChart3 },
+    { id: "arena", label: "Live Attack Arena", icon: ShieldAlert },
     { id: "security-intelligence", label: "Security Intelligence", icon: Award },
     { id: "config", label: "System Configuration", icon: Sliders },
   ];
@@ -137,6 +138,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
             </div>
             <div className="truncate text-text-secondary/70">arXiv:2509.20383</div>
           </div>
+        </div>
+        <div className="mt-3 text-[10px] font-mono text-text-secondary/50 text-center tracking-tight">
+          © 2026 FedSanitize. All rights reserved.
         </div>
       </div>
     </aside>

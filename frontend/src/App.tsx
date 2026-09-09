@@ -9,6 +9,7 @@ import { AttackPlayground } from "./pages/AttackPlayground";
 import { Analytics } from "./pages/Analytics";
 import { Configuration } from "./pages/Configuration";
 import { SecurityIntelligence } from "./pages/SecurityIntelligence";
+import { LiveAttackArena } from "./pages/LiveAttackArena";
 import { StartupScreen } from "./components/common/StartupScreen";
 import { TransitionPanel } from "./components/core/TransitionPanel";
 import type { RoundRecord, ClientSummary } from "./types/telemetry";
@@ -20,8 +21,7 @@ import {
   loadDemo 
 } from "./api/client";
 
-const pageOrder: NavPage[] = ["overview", "clients", "defense", "attacks", "analytics", "security-intelligence", "config"];
-
+const pageOrder: NavPage[] = ["overview", "clients", "defense", "attacks", "analytics", "arena", "security-intelligence", "config"];
 
 export function App() {
   const [currentPage, setCurrentPage] = useState<NavPage>("overview");
@@ -170,10 +170,17 @@ export function App() {
                 <DefensePipeline latestRound={latestRound} isRunning={isRunning} />
                 <AttackPlayground clients={clients} onRefreshClients={refreshData} />
                 <Analytics history={history} latestRound={latestRound} />
+                <LiveAttackArena />
                 <SecurityIntelligence latestRound={latestRound} />
                 <Configuration />
               </TransitionPanel>
             </main>
+
+            {/* Global Copyright & Architecture Footer */}
+            <footer className="border-t border-border/40 py-2 px-8 text-xs font-mono text-text-secondary/60 flex items-center justify-between shrink-0 bg-surface/30 backdrop-blur-sm select-none">
+              <span>© 2026 FedSanitize · Multi-Layer Byzantine &amp; Backdoor Defense Framework</span>
+              <span className="text-[11px] text-text-secondary/50">NeurIPS 2025 MARS Forensics · All rights reserved.</span>
+            </footer>
           </div>
         </div>
       </div>
