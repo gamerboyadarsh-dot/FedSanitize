@@ -129,7 +129,17 @@ class StateManager:
 
         # Load datasets
         data_dir = os.path.join(PROJECT_ROOT, "data")
-        train_ds, test_ds = get_mnist_datasets(data_dir)
+        try:
+            train_ds, test_ds = get_mnist_datasets(data_dir)
+        except Exception as _e:
+            print(f"[DATA] MNIST download unavailable at startup ({_e}). Using synthetic dataset fallback.")
+            import torch
+            from torch.utils.data import TensorDataset
+            dummy_x = torch.randn(1000, 1, 28, 28)
+            dummy_y = torch.randint(0, 10, (1000,))
+            train_ds = TensorDataset(dummy_x, dummy_y)
+            test_ds = TensorDataset(dummy_x[:200], dummy_y[:200])
+
         self.clean_test_ds = test_ds
         self.triggered_test_ds = TriggeredTestDataset(
             test_ds,

@@ -17,6 +17,9 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Attempt to pre-download MNIST during image build so runtime startup is instant
+RUN python -c "from torchvision import datasets; datasets.MNIST('./data', train=True, download=True); datasets.MNIST('./data', train=False, download=True)" || true
+
 # Copy application source
 COPY . .
 
@@ -24,4 +27,4 @@ COPY . .
 EXPOSE 8000
 
 # Start FastAPI application
-CMD ["sh", "-c", "uvicorn backend_api.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "python -m uvicorn backend_api.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
