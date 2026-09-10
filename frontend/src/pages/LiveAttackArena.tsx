@@ -15,7 +15,6 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { motion } from "framer-motion";
 import type { ArenaData, ArenaSecurityEvent } from "../types/telemetry";
 import { fetchArenaData } from "../api/client";
 import { HeaderMetrics } from "../components/arena/HeaderMetrics";
@@ -222,88 +221,74 @@ export const LiveAttackArena: React.FC = () => {
       <PipelineStatusBar summary={summary} activeLayer={activeLayer} />
 
       {/* ── Playback Controls ── */}
-      <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 mb-4 shadow-xl">
-        <div className="flex flex-wrap gap-3 items-center mb-3">
+      <div style={{ background: "#161B22", border: "1px solid #30363D", borderRadius: 8, padding: "12px 16px", marginBottom: 14 }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginBottom: 10 }}>
           {/* Run Animated */}
-          <motion.button
-            whileHover={!isAnimating ? { scale: 1.05 } : {}}
-            whileTap={!isAnimating ? { scale: 0.95 } : {}}
+          <button
             onClick={runAnimation}
             disabled={isAnimating}
-            className={`px-4 py-2 rounded-xl text-xs font-bold font-sans flex items-center gap-2 transition-colors shadow-lg ${
-              isAnimating 
-                ? "bg-zinc-800 text-zinc-500 border border-zinc-700 cursor-not-allowed" 
-                : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20"
-            }`}
+            style={{
+              background: isAnimating ? "#21262D" : "#238636",
+              color: isAnimating ? "#8B949E" : "#FFF",
+              border: "none", borderRadius: 6, padding: "8px 18px",
+              fontWeight: "bold", fontSize: 13, cursor: isAnimating ? "not-allowed" : "pointer",
+              fontFamily: "monospace",
+            }}
           >
             {isAnimating ? "⏳ Animating..." : "▶ Run Animated Simulation"}
-          </motion.button>
+          </button>
 
-          <div className="flex items-center gap-2 bg-black/40 border border-white/5 rounded-xl p-1 shadow-inner">
-            {/* Back */}
-            <motion.button
-              whileHover={(!isAnimating && currentStep > 0) ? { scale: 1.1 } : {}}
-              whileTap={(!isAnimating && currentStep > 0) ? { scale: 0.9 } : {}}
-              onClick={() => setCurrentStep((s) => Math.max(0, s - 1))}
-              disabled={isAnimating || currentStep === 0}
-              className="px-3 py-1.5 rounded-lg text-xs font-sans font-bold flex items-center gap-1 transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed text-zinc-300"
-              title="Previous Step"
-            >
-              ⏮ Back
-            </motion.button>
+          {/* Back */}
+          <button
+            onClick={() => setCurrentStep((s) => Math.max(0, s - 1))}
+            disabled={isAnimating || currentStep === 0}
+            style={{ background: "#21262D", color: "#F0F6FC", border: "1px solid #30363D", borderRadius: 6, padding: "8px 14px", cursor: "pointer", fontFamily: "monospace", fontWeight: "bold" }}
+          >
+            ⏮ Back
+          </button>
 
-            {/* Next */}
-            <motion.button
-              whileHover={(!isAnimating && currentStep < totalSteps - 1) ? { scale: 1.1 } : {}}
-              whileTap={(!isAnimating && currentStep < totalSteps - 1) ? { scale: 0.9 } : {}}
-              onClick={() => setCurrentStep((s) => Math.min(totalSteps - 1, s + 1))}
-              disabled={isAnimating || currentStep === totalSteps - 1}
-              className="px-3 py-1.5 rounded-lg text-xs font-sans font-bold flex items-center gap-1 transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed text-zinc-300"
-              title="Next Step"
-            >
-              Next ⏭
-            </motion.button>
-          </div>
+          {/* Next */}
+          <button
+            onClick={() => setCurrentStep((s) => Math.min(totalSteps - 1, s + 1))}
+            disabled={isAnimating || currentStep === totalSteps - 1}
+            style={{ background: "#21262D", color: "#F0F6FC", border: "1px solid #30363D", borderRadius: 6, padding: "8px 14px", cursor: "pointer", fontFamily: "monospace", fontWeight: "bold" }}
+          >
+            ⏭ Next
+          </button>
 
-          <div className="flex items-center gap-2 bg-black/40 border border-white/5 rounded-xl p-1 shadow-inner">
-            {/* Reset */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => { setCurrentStep(0); setIsAnimating(false); if (animRef.current) clearTimeout(animRef.current); }}
-              className="px-3 py-1.5 rounded-lg text-xs font-sans font-bold flex items-center gap-1 transition-colors hover:bg-rose-500/20 hover:text-rose-400 text-zinc-300"
-            >
-              ↺ Reset
-            </motion.button>
+          {/* Reset */}
+          <button
+            onClick={() => { setCurrentStep(0); setIsAnimating(false); if (animRef.current) clearTimeout(animRef.current); }}
+            style={{ background: "#21262D", color: "#F0F6FC", border: "1px solid #30363D", borderRadius: 6, padding: "8px 14px", cursor: "pointer", fontFamily: "monospace", fontWeight: "bold" }}
+          >
+            ↺ Reset
+          </button>
 
-            {/* Jump to End */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => { setCurrentStep(totalSteps - 1); setIsAnimating(false); if (animRef.current) clearTimeout(animRef.current); }}
-              className="px-3 py-1.5 rounded-lg text-xs font-sans font-bold flex items-center gap-1 transition-colors hover:bg-cyan-500/20 hover:text-cyan-400 text-zinc-300"
-            >
-              ⏩ End
-            </motion.button>
-          </div>
+          {/* Jump to End */}
+          <button
+            onClick={() => { setCurrentStep(totalSteps - 1); setIsAnimating(false); if (animRef.current) clearTimeout(animRef.current); }}
+            style={{ background: "#21262D", color: "#F0F6FC", border: "1px solid #30363D", borderRadius: 6, padding: "8px 14px", cursor: "pointer", fontFamily: "monospace", fontWeight: "bold" }}
+          >
+            ⏩ Jump to End
+          </button>
 
           {/* Speed */}
-          <div className="flex items-center gap-1.5 ml-auto bg-black/40 border border-white/5 rounded-xl p-1 shadow-inner">
-            <span className="text-[10px] text-zinc-500 font-sans uppercase font-bold px-2 tracking-wider">Speed:</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginLeft: "auto" }}>
+            <span style={{ color: "#8B949E", fontSize: 11 }}>Speed:</span>
             {SPEED_OPTIONS.map((s) => (
-              <motion.button
+              <button
                 key={s}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
                 onClick={() => setSpeed(s)}
-                className={`px-2 py-1 rounded-lg text-xs font-mono font-bold transition-all ${
-                  speed === s
-                    ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 shadow-[0_0_8px_rgba(6,182,212,0.3)]"
-                    : "bg-transparent text-zinc-400 hover:text-white hover:bg-white/5"
-                }`}
+                style={{
+                  background: speed === s ? "#00E5FF" : "#21262D",
+                  color: speed === s ? "#0D1117" : "#F0F6FC",
+                  border: `1px solid ${speed === s ? "#00E5FF" : "#30363D"}`,
+                  borderRadius: 4, padding: "4px 10px",
+                  cursor: "pointer", fontFamily: "monospace", fontSize: 12, fontWeight: speed === s ? "bold" : "normal",
+                }}
               >
                 {s}x
-              </motion.button>
+              </button>
             ))}
           </div>
         </div>

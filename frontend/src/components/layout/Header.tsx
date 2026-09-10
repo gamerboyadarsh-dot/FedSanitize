@@ -44,6 +44,50 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
         </div>
+
+        {roundNum > 0 && (
+          <div className="flex items-center gap-6 border-l border-border pl-6">
+            {/* Round Stat */}
+            <div className="flex flex-col whitespace-nowrap">
+              <span className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
+                ROUND
+              </span>
+              <span className="text-sm font-mono font-bold text-primary">
+                <SlidingNumber value={roundNum} />
+              </span>
+            </div>
+
+            {/* Clean Acc Stat */}
+            <div className="flex flex-col whitespace-nowrap">
+              <span className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
+                CLEAN ACCURACY
+              </span>
+              <span className="text-sm font-mono font-bold text-accent-safe">
+                <SlidingNumber value={cleanAcc} decimalPlaces={1} suffix="%" />
+              </span>
+            </div>
+
+            {/* Backdoor ASR Stat */}
+            <div className="flex flex-col whitespace-nowrap">
+              <span className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
+                BACKDOOR ASR
+              </span>
+              <span className={`text-sm font-mono font-bold ${asr < 2.0 ? "text-accent-safe" : "text-accent-danger"}`}>
+                <SlidingNumber value={asr} decimalPlaces={2} suffix="%" />
+              </span>
+            </div>
+
+            {/* Quarantined Count */}
+            <div className="flex flex-col whitespace-nowrap">
+              <span className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
+                QUARANTINED
+              </span>
+              <span className="text-sm font-mono font-bold text-accent-danger">
+                <SlidingNumber value={totalQuarantined} suffix=" Nodes" />
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Right: Action Buttons with whitespace-nowrap & consistent h-9 */}
@@ -53,7 +97,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onLoadDemo}
           disabled={isRunning}
-          className="bg-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-700 border border-white/10 transition-all shadow-md h-9 px-3.5 rounded-lg disabled:opacity-50 whitespace-nowrap font-medium flex items-center justify-center shadow-sm"
+          className="threat-btn-secondary h-9 px-3.5 rounded-lg disabled:opacity-50 whitespace-nowrap font-medium flex items-center justify-center shadow-sm"
         >
           Load 5-Round Demo
         </button>
@@ -61,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onReset}
           disabled={isRunning}
-          className="bg-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-700 border border-white/10 transition-all shadow-md h-9 px-3.5 rounded-lg disabled:opacity-50 flex items-center gap-1.5 whitespace-nowrap font-medium shadow-sm"
+          className="threat-btn-secondary h-9 px-3.5 rounded-lg disabled:opacity-50 flex items-center gap-1.5 whitespace-nowrap font-medium shadow-sm"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           Reset
@@ -70,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onRunRound}
           disabled={isRunning}
-          className={`bg-white text-black hover:bg-zinc-200 border border-white/20 transition-all shadow-md h-9 px-4 rounded-lg font-bold flex items-center gap-2 whitespace-nowrap ${
+          className={`threat-btn-primary h-9 px-4 rounded-lg font-bold flex items-center gap-2 whitespace-nowrap ${
             isRunning ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >

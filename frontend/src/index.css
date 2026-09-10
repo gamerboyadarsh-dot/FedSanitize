@@ -6,12 +6,22 @@
 
 :root {
   color-scheme: dark;
+  --background: 240 23% 3%;       /* #050508 */
+  --card: 218 67% 15%;             /* #0C1E3E */
+  --card-elevated: 218 62% 19%;    /* #12264D */
+  --primary: 170 96% 60%;          /* #38FBDB */
+  --secondary: 262 89% 64%;        /* #8E52F5 */
+  --foreground: 198 33% 93%;       /* #E8F1F5 */
+  --muted-foreground: 218 17% 56%; /* #7B8AA3 */
+  --destructive: 349 100% 62%;     /* #FF3B5C */
+  --success: 161 74% 49%;          /* #20D9A0 */
+  --warning: 37 91% 55%;           /* #F5A623 */
 }
 
 body {
   margin: 0;
-  background-color: #000000;
-  color: #f4f4f5;
+  background-color: #050508;
+  color: #E8F1F5;
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
 }
@@ -22,30 +32,139 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #0C1E3E;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: #38FBDB;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: #8E52F5;
+  box-shadow: 0 0 8px rgba(56, 251, 219, 0.6);
 }
 
-/* Minimal Custom Scrollbar for inner containers */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+/* Scanline / Grid texture overlay */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(56, 251, 219, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56, 251, 219, 0.04) 1px, transparent 1px);
 }
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+
+/* Threat Console Card Elevation & Cyan-glow Hover Transitions */
+.threat-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 8px 24px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(160deg, #0C1E3E 0%, #07152b 100%);
+  border: 1px solid rgba(56, 251, 219, 0.15);
+  transition: border-color 200ms cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
+
+.threat-card:hover {
+  border-color: #38FBDB !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 251, 219, 0.25);
+  transform: translateY(-1.5px);
 }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+
+.threat-card-elevated {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7), 0 12px 32px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(160deg, #12264D 0%, #0C1E3E 100%);
+  border: 1px solid rgba(56, 251, 219, 0.25);
+  transition: border-color 200ms cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.threat-card-elevated:hover {
+  border-color: #38FBDB;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), 0 0 24px rgba(56, 251, 219, 0.35);
+  transform: translateY(-1.5px);
+}
+
+/* Interactive Table Row Hover with Left Cyan Accent Bar */
+.threat-table-row {
+  position: relative;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.threat-table-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: transparent;
+  transition: background-color 150ms ease-out;
+}
+
+.threat-table-row:hover {
+  background-color: rgba(56, 251, 219, 0.05) !important;
+}
+
+.threat-table-row:hover::before {
+  background-color: #38FBDB;
+}
+
+/* Action Button Hover States */
+.threat-btn-primary {
+  background: linear-gradient(135deg, #38FBDB 0%, #8E52F5 100%);
+  color: #050508;
+  font-weight: 700;
+  box-shadow: 0 0 16px rgba(56, 251, 219, 0.4);
+  transition: background 200ms ease, box-shadow 200ms ease, transform 150ms ease;
+}
+
+.threat-btn-primary:hover {
+  box-shadow: 0 0 24px rgba(56, 251, 219, 0.65);
+  transform: translateY(-1px);
+}
+
+.threat-btn-secondary {
+  background-color: #0C1E3E;
+  border: 1px solid rgba(56, 251, 219, 0.25);
+  color: #E8F1F5;
+  transition: background-color 200ms ease, border-color 200ms ease, color 150ms ease, box-shadow 200ms ease;
+}
+
+.threat-btn-secondary:hover {
+  background-color: #12264D;
+  border-color: #38FBDB;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(56, 251, 219, 0.2);
+}
+
+/* Status Pills */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.2rem 0.625rem;
+  border-radius: 9999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pill-pass {
+  color: #20D9A0;
+  background-color: rgba(32, 217, 160, 0.1);
+  border: 1px solid rgba(32, 217, 160, 0.35);
+}
+
+.pill-quarantined {
+  color: #FF3B5C;
+  background-color: rgba(255, 59, 92, 0.15);
+  border: 1px solid rgba(255, 59, 92, 0.45);
+}
+
+.pill-review {
+  color: #8E52F5;
+  background-color: rgba(142, 82, 245, 0.12);
+  border: 1px solid rgba(142, 82, 245, 0.35);
 }
 
 /* Static fallback for reduced motion */
@@ -57,3 +176,5 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+

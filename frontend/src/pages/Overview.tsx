@@ -10,8 +10,8 @@ import {
   Layers
 } from "lucide-react";
 import { 
-  AreaChart, 
-  Area, 
+  LineChart, 
+  Line, 
   XAxis, 
   YAxis, 
   CartesianGrid, 
@@ -52,7 +52,7 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
       <AnimatedGroup className="grid grid-cols-1 md:grid-cols-5 gap-4 telemetry-live">
         {/* Card 1: Current Round */}
         <GlowEffect glowColor="rgba(56, 251, 219, 0.4)">
-          <div className="bg-surface border border-border rounded-xl p-4  hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
+          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Simulation Round</span>
@@ -74,7 +74,7 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
 
         {/* Card 2: Clean Accuracy */}
         <GlowEffect glowColor="rgba(46, 204, 113, 0.4)">
-          <div className="bg-surface border border-border rounded-xl p-4  hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
+          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Clean Accuracy</span>
@@ -97,7 +97,7 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
 
         {/* Card 3: Backdoor ASR */}
         <GlowEffect glowColor="rgba(255, 59, 92, 0.4)">
-          <div className="bg-surface border border-border rounded-xl p-4  hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
+          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Backdoor ASR</span>
@@ -120,7 +120,7 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
 
         {/* Card 4: Quarantined Clients */}
         <GlowEffect glowColor="rgba(245, 166, 35, 0.4)">
-          <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between group">
+          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Threats Isolated</span>
@@ -138,7 +138,7 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
 
         {/* Card 5: Detection F1 */}
         <GlowEffect glowColor="rgba(46, 204, 113, 0.4)">
-          <div className="bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between group">
+          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
                 <span>Defense F1-Score</span>
@@ -158,7 +158,7 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
       {/* Main Charts & Telemetry Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Dual-Line Convergence Chart */}
-        <div className="lg:col-span-2 bg-zinc-900/50 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl space-y-4 flex flex-col">
+        <div className="lg:col-span-2 bg-surface border border-border rounded-xl p-5 threat-card space-y-4">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div>
               <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary">
@@ -176,46 +176,34 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
           <div className="h-72 w-full pt-2">
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData} margin={{ top: 10, right: 20, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorClean" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="colorAsr" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" opacity={0.5} />
-                  <XAxis dataKey="round" stroke="#a1a1aa" tick={{ fill: "#a1a1aa", fontSize: 11, fontFamily: "monospace" }} />
-                  <YAxis domain={[0, 100]} stroke="#a1a1aa" tick={{ fill: "#a1a1aa", fontSize: 11, fontFamily: "monospace" }} />
+                <LineChart data={chartData} margin={{ top: 10, right: 20, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" opacity={0.5} />
+                  <XAxis dataKey="round" stroke="#64748b" tick={{ fill: "#64748b", fontSize: 11, fontFamily: "monospace" }} />
+                  <YAxis domain={[0, 100]} stroke="#64748b" tick={{ fill: "#64748b", fontSize: 11, fontFamily: "monospace" }} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: "rgba(9, 9, 11, 0.9)", borderColor: "rgba(255,255,255,0.1)", borderRadius: "8px", fontFamily: "monospace", fontSize: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.5)", backdropFilter: "blur(8px)" }}
-                    labelStyle={{ color: "#fafafa", fontWeight: "bold" }}
+                    contentStyle={{ backgroundColor: "#050508", borderColor: "#38FBDB", borderRadius: "8px", fontFamily: "monospace", fontSize: "12px", boxShadow: "0 0 10px rgba(56,251,219,0.2)" }}
+                    labelStyle={{ color: "#f2e8e8", fontWeight: "bold" }}
                   />
                   <Legend wrapperStyle={{ fontFamily: "monospace", fontSize: "11px", paddingTop: "10px" }} />
-                  <Area 
+                  <Line 
                     type="monotone" 
                     dataKey="clean_accuracy" 
                     name="Clean Accuracy (%)" 
-                    stroke="#10b981" 
+                    stroke="#20D9A0" 
                     strokeWidth={2.5} 
-                    fillOpacity={1} 
-                    fill="url(#colorClean)"
-                    activeDot={{ r: 6, strokeWidth: 0, fill: "#10b981" }}
+                    dot={{ fill: "#20D9A0", r: 4 }} 
+                    activeDot={{ r: 6, stroke: "#20D9A0" }}
                   />
-                  <Area 
+                  <Line 
                     type="monotone" 
                     dataKey="backdoor_asr" 
                     name="Backdoor ASR (%)" 
-                    stroke="#ef4444" 
+                    stroke="#FF3B5C" 
                     strokeWidth={2.5} 
-                    fillOpacity={1} 
-                    fill="url(#colorAsr)"
-                    activeDot={{ r: 6, strokeWidth: 0, fill: "#ef4444" }}
+                    dot={{ fill: "#FF3B5C", r: 4 }}
+                    activeDot={{ r: 6, stroke: "#FF3B5C" }}
                   />
-                </AreaChart>
+                </LineChart>
               </ResponsiveContainer>
             ) : (
               <div className="h-full flex items-center justify-center text-text-secondary font-mono text-xs">
@@ -226,61 +214,51 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
         </div>
 
         {/* Right Col: Live Telemetry Terminal Feed */}
-        <div className="bg-[#050505] border border-[#222] rounded-xl overflow-hidden flex flex-col justify-between shadow-2xl relative">
-          {/* Terminal MacOS-style Header */}
-          <div className="bg-[#111] border-b border-[#222] px-4 py-2.5 flex items-center justify-between shrink-0">
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-              <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+        <div className="bg-surface border border-border rounded-xl p-5 threat-card flex flex-col justify-between space-y-4">
+          <div className="flex items-center justify-between border-b border-border/60 pb-3">
+            <div className="flex items-center gap-2">
+              <Terminal className="w-4 h-4 text-primary" />
+              <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary">
+                Gateway Audit Log
+              </h2>
             </div>
-            <div className="text-[10px] font-mono text-gray-500 tracking-widest flex items-center gap-2">
-              <Terminal className="w-3 h-3" />
-              root@fedsanitize:~/logs
-            </div>
-            <div className="w-10"></div>
+            <span className="w-2 h-2 rounded-full bg-accent-safe animate-pulse" />
           </div>
 
-          <div className="p-4 font-mono text-[11px] flex-1 overflow-y-auto max-h-80 space-y-3 relative scanlines scroll-smooth">
+          <div className="bg-background border border-border/80 rounded-lg p-3 font-mono text-xs text-text-secondary flex-1 overflow-y-auto max-h-72 space-y-2.5 relative overflow-hidden scanlines">
             {history.length > 0 ? (
               history.map((r, idx) => {
                 const isLatest = idx === history.length - 1;
-                const logText = r.log || `[SYSTEM] Analyzing client updates for Round ${r.round}... Aggregate clean_accuracy=${r.clean_accuracy.toFixed(2)}%, backdoor_asr=${r.backdoor_asr.toFixed(2)}%`;
+                const logText = r.log || `R${r.round}: Acc=${r.clean_accuracy.toFixed(1)}%, ASR=${r.backdoor_asr.toFixed(1)}%`;
                 return (
-                  <div key={idx} className="z-10 relative leading-relaxed tracking-tight">
-                    <div className="flex items-center gap-2 text-gray-500 mb-1">
-                      <span>{new Date().toLocaleTimeString('en-US', { hour12: false, hour: "numeric", minute: "numeric", second: "numeric" })}</span>
-                      <span className="text-[#38FBDB]">fedsanitize</span>
-                      <span>[PID:4921]</span>
+                  <div key={idx} className="border-b border-border/40 pb-2.5 last:border-0 last:pb-0 z-10 relative">
+                    <div className="flex items-center justify-between text-[11px] font-bold">
+                      <span className="text-primary">[SEC-EVENT] Round {r.round} Audit</span>
+                      <span className="text-text-secondary font-normal">{r.quarantined_clients.length} Blocked</span>
                     </div>
-                    <div className="text-gray-300">
-                      <span className="text-emerald-400 mr-2">➜</span> 
+                    <div className="text-text-primary mt-1 text-[11px] leading-relaxed">
                       {isLatest ? (
                         <TextEffect per="word">{logText}</TextEffect>
                       ) : (
                         logText
                       )}
                     </div>
-                    {r.quarantined_clients.length > 0 && (
-                      <div className="text-red-400 mt-1 pl-4 border-l border-red-500/30 ml-1">
-                        [CRITICAL] Malicious signatures detected. Quarantining: {r.quarantined_clients.join(", ")}
-                      </div>
-                    )}
+                    <div className="text-[10px] text-text-secondary mt-1">
+                      Quarantined: [{r.quarantined_clients.join(", ")}]
+                    </div>
                   </div>
                 );
               })
             ) : (
-              <div className="text-gray-500 italic z-10 relative">
-                root@fedsanitize:~/logs$ tail -f gateway.log
-                <br />
-                Waiting for incoming client connections...
+              <div className="text-text-secondary text-[11px] italic z-10 relative">
+                Gateway listening... No rounds executed yet.
               </div>
             )}
           </div>
 
-          <div className="bg-[#111] px-4 py-2 text-[10px] font-mono text-gray-500 flex items-center justify-between border-t border-[#222]">
+          <div className="pt-2 text-[11px] font-mono text-text-secondary flex items-center justify-between border-t border-border/50">
             <span>Aggregator: Coordinate Trimmed Mean</span>
-            <span className="text-emerald-500 font-bold">● Active</span>
+            <span className="text-accent-safe font-bold">β = 0.10</span>
           </div>
         </div>
       </div>
