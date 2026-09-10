@@ -31,6 +31,11 @@
 
 </div>
 
+## 🚀 Live Deployments
+
+- **Frontend Console (React)**: [https://fed-sanitize.vercel.app](https://fed-sanitize.vercel.app)
+- **Backend API (FastAPI)**: [Insert your Railway backend URL here]
+
 ## 📌 Executive Summary
 
 Federated Learning (FL) enables decentralized model training across distributed clients without exposing private local datasets. However, standard aggregation protocols (such as `FedAvg`) are fundamentally vulnerable to adversarial clients:
