@@ -23,20 +23,39 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, activeRounds }) => {
-  const navItems = [
-    { id: "overview", label: "Overview", icon: LayoutDashboard },
-    { id: "clients", label: "Client Profiling", icon: Users },
-    { id: "defense", label: "3-Layer Defense", icon: ShieldCheck },
-    { id: "attacks", label: "Attack Playground", icon: Swords },
-    { id: "analytics", label: "Comparative Analytics", icon: BarChart3 },
-    { id: "arena", label: "Live Attack Arena", icon: ShieldAlert },
-    { id: "security-intelligence", label: "Security Intelligence", icon: Award },
-    { id: "config", label: "System Configuration", icon: Sliders },
+  const navGroups = [
+    {
+      title: "Core Dashboards",
+      items: [
+        { id: "overview", label: "Overview", icon: LayoutDashboard },
+        { id: "analytics", label: "Comparative Analytics", icon: BarChart3 },
+      ]
+    },
+    {
+      title: "Threat Pipeline",
+      items: [
+        { id: "clients", label: "Client Profiling", icon: Users },
+        { id: "defense", label: "3-Layer Defense", icon: ShieldCheck },
+        { id: "security-intelligence", label: "Security Intelligence", icon: Award },
+      ]
+    },
+    {
+      title: "Adversarial Arena",
+      items: [
+        { id: "attacks", label: "Attack Playground", icon: Swords },
+        { id: "arena", label: "Live Attack Arena", icon: ShieldAlert },
+      ]
+    },
+    {
+      title: "System Settings",
+      items: [
+        { id: "config", label: "System Configuration", icon: Sliders },
+      ]
+    }
   ];
 
-
   return (
-    <aside className="w-72 bg-surface border-r border-border flex flex-col justify-between h-screen select-none shrink-0  z-20 group">
+    <aside className="w-72 bg-surface border-r border-border flex flex-col justify-between h-screen select-none shrink-0 z-20 group">
       {/* Brand Header */}
       <div>
         <div className="p-6 border-b border-border flex items-center gap-3">
@@ -53,53 +72,57 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onSelectPage, act
           </div>
         </div>
 
-        {/* Navigation Items with AnimatedBackground */}
-        <div className="p-4 space-y-1.5">
-          <div className="text-[10px] font-mono uppercase tracking-wider text-text-secondary px-3 py-1 font-semibold">
-            Security Telemetry
-          </div>
+        {/* Navigation Groups */}
+        <div className="p-4 space-y-5 overflow-y-auto custom-scrollbar" style={{ maxHeight: "calc(100vh - 220px)" }}>
+          {navGroups.map((group) => (
+            <div key={group.title} className="flex flex-col space-y-1">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-text-secondary/70 px-3 py-1 font-bold mb-0.5">
+                {group.title}
+              </div>
 
-          <div className="flex flex-col space-y-1">
-            <AnimatedBackground
-              defaultValue={currentPage}
-              onValueChange={(id) => id && onSelectPage(id as NavPage)}
-              className="bg-surface-elevated border-l-[3px] border-primary rounded-lg shadow-glow-cyan"
-              transition={{
-                type: "spring",
-                bounce: 0.15,
-                duration: 0.32,
-              }}
-            >
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = currentPage === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    data-id={item.id}
-                    type="button"
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-mono text-left group transition-all duration-200 ${
-                      isActive 
-                        ? "text-white font-bold" 
-                        : "text-zinc-400 hover:text-primary hover:bg-primary/5"
-                    }`}
-                  >
-                    <Icon className={`w-4 h-4 shrink-0 transition-colors duration-200 ${
-                      isActive 
-                        ? "text-primary" 
-                        : "text-zinc-500 group-hover:text-primary"
-                    }`} />
-                    <span className="truncate">{item.label}</span>
-                    {item.id === "overview" && activeRounds > 0 && (
-                      <span className="ml-auto text-[10px] bg-primary/20 text-primary border border-primary/40 px-1.5 py-0.5 rounded font-bold shrink-0">
-                        R{activeRounds}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </AnimatedBackground>
-          </div>
+              <div className="flex flex-col space-y-1">
+                <AnimatedBackground
+                  defaultValue={group.items.some(i => i.id === currentPage) ? currentPage : undefined}
+                  onValueChange={(id) => id && onSelectPage(id as NavPage)}
+                  className="bg-surface-elevated border-l-[3px] border-primary rounded-lg shadow-glow-cyan"
+                  transition={{
+                    type: "spring",
+                    bounce: 0.15,
+                    duration: 0.32,
+                  }}
+                >
+                  {group.items.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = currentPage === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        data-id={item.id}
+                        type="button"
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-mono text-left group transition-all duration-200 ${
+                          isActive 
+                            ? "text-white font-bold" 
+                            : "text-zinc-400 hover:text-primary hover:bg-primary/5"
+                        }`}
+                      >
+                        <Icon className={`w-4 h-4 shrink-0 transition-colors duration-200 ${
+                          isActive 
+                            ? "text-primary" 
+                            : "text-zinc-500 group-hover:text-primary"
+                        }`} />
+                        <span className="truncate">{item.label}</span>
+                        {item.id === "overview" && activeRounds > 0 && (
+                          <span className="ml-auto text-[10px] bg-primary/20 text-primary border border-primary/40 px-1.5 py-0.5 rounded font-bold shrink-0">
+                            R{activeRounds}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </AnimatedBackground>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
