@@ -1,173 +1,699 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   FEDSANITIZE DESIGN SYSTEM v2
+   Design tokens as CSS custom properties
+   ============================================================ */
+
 :root {
   color-scheme: dark;
-  --background: 240 23% 3%;       /* #050508 */
-  --card: 218 67% 15%;             /* #0C1E3E */
-  --card-elevated: 218 62% 19%;    /* #12264D */
-  --primary: 170 96% 60%;          /* #38FBDB */
-  --secondary: 262 89% 64%;        /* #8E52F5 */
-  --foreground: 198 33% 93%;       /* #E8F1F5 */
-  --muted-foreground: 218 17% 56%; /* #7B8AA3 */
-  --destructive: 349 100% 62%;     /* #FF3B5C */
-  --success: 161 74% 49%;          /* #20D9A0 */
-  --warning: 37 91% 55%;           /* #F5A623 */
+
+  /* ---- Backgrounds ---- */
+  --bg-base:     #050A18;
+  --bg-surface:  #0A1330;
+  --bg-elevated: #0F1C42;
+  --bg-hover:    rgba(255,255,255,0.04);
+
+  /* ---- Borders ---- */
+  --border-subtle: rgba(148,163,184,0.10);
+  --border-strong: rgba(148,163,184,0.20);
+  --border-active: rgba(34,211,238,0.55);
+
+  /* ---- Text ---- */
+  --text-primary:   #E8EEF9;
+  --text-secondary: #9FB0CC;
+  --text-muted:     #667796;
+
+  /* ---- Semantic colours ---- */
+  --cyan:   #22D3EE;
+  --green:  #34D399;
+  --red:    #FF4D6D;
+  --amber:  #F5A524;
+  --purple: #8B5CF6;
+  --blue:   #3B82F6;
+
+  /* Tints (bg alpha 0.12) */
+  --cyan-tint:   rgba(34,211,238,0.12);
+  --green-tint:  rgba(52,211,153,0.12);
+  --red-tint:    rgba(255,77,109,0.12);
+  --amber-tint:  rgba(245,165,36,0.12);
+  --purple-tint: rgba(139,92,246,0.12);
+  --blue-tint:   rgba(59,130,246,0.12);
+
+  /* Borders (alpha 0.30) */
+  --cyan-border:   rgba(34,211,238,0.30);
+  --green-border:  rgba(52,211,153,0.30);
+  --red-border:    rgba(255,77,109,0.30);
+  --amber-border:  rgba(245,165,36,0.30);
+  --purple-border: rgba(139,92,246,0.30);
+  --blue-border:   rgba(59,130,246,0.30);
+
+  /* Glows */
+  --cyan-glow:   rgba(34,211,238,0.35);
+  --green-glow:  rgba(52,211,153,0.35);
+  --red-glow:    rgba(255,77,109,0.35);
+  --purple-glow: rgba(139,92,246,0.35);
+
+  /* ---- Radius ---- */
+  --r-sm:  10px;
+  --r-md:  14px;
+  --r-lg:  16px;
+  --r-xl:  20px;
+  --r-pill: 999px;
+
+  /* ---- Shadows ---- */
+  --shadow-card: 0 1px 0 rgba(255,255,255,0.03) inset, 0 8px 24px rgba(0,0,0,0.35);
+  --shadow-elevated: 0 1px 0 rgba(255,255,255,0.04) inset, 0 12px 32px rgba(0,0,0,0.45);
+
+  /* legacy compat */
+  --background: 222 84% 7%;
+  --card: 222 75% 12%;
+  --card-elevated: 222 60% 16%;
+  --primary: 191 96% 53%;
+  --secondary: 263 89% 66%;
+  --foreground: 214 33% 94%;
+  --muted-foreground: 214 20% 63%;
+  --destructive: 349 100% 65%;
+  --success: 160 60% 52%;
+  --warning: 37 91% 55%;
 }
+
+/* ============================================================
+   GLOBAL RESETS & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  background-color: #050508;
-  color: #E8F1F5;
-  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Inter', 'ui-sans-serif', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
-/* Custom terminal scrollbars */
-::-webkit-scrollbar {
+/* Monospace ONLY for data values, client IDs, hashes, log lines */
+.font-data,
+.font-mono,
+code, kbd, samp, pre {
+  font-family: 'JetBrains Mono', 'ui-monospace', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   SCROLLBARS (thin, cyan-tinted)
+   ============================================================ */
+::-webkit-scrollbar          { width: 6px; height: 6px; }
+::-webkit-scrollbar-track    { background: transparent; }
+::-webkit-scrollbar-thumb    {
+  background: rgba(34,211,238,0.35);
+  border-radius: var(--r-pill);
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(34,211,238,0.6); }
+
+/* Fade mask for scrollable cards */
+.scroll-fade-y {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12px, black calc(100% - 12px), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 12px, black calc(100% - 12px), transparent 100%);
+}
+
+/* ============================================================
+   APP BACKGROUND
+   Remove the purple top gradient. Use two soft radial glows +
+   a faint 32px grid pattern.
+   ============================================================ */
+.app-bg {
+  background-color: var(--bg-base);
+  background-image:
+    radial-gradient(ellipse 55% 40% at 88% 8%,  rgba(34,211,238,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 35% at 10% 92%, rgba(139,92,246,0.05) 0%, transparent 70%),
+    linear-gradient(to right, rgba(34,211,238,0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(34,211,238,0.025) 1px, transparent 1px);
+  background-size: auto, auto, 32px 32px, 32px 32px;
+  background-attachment: fixed;
+}
+
+/* ============================================================
+   DS CARD COMPONENT
+   ============================================================ */
+.ds-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.ds-card-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-elevated);
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0) 100%);
+}
+
+/* Interactive hover - only for clickable cards */
+.ds-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* Active/selected state = cyan glow */
+.ds-card-active {
+  border-color: var(--border-active) !important;
+  box-shadow: var(--shadow-card), 0 0 0 1px rgba(34,211,238,0.15), 0 0 20px rgba(34,211,238,0.12) !important;
+}
+
+/* ============================================================
+   DS CHIP / BADGE COMPONENT
+   ============================================================ */
+.ds-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+.ds-chip::before {
+  content: '';
+  display: inline-block;
   width: 6px;
   height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #0C1E3E;
-}
-::-webkit-scrollbar-thumb {
-  background: #38FBDB;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #8E52F5;
-  box-shadow: 0 0 8px rgba(56, 251, 219, 0.6);
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
-/* Scanline / Grid texture overlay */
-.bg-grid-pattern {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(56, 251, 219, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(56, 251, 219, 0.04) 1px, transparent 1px);
+/* Variants */
+.ds-chip-pass, .ds-chip-trusted {
+  color: var(--green);
+  background: var(--green-tint);
+  border: 1px solid var(--green-border);
 }
+.ds-chip-pass::before, .ds-chip-trusted::before { background: var(--green); }
 
-/* Threat Console Card Elevation & Cyan-glow Hover Transitions */
-.threat-card {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 8px 24px rgba(0, 0, 0, 0.4);
-  background: linear-gradient(160deg, #0C1E3E 0%, #07152b 100%);
-  border: 1px solid rgba(56, 251, 219, 0.15);
-  transition: border-color 200ms cubic-bezier(0.16, 1, 0.3, 1), 
-              box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1), 
-              transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+.ds-chip-flagged, .ds-chip-warning {
+  color: var(--amber);
+  background: var(--amber-tint);
+  border: 1px solid var(--amber-border);
 }
+.ds-chip-flagged::before, .ds-chip-warning::before { background: var(--amber); }
 
-.threat-card:hover {
-  border-color: #38FBDB !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 251, 219, 0.25);
-  transform: translateY(-1.5px);
+.ds-chip-quarantined, .ds-chip-critical, .ds-chip-danger {
+  color: var(--red);
+  background: var(--red-tint);
+  border: 1px solid var(--red-border);
 }
+.ds-chip-quarantined::before, .ds-chip-critical::before, .ds-chip-danger::before { background: var(--red); }
 
-.threat-card-elevated {
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7), 0 12px 32px rgba(0, 0, 0, 0.5);
-  background: linear-gradient(160deg, #12264D 0%, #0C1E3E 100%);
-  border: 1px solid rgba(56, 251, 219, 0.25);
-  transition: border-color 200ms cubic-bezier(0.16, 1, 0.3, 1), 
-              box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1), 
-              transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+.ds-chip-info, .ds-chip-cyan {
+  color: var(--cyan);
+  background: var(--cyan-tint);
+  border: 1px solid var(--cyan-border);
 }
+.ds-chip-info::before, .ds-chip-cyan::before { background: var(--cyan); }
 
-.threat-card-elevated:hover {
-  border-color: #38FBDB;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), 0 0 24px rgba(56, 251, 219, 0.35);
-  transform: translateY(-1.5px);
+.ds-chip-mars, .ds-chip-purple {
+  color: var(--purple);
+  background: var(--purple-tint);
+  border: 1px solid var(--purple-border);
 }
+.ds-chip-mars::before, .ds-chip-purple::before { background: var(--purple); }
 
-/* Interactive Table Row Hover with Left Cyan Accent Bar */
-.threat-table-row {
-  position: relative;
-  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+.ds-chip-neutral {
+  color: var(--text-secondary);
+  background: rgba(148,163,184,0.08);
+  border: 1px solid var(--border-subtle);
 }
+.ds-chip-neutral::before { background: var(--text-muted); }
 
-.threat-table-row::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background-color: transparent;
-  transition: background-color 150ms ease-out;
+.ds-chip-no-dot::before { display: none; }
+
+/* ============================================================
+   DS BUTTONS
+   ============================================================ */
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: var(--r-md);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', system-ui, sans-serif;
+  cursor: pointer;
+  border: none;
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease, border-color 150ms ease, opacity 150ms ease;
+  outline: none;
+  text-decoration: none;
+  white-space: nowrap;
 }
-
-.threat-table-row:hover {
-  background-color: rgba(56, 251, 219, 0.05) !important;
+.ds-btn:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
 }
-
-.threat-table-row:hover::before {
-  background-color: #38FBDB;
+.ds-btn:disabled, .ds-btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
+.ds-btn:active:not(:disabled) { transform: translateY(1px) scale(0.99); }
 
-/* Action Button Hover States */
-.threat-btn-primary {
-  background: linear-gradient(135deg, #38FBDB 0%, #8E52F5 100%);
-  color: #050508;
-  font-weight: 700;
-  box-shadow: 0 0 16px rgba(56, 251, 219, 0.4);
-  transition: background 200ms ease, box-shadow 200ms ease, transform 150ms ease;
+/* Primary */
+.ds-btn-primary {
+  background: linear-gradient(135deg, #0891b2 0%, #1d4ed8 100%);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(34,211,238,0.2);
 }
-
-.threat-btn-primary:hover {
-  box-shadow: 0 0 24px rgba(56, 251, 219, 0.65);
+.ds-btn-primary:hover:not(:disabled) {
+  box-shadow: 0 0 28px rgba(34,211,238,0.35);
   transform: translateY(-1px);
 }
 
+/* Secondary */
+.ds-btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+.ds-btn-secondary:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--border-active);
+}
+
+/* Icon button */
+.ds-btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+.ds-btn-icon:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+/* Danger */
+.ds-btn-danger {
+  background: var(--red-tint);
+  color: var(--red);
+  border: 1px solid var(--red-border);
+}
+.ds-btn-danger:hover:not(:disabled) {
+  background: rgba(255,77,109,0.18);
+  box-shadow: 0 0 16px var(--red-glow);
+}
+
+/* ============================================================
+   NAV ITEM
+   ============================================================ */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+  position: relative;
+  text-decoration: none;
+  user-select: none;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+}
+.nav-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.nav-item:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+.nav-item.active {
+  background: rgba(34,211,238,0.10);
+  color: var(--cyan);
+  font-weight: 600;
+}
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  background: var(--cyan);
+  border-radius: var(--r-pill);
+  box-shadow: 0 0 8px var(--cyan-glow);
+}
+
+/* ============================================================
+   EYEBROW / SECTION LABELS
+   Use ONLY for tiny labels above KPI values and group headers
+   ============================================================ */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ============================================================
+   KPI VALUE
+   ============================================================ */
+.kpi-value {
+  font-family: 'JetBrains Mono', 'ui-monospace', monospace;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+/* ============================================================
+   DS SLIDER (styled track)
+   ============================================================ */
+.ds-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--bg-elevated);
+  outline: none;
+  cursor: pointer;
+}
+.ds-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(to right, var(--cyan) 0%, var(--blue) 100%);
+}
+.ds-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--cyan);
+  box-shadow: 0 0 8px var(--cyan-glow);
+  cursor: pointer;
+  margin-top: -7px;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+.ds-slider::-webkit-slider-thumb:active {
+  transform: scale(1.2);
+  box-shadow: 0 0 14px var(--cyan-glow);
+}
+.ds-slider:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+/* ============================================================
+   SKELETON LOADER
+   ============================================================ */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg,
+    rgba(15,28,66,0.5) 0%,
+    rgba(34,211,238,0.06) 50%,
+    rgba(15,28,66,0.5) 100%);
+  background-size: 800px 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* ============================================================
+   STATUS DOT (pulsing for live elements)
+   ============================================================ */
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+.status-dot-live { animation: live-pulse 2s ease-in-out infinite; }
+
+/* ============================================================
+   TOOLTIP
+   ============================================================ */
+.ds-tooltip {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--text-primary);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   PAGE TRANSITIONS
+   ============================================================ */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: page-in 250ms ease forwards;
+}
+
+/* ============================================================
+   FLASH ANIMATION (metric value change)
+   ============================================================ */
+@keyframes metric-flash {
+  0%   { background: rgba(34,211,238,0.18); }
+  100% { background: transparent; }
+}
+.metric-flash {
+  animation: metric-flash 800ms ease forwards;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   COUNT-UP (no extra CSS needed, handled in JS)
+   ============================================================ */
+
+/* ============================================================
+   SEGMENTED CONTROL
+   ============================================================ */
+.ds-seg-control {
+  display: flex;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px;
+}
+.ds-seg-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: background 150ms ease, color 150ms ease, box-shadow 150ms ease;
+}
+.ds-seg-btn:hover:not(.active) {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+.ds-seg-btn.active {
+  background: rgba(34,211,238,0.15);
+  color: var(--cyan);
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px var(--cyan-border);
+}
+
+/* ============================================================
+   LEGACY COMPATIBILITY (mapped to new tokens)
+   ============================================================ */
+/* Keep old class names working while new design rolls out */
+.threat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+.threat-card:hover {
+  transform: translateY(-1.5px);
+  border-color: var(--border-strong);
+}
+
+.threat-card-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-elevated);
+}
+.threat-card-elevated:hover {
+  border-color: var(--border-strong);
+}
+
+.threat-table-row {
+  position: relative;
+  transition: background-color 150ms ease;
+}
+.threat-table-row::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background-color: transparent;
+  transition: background-color 150ms ease;
+}
+.threat-table-row:hover { background-color: var(--bg-hover) !important; }
+.threat-table-row:hover::before { background-color: var(--cyan); }
+
+.threat-btn-primary {
+  background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 100%);
+  color: var(--bg-base);
+  font-weight: 700;
+  box-shadow: 0 0 16px rgba(34,211,238,0.3);
+  transition: box-shadow 200ms ease, transform 150ms ease;
+}
+.threat-btn-primary:hover { box-shadow: 0 0 24px rgba(34,211,238,0.5); transform: translateY(-1px); }
+
 .threat-btn-secondary {
-  background-color: #0C1E3E;
-  border: 1px solid rgba(56, 251, 219, 0.25);
-  color: #E8F1F5;
-  transition: background-color 200ms ease, border-color 200ms ease, color 150ms ease, box-shadow 200ms ease;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  transition: background 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
 }
-
 .threat-btn-secondary:hover {
-  background-color: #12264D;
-  border-color: #38FBDB;
-  color: #ffffff;
-  box-shadow: 0 0 12px rgba(56, 251, 219, 0.2);
+  background: var(--bg-elevated);
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(34,211,238,0.15);
 }
 
-/* Status Pills */
 .pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.2rem 0.625rem;
-  border-radius: 9999px;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.pill-pass    { color: var(--green);  background: var(--green-tint);  border: 1px solid var(--green-border); }
+.pill-flagged { color: var(--amber);  background: var(--amber-tint);  border: 1px solid var(--amber-border); }
+.pill-quarantined, .pill-danger { color: var(--red); background: var(--red-tint); border: 1px solid var(--red-border); }
+.pill-review  { color: var(--purple); background: var(--purple-tint); border: 1px solid var(--purple-border); }
+.pill-skipped { color: var(--text-muted); background: rgba(148,163,184,0.08); border: 1px solid var(--border-subtle); }
+
+/* ============================================================
+   BACKGROUND GRID (legacy)
+   ============================================================ */
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(34,211,238,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(34,211,238,0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* ============================================================
+   TIMELINE (Gateway Audit Log, Live Security Feed)
+   ============================================================ */
+.timeline-entry {
+  display: flex;
+  gap: 12px;
+  position: relative;
+}
+.timeline-entry::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 32px;
+  bottom: -12px;
+  width: 1px;
+  background: var(--border-subtle);
+}
+.timeline-entry:last-child::before { display: none; }
+.timeline-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* ============================================================
+   HORIZONTAL PIPELINE FLOW
+   ============================================================ */
+.pipeline-connector {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(to right, var(--cyan-border), transparent);
+  position: relative;
+  align-self: center;
+}
+.pipeline-connector::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -4px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid var(--cyan-border);
+}
+
+/* ============================================================
+   HEATMAP CELL
+   ============================================================ */
+.heatmap-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight: 500;
+  transition: opacity 150ms ease;
+  cursor: default;
 }
 
-.pill-pass {
-  color: #20D9A0;
-  background-color: rgba(32, 217, 160, 0.1);
-  border: 1px solid rgba(32, 217, 160, 0.35);
-}
-
-.pill-quarantined {
-  color: #FF3B5C;
-  background-color: rgba(255, 59, 92, 0.15);
-  border: 1px solid rgba(255, 59, 92, 0.45);
-}
-
-.pill-review {
-  color: #8E52F5;
-  background-color: rgba(142, 82, 245, 0.12);
-  border: 1px solid rgba(142, 82, 245, 0.35);
-}
-
-/* Static fallback for reduced motion */
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -175,6 +701,37 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  .status-dot-live { animation: none; opacity: 1; }
+  .skeleton         { animation: none; }
 }
 
+/* ============================================================
+   TOPOLOGY NETWORK (Live Attack Arena)
+   ============================================================ */
+.topology-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+}
 
+/* ============================================================
+   CHART CUSTOMISATIONS (applied via recharts className props)
+   ============================================================ */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border-strong) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4) !important;
+}
+.recharts-tooltip-label {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12px !important;
+  color: var(--text-primary) !important;
+}
+.recharts-tooltip-item {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12px !important;
+}

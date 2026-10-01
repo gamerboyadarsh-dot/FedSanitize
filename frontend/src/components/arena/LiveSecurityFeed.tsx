@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import type { ArenaSecurityEvent } from "../../types/telemetry";
+import { Activity, Radio, AlertTriangle, ShieldCheck, ShieldAlert, Info } from "lucide-react";
 
 interface Props {
   events: ArenaSecurityEvent[];
@@ -20,47 +21,90 @@ const TYPE_ICONS: Record<string, string> = {
   MARS_SCAN_STARTED: "🧬",
 };
 
-const SEV_COLORS: Record<string, string> = {
-  INFO: "#00E5FF",
-  WARNING: "#FFB300",
-  HIGH: "#FF7043",
-  CRITICAL: "#FF1744",
-};
-
-export const LiveSecurityFeed: React.FC<Props> = ({ events, maxItems = 10 }) => {
+export const LiveSecurityFeed: React.FC<Props> = ({ events, maxItems = 12 }) => {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => { if (ref.current) ref.current.scrollTop = 0; }, [events]);
   const recent = [...events].reverse().slice(0, maxItems);
 
+  const getSeverityChip = (sev: string) => {
+    switch (sev) {
+      case "CRITICAL":
+      case "HIGH":
+        return "ds-chip ds-chip-danger ds-chip-no-dot text-[10px] py-0.5 px-2";
+      case "WARNING":
+        return "ds-chip ds-chip-warning ds-chip-no-dot text-[10px] py-0.5 px-2";
+      case "INFO":
+      default:
+        return "ds-chip ds-chip-info ds-chip-no-dot text-[10px] py-0.5 px-2";
+    }
+  };
+
   return (
-    <div style={{ background: "#161B22", border: "1px solid #30363D", borderRadius: 8, display: "flex", flexDirection: "column", minHeight: 320, maxHeight: 520 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px", borderBottom: "1px solid #30363D", flexShrink: 0 }}>
-        <span style={{ fontSize: 12, fontWeight: "bold", fontFamily: "monospace", color: "#F0F6FC" }}>📡 LIVE SECURITY FEED</span>
-        <span style={{ fontSize: 10, fontFamily: "monospace", color: "#00E676", display: "flex", alignItems: "center", gap: 4 }}>
-          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#00E676", display: "inline-block" }} />
-          LIVE STREAM
+    <div className="flex flex-col h-full bg-[var(--bg-base)] border border-[var(--border-subtle)] rounded-xl min-h-[360px] max-h-[520px] overflow-hidden">
+      {/* Feed Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] shrink-0">
+        <div className="flex items-center gap-2">
+          <Radio className="w-4 h-4 text-[var(--cyan)] animate-pulse" />
+          <span className="text-xs font-semibold text-[var(--text-primary)] uppercase tracking-wider">
+            Live Security Feed
+          </span>
+        </div>
+        <span className="flex items-center gap-1.5 text-[11px] font-sans text-[var(--green)]">
+          <span className="w-2 h-2 rounded-full bg-[var(--green)] animate-ping" />
+          <span>Active Telemetry</span>
         </span>
       </div>
-      <div ref={ref} style={{ overflowY: "auto", flex: 1 }}>
+
+      {/* Feed Timeline Items */}
+      <div ref={ref} className="overflow-y-auto flex-1 p-3 space-y-2 scroll-fade-y">
         {recent.length === 0 ? (
-          <div style={{ padding: 16, fontSize: 11, color: "#8B949E", fontFamily: "monospace" }}>Awaiting security telemetry...</div>
+          <div className="flex flex-col items-center justify-center h-full py-16 gap-2.5 text-[var(--text-muted)]">
+            <Activity className="w-8 h-8 opacity-40" />
+            <p className="text-xs font-medium">Awaiting arena security telemetry...</p>
+            <p className="text-[11px] text-center max-w-[200px] leading-relaxed">
+              Click "Run Animated Simulation" or scrub the timeline to stream events.
+            </p>
+          </div>
         ) : (
           recent.map((evt, i) => {
             const icon = TYPE_ICONS[evt.event_type] ?? "📌";
-            const col = SEV_COLORS[evt.severity] ?? "#00E5FF";
             return (
-              <div key={i} style={{ padding: "6px 12px", borderBottom: "1px solid #21262D" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ color: col, fontWeight: "bold", fontSize: 10, fontFamily: "monospace" }}>{icon} {evt.event_type}</span>
-                  <span style={{ color: "#6E7681", fontSize: 10, fontFamily: "monospace" }}>+{evt.timestamp.toFixed(1)}s</span>
+              <div 
+                key={i} 
+                className="p-2.5 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:border-[var(--border-strong)] transition-colors"
+              >
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="text-xs shrink-0">{icon}</span>
+                    <span className={getSeverityChip(evt.severity)}>
+                      {evt.severity}
+                    </span>
+                    <span className="text-[11px] font-mono text-[var(--text-secondary)] truncate">
+                      {evt.event_type}
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)] shrink-0">
+                    +{evt.timestamp.toFixed(1)}s
+                  </span>
                 </div>
-                <div style={{ color: "#C9D1D9", fontSize: 11, marginTop: 2, fontFamily: "monospace" }}>
-                  {evt.client_id && <b>[{evt.client_id}] </b>}{evt.message}
+                <div className="text-[12px] text-[var(--text-primary)] leading-snug pl-4">
+                  {evt.client_id && (
+                    <span className="font-mono font-bold text-[var(--cyan)] mr-1">
+                      [{evt.client_id}]
+                    </span>
+                  )}
+                  <span>{evt.message}</span>
                 </div>
               </div>
             );
           })
         )}
+      </div>
+
+      {/* Feed Footer */}
+      <div className="px-4 py-2 bg-[var(--bg-surface)] border-t border-[var(--border-subtle)] text-[11px] text-[var(--text-muted)] flex items-center justify-between shrink-0 font-mono">
+        <span>Logged Events: {events.length}</span>
+        <span>Buffer: {Math.min(events.length, maxItems)}</span>
       </div>
     </div>
   );

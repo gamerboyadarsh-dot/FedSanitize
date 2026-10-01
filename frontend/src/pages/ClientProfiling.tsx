@@ -18,18 +18,27 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
   const selectedRecord = selectedClientId ? records[selectedClientId] : null;
   const selectedClient = clients.find((c) => c.client_id === selectedClientId);
 
+  // Summary counts derived from client list (not latestRound to stay reactive pre-run)
+  const trustedCount = clients.filter((c) => !c.is_malicious).length;
+  const quarantinedCount = clients.filter((c) => c.is_malicious).length;
+
   return (
     <div className="space-y-6">
-      {/* Header Info */}
-      <div className="flex items-center justify-between bg-surface border border-border rounded-xl p-5 ">
+      {/* Header Info — Inter title-case per design system */}
+      <div className="flex items-center justify-between ds-card p-5">
         <div>
-          <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary flex items-center gap-2">
+          <h2 className="text-base font-semibold text-text-primary flex items-center gap-2">
             <Users className="w-4 h-4 text-primary" />
-            Distributed Client Cohort Matrix (10 Edge Nodes)
+            Distributed Client Cohort Matrix \u2014 10 Edge Nodes
           </h2>
-          <p className="text-xs text-text-secondary font-mono mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             Real-time telemetry showing each client's threat profile, update norm, and multi-layer firewall verdict.
           </p>
+          {/* Summary chips */}
+          <div className="flex gap-2 mt-2">
+            <span className="ds-chip ds-chip-trusted ds-chip-no-dot">Trusted: {trustedCount}</span>
+            <span className="ds-chip ds-chip-quarantined ds-chip-no-dot">Quarantined: {quarantinedCount}</span>
+          </div>
         </div>
         <div className="flex items-center gap-4 text-xs font-mono">
           <span className="flex items-center gap-1.5 text-accent-safe">
@@ -45,9 +54,10 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
 
       <AnimatedGroup className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: 10-Client Interactive Cohort Table */}
-        <div className="lg:col-span-2 bg-surface border border-border rounded-xl overflow-hidden ">
+        <div className="lg:col-span-2 bg-surface border border-border rounded-xl overflow-hidden">
           <div className="p-4 border-b border-border flex items-center justify-between">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-text-primary">
+            {/* Inter sans-serif header per design system */}
+            <span className="text-[11px] uppercase tracking-wider font-sans font-semibold text-text-primary">
               Client Telemetry Roster
             </span>
             <span className="text-[11px] font-mono text-text-secondary">
@@ -56,15 +66,16 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left font-mono text-xs">
-              <thead className="bg-surface-elevated/70 text-text-secondary uppercase text-[10px] tracking-wider border-b border-border">
+            <table className="w-full text-left text-xs">
+              {/* Table headers — sans-serif per design system */}
+              <thead className="bg-surface-elevated/70 text-text-secondary border-b border-border">
                 <tr>
-                  <th className="px-4 py-3">Client ID</th>
-                  <th className="px-4 py-3">Attack Type</th>
-                  <th className="px-4 py-3">L2 Norm</th>
-                  <th className="px-4 py-3">Layer 1 (MAD)</th>
-                  <th className="px-4 py-3">Layer 2 (MARS)</th>
-                  <th className="px-4 py-3">Final Status</th>
+                  <th className="px-4 py-3 text-[11px] uppercase tracking-wider font-sans">Client ID</th>
+                  <th className="px-4 py-3 text-[11px] uppercase tracking-wider font-sans">Attack Type</th>
+                  <th className="px-4 py-3 text-[11px] uppercase tracking-wider font-sans">L2 Norm</th>
+                  <th className="px-4 py-3 text-[11px] uppercase tracking-wider font-sans">Layer 1 (MAD)</th>
+                  <th className="px-4 py-3 text-[11px] uppercase tracking-wider font-sans">Layer 2 (MARS)</th>
+                  <th className="px-4 py-3 text-[11px] uppercase tracking-wider font-sans">Final Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
@@ -79,44 +90,50 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
                     <tr
                       key={c.client_id}
                       onClick={() => setSelectedClientId(c.client_id)}
-                      className={`group hover:bg-white/5 transition-colors border-l-2 border-transparent hover:border-white cursor-pointer transition-colors duration-200 ${
-                        isSelected 
-                          ? "bg-primary/5 border-l-4 border-primary" 
+                      className={`group hover:bg-white/5 transition-colors cursor-pointer duration-200 ${
+                        isSelected
+                          ? "bg-[rgba(34,211,238,0.06)] border-l-[3px] border-[#22D3EE]"
                           : "border-l-4 border-transparent hover:bg-white/[0.02]"
                       }`}
                     >
-                      <td className="px-4 py-3 font-bold text-text-primary flex items-center gap-2">
+                      <td className="px-4 py-3 font-bold text-text-primary font-mono flex items-center gap-2">
                         <span>{c.client_id}</span>
                         {c.is_malicious && (
                           <span className="w-1.5 h-1.5 rounded-full bg-accent-danger shadow-glow-red" title="Malicious Client" />
                         )}
                       </td>
                       <td className="px-4 py-3">
-                        <span className={c.attack_type === "NONE" ? "pill-pass" : "pill-quarantined"}>
+                        {/* NONE = neutral, any attack = danger */}
+                        <span className={c.attack_type === "NONE" ? "ds-chip ds-chip-neutral ds-chip-no-dot" : "ds-chip ds-chip-danger ds-chip-no-dot"}>
                           {c.attack_type}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-text-secondary">
+                      <td className="px-4 py-3 text-text-secondary font-mono">
                         {rec?.update_norm ? rec.update_norm.toFixed(2) : "~5.10"}
                       </td>
                       <td className="px-4 py-3">
-                        <span className={l1Status === "PASS" ? "pill-pass" : "pill-quarantined"}>
+                        {/* PASS = green, FLAGGED = danger, SKIPPED = neutral */}
+                        <span className={
+                          l1Status === "PASS"
+                            ? "ds-chip ds-chip-pass ds-chip-no-dot"
+                            : "ds-chip ds-chip-quarantined ds-chip-no-dot"
+                        }>
                           {l1Status}
                         </span>
                       </td>
                       <td className="px-4 py-3">
                         <span className={
-                          marsStatus === "PASS" 
-                            ? "pill-pass" 
-                            : marsStatus === "FLAGGED" 
-                            ? "pill-quarantined" 
-                            : "pill-skipped"
+                          marsStatus === "PASS"
+                            ? "ds-chip ds-chip-pass ds-chip-no-dot"
+                            : marsStatus === "FLAGGED"
+                            ? "ds-chip ds-chip-quarantined ds-chip-no-dot"
+                            : "ds-chip ds-chip-neutral ds-chip-no-dot"
                         }>
                           {marsStatus}
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className={finalStatus === "TRUSTED" ? "pill-pass" : "pill-quarantined"}>
+                        <span className={finalStatus === "TRUSTED" ? "ds-chip ds-chip-pass ds-chip-no-dot" : "ds-chip ds-chip-quarantined ds-chip-no-dot"}>
                           {finalStatus}
                         </span>
                       </td>
@@ -129,11 +146,12 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
         </div>
 
         {/* Right Col: Deep-Dive Inspector for Selected Client */}
-        <div className="bg-surface border border-border rounded-xl p-5  space-y-4">
+        <div className="bg-surface border border-border rounded-xl p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div className="flex items-center gap-2">
               <Crosshair className="w-4 h-4 text-primary" />
-              <h3 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary">
+              {/* Inter title-case per design system */}
+              <h3 className="text-base font-semibold text-text-primary">
                 Node Inspector: {selectedClientId}
               </h3>
             </div>
@@ -142,9 +160,20 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
             </span>
           </div>
 
+          {/* Verdict banner — visual summary of node trust status */}
+          <div className="px-4 py-2 rounded-lg mb-3" style={{
+            background: selectedClient?.is_malicious ? "var(--red-tint)" : "var(--green-tint)",
+            border: `1px solid ${selectedClient?.is_malicious ? "var(--red-border)" : "var(--green-border)"}`
+          }}>
+            <span style={{ color: selectedClient?.is_malicious ? "var(--red)" : "var(--green)", fontWeight: 600 }}>
+              {selectedClient?.is_malicious ? "Threat Node \u2014 Flagged/Quarantined" : "Trusted Node \u2014 Passes All Layers"}
+            </span>
+          </div>
+
           <div className="space-y-3 font-mono text-xs">
             <div className="bg-surface-elevated border border-border p-3 rounded-lg space-y-2">
-              <div className="text-[10px] text-text-secondary uppercase">Threat Classification</div>
+              {/* eyebrow section header per design system */}
+              <div className="eyebrow">Threat Classification</div>
               <div className="flex items-center justify-between">
                 <span className="text-text-secondary">Assigned Attack:</span>
                 <span className="text-text-primary font-bold">{selectedClient?.attack_type ?? "NONE"}</span>
@@ -158,7 +187,7 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
             </div>
 
             <div className="bg-surface-elevated border border-border p-3 rounded-lg space-y-2">
-              <div className="text-[10px] text-text-secondary uppercase">Layer 1 Anomaly Metrics</div>
+              <div className="eyebrow">Layer 1 Anomaly Metrics</div>
               <div className="flex items-center justify-between">
                 <span className="text-text-secondary">L2 Update Norm:</span>
                 <span className="text-text-primary font-bold">{selectedRecord?.update_norm ? selectedRecord.update_norm.toFixed(4) : "5.0838"}</span>
@@ -178,7 +207,7 @@ export const ClientProfiling: React.FC<ClientProfilingProps> = ({ clients, lates
             </div>
 
             <div className="bg-surface-elevated border border-border p-3 rounded-lg space-y-2">
-              <div className="text-[10px] text-text-secondary uppercase">Layer 2 MARS Backdoor Analysis</div>
+              <div className="eyebrow">Layer 2 MARS Backdoor Analysis</div>
               <div className="flex items-center justify-between">
                 <span className="text-text-secondary">Client Backdoor Energy (CBE):</span>
                 <span className="text-text-primary font-bold">

@@ -47,18 +47,19 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
   }));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-8 page-enter">
       {/* 5 KPI Metric Cards with AnimatedGroup & GlowEffect */}
       <AnimatedGroup className="grid grid-cols-1 md:grid-cols-5 gap-4 telemetry-live">
         {/* Card 1: Current Round */}
         <GlowEffect glowColor="rgba(56, 251, 219, 0.4)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
+          <div className="ds-card p-4 hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
-                <span>Simulation Round</span>
+              <div className="flex items-center justify-between mb-2">
+                <span className="eyebrow">Simulation Round</span>
                 <Layers className="w-4 h-4 text-primary" />
               </div>
-              <div className="text-3xl font-mono font-bold text-text-primary">
+              {/* Cyan semantic colour for round number */}
+              <div className="kpi-value text-4xl text-[#22D3EE]">
                 {roundNum > 0 ? (
                   <SlidingNumber value={roundNum} prefix="Round " />
                 ) : (
@@ -74,13 +75,14 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
 
         {/* Card 2: Clean Accuracy */}
         <GlowEffect glowColor="rgba(46, 204, 113, 0.4)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
+          <div className="ds-card p-4 hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
-                <span>Clean Accuracy</span>
+              <div className="flex items-center justify-between mb-2">
+                <span className="eyebrow">Clean Accuracy</span>
                 <CheckCircle2 className="w-4 h-4 text-accent-safe" />
               </div>
-              <div className="text-3xl font-mono font-bold text-accent-safe">
+              {/* Green — high accuracy is good */}
+              <div className="kpi-value text-4xl text-[#34D399]">
                 {cleanAcc > 0 ? (
                   <SlidingNumber value={cleanAcc} decimalPlaces={2} suffix="%" />
                 ) : (
@@ -97,13 +99,14 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
 
         {/* Card 3: Backdoor ASR */}
         <GlowEffect glowColor="rgba(255, 59, 92, 0.4)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
+          <div className="ds-card p-4 hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
-                <span>Backdoor ASR</span>
+              <div className="flex items-center justify-between mb-2">
+                <span className="eyebrow">Backdoor ASR</span>
                 <ShieldAlert className="w-4 h-4 text-accent-danger" />
               </div>
-              <div className={`text-3xl font-mono font-bold ${asr < 2.0 ? "text-accent-safe" : "text-accent-danger"}`}>
+              {/* Green when suppressed (<2%), red when active */}
+              <div className={`kpi-value text-4xl ${asr < 2.0 ? "text-[#34D399]" : "text-[#FF4D6D]"}`}>
                 {latestRound ? (
                   <SlidingNumber value={asr} decimalPlaces={2} suffix="%" />
                 ) : (
@@ -120,31 +123,35 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
 
         {/* Card 4: Quarantined Clients */}
         <GlowEffect glowColor="rgba(245, 166, 35, 0.4)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
+          <div className="ds-card p-4 hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
-                <span>Threats Isolated</span>
+              <div className="flex items-center justify-between mb-2">
+                <span className="eyebrow">Threats Isolated</span>
                 <AlertTriangle className="w-4 h-4 text-accent-warning" />
               </div>
-              <div className="text-3xl font-mono font-bold text-accent-danger">
+              {/* Red when threats present, amber when none */}
+              <div className={`kpi-value text-4xl ${quarantined > 0 ? "text-[#FF4D6D]" : "text-[#F5A524]"}`}>
                 <SlidingNumber value={quarantined} /> / {latestRound?.total_clients ?? 10}
               </div>
             </div>
             <div className="text-[11px] font-mono text-text-secondary mt-2">
               L1: <span className="text-accent-danger font-bold">{l1Blocked}</span> | MARS: <span className="text-accent-warning font-bold">{marsBlocked}</span>
             </div>
+            {/* Disambiguates from Attack Playground threat count */}
+            <p className="text-[10px] italic mt-1" style={{ color: "var(--text-muted)" }}>(firewall quarantine)</p>
           </div>
         </GlowEffect>
 
         {/* Card 5: Detection F1 */}
         <GlowEffect glowColor="rgba(46, 204, 113, 0.4)">
-          <div className="bg-surface border border-border rounded-xl p-4 threat-card hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
+          <div className="ds-card p-4 hover:-translate-y-0.5 transition-all duration-200 h-full flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between text-text-secondary text-xs font-mono uppercase mb-2">
-                <span>Defense F1-Score</span>
+              <div className="flex items-center justify-between mb-2">
+                <span className="eyebrow">Defense F1-Score</span>
                 <Activity className="w-4 h-4 text-accent-safe" />
               </div>
-              <div className="text-3xl font-mono font-bold text-accent-safe">
+              {/* Green — defence quality metric */}
+              <div className="kpi-value text-4xl text-[#34D399]">
                 <SlidingNumber value={f1} decimalPlaces={1} suffix="%" />
               </div>
             </div>
@@ -158,14 +165,16 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
       {/* Main Charts & Telemetry Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Dual-Line Convergence Chart */}
-        <div className="lg:col-span-2 bg-surface border border-border rounded-xl p-5 threat-card space-y-4">
+        <div className="lg:col-span-2 ds-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div>
-              <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary">
+              {/* Inter 16px/600 normal-case title per design system */}
+              <h2 className="text-base font-semibold text-text-primary">
                 Convergence vs. Threat Suppression
               </h2>
-              <p className="text-xs text-text-secondary font-mono">
-                Clean Accuracy (Green) vs. Backdoor Attack Success Rate (Red) over rounds
+              {/* 13px secondary description — no mono */}
+              <p className="text-[13px] mt-0.5" style={{ color: "var(--text-secondary)" }}>
+                Clean accuracy vs. backdoor ASR over training rounds
               </p>
             </div>
             <span className="text-xs font-mono px-2 py-1 rounded bg-surface-elevated text-accent-safe border border-border">
@@ -177,11 +186,12 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 10, right: 20, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" opacity={0.5} />
-                  <XAxis dataKey="round" stroke="#64748b" tick={{ fill: "#64748b", fontSize: 11, fontFamily: "monospace" }} />
-                  <YAxis domain={[0, 100]} stroke="#64748b" tick={{ fill: "#64748b", fontSize: 11, fontFamily: "monospace" }} />
+                  {/* Subtle grid per design system */}
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.08)" />
+                  <XAxis dataKey="round" stroke="#667796" tick={{ fill: "#667796", fontSize: 11, fontFamily: "monospace" }} />
+                  <YAxis domain={[0, 100]} stroke="#667796" tick={{ fill: "#667796", fontSize: 11, fontFamily: "monospace" }} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: "#050508", borderColor: "#38FBDB", borderRadius: "8px", fontFamily: "monospace", fontSize: "12px", boxShadow: "0 0 10px rgba(56,251,219,0.2)" }}
+                    contentStyle={{ backgroundColor: "#0F1C42", border: "1px solid rgba(148,163,184,0.20)", borderRadius: "8px", fontFamily: "JetBrains Mono", fontSize: "12px" }}
                     labelStyle={{ color: "#f2e8e8", fontWeight: "bold" }}
                   />
                   <Legend wrapperStyle={{ fontFamily: "monospace", fontSize: "11px", paddingTop: "10px" }} />
@@ -213,52 +223,82 @@ export const Overview: React.FC<OverviewProps> = ({ history, latestRound }) => {
           </div>
         </div>
 
-        {/* Right Col: Live Telemetry Terminal Feed */}
-        <div className="bg-surface border border-border rounded-xl p-5 threat-card flex flex-col justify-between space-y-4">
+        {/* Right Col: Gateway Audit Log — Timeline design */}
+        <div className="ds-card p-5 flex flex-col justify-between space-y-4">
           <div className="flex items-center justify-between border-b border-border/60 pb-3">
             <div className="flex items-center gap-2">
               <Terminal className="w-4 h-4 text-primary" />
-              <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-text-primary">
+              {/* Inter title-case per design system */}
+              <h2 className="text-base font-semibold text-text-primary">
                 Gateway Audit Log
               </h2>
             </div>
             <span className="w-2 h-2 rounded-full bg-accent-safe animate-pulse" />
           </div>
 
-          <div className="bg-background border border-border/80 rounded-lg p-3 font-mono text-xs text-text-secondary flex-1 overflow-y-auto max-h-72 space-y-2.5 relative overflow-hidden scanlines">
+          {/* Timeline feed — replaces old raw text blob */}
+          <div className="overflow-y-auto max-h-80 scroll-fade-y pr-1 space-y-0 flex-1">
             {history.length > 0 ? (
               history.map((r, idx) => {
                 const isLatest = idx === history.length - 1;
                 const logText = r.log || `R${r.round}: Acc=${r.clean_accuracy.toFixed(1)}%, ASR=${r.backdoor_asr.toFixed(1)}%`;
                 return (
-                  <div key={idx} className="border-b border-border/40 pb-2.5 last:border-0 last:pb-0 z-10 relative">
-                    <div className="flex items-center justify-between text-[11px] font-bold">
-                      <span className="text-primary">[SEC-EVENT] Round {r.round} Audit</span>
-                      <span className="text-text-secondary font-normal">{r.quarantined_clients.length} Blocked</span>
-                    </div>
-                    <div className="text-text-primary mt-1 text-[11px] leading-relaxed">
-                      {isLatest ? (
-                        <TextEffect per="word">{logText}</TextEffect>
-                      ) : (
-                        logText
+                  <div key={idx} className="flex gap-3 pb-4 last:pb-0">
+                    {/* Timeline spine */}
+                    <div className="flex flex-col items-center">
+                      <div
+                        className="w-2 h-2 rounded-full mt-1.5 shrink-0"
+                        style={{
+                          background: r.quarantined_clients.length > 0 ? "var(--red)" : "var(--green)",
+                          boxShadow: r.quarantined_clients.length > 0 ? "0 0 6px var(--red-glow)" : "0 0 6px var(--green-glow)"
+                        }}
+                      />
+                      {idx < history.length - 1 && (
+                        <div className="w-px flex-1 mt-1" style={{ background: "var(--border-subtle)" }} />
                       )}
                     </div>
-                    <div className="text-[10px] text-text-secondary mt-1">
-                      Quarantined: [{r.quarantined_clients.join(", ")}]
+                    {/* Entry content */}
+                    <div className="flex-1 pb-4">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="ds-chip ds-chip-info ds-chip-no-dot">Round {r.round}</span>
+                        {r.quarantined_clients.length > 0 && (
+                          <span className="ds-chip ds-chip-danger ds-chip-no-dot">{r.quarantined_clients.length} blocked</span>
+                        )}
+                      </div>
+                      <div className="text-[12px]" style={{ fontFamily: "JetBrains Mono", color: "var(--text-secondary)" }}>
+                        {isLatest ? (
+                          <TextEffect per="word">{logText}</TextEffect>
+                        ) : (
+                          <>
+                            Acc: <span style={{ color: "var(--green)" }}>{r.clean_accuracy.toFixed(2)}%</span> &middot; ASR: <span style={{ color: r.backdoor_asr < 2 ? "var(--green)" : "var(--red)" }}>{r.backdoor_asr.toFixed(2)}%</span>
+                          </>
+                        )}
+                      </div>
+                      {r.quarantined_clients.length > 0 && (
+                        <div className="flex gap-1 mt-1.5 flex-wrap items-center">
+                          <span className="text-[11px] eyebrow">Quarantined:</span>
+                          {r.quarantined_clients.map((c: string) => (
+                            <span key={c} className="ds-chip ds-chip-quarantined ds-chip-no-dot" style={{ fontSize: "10px", padding: "2px 7px" }}>{c}</span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
               })
             ) : (
-              <div className="text-text-secondary text-[11px] italic z-10 relative">
-                Gateway listening... No rounds executed yet.
+              /* Empty state */
+              <div className="flex flex-col items-center justify-center py-8 gap-2">
+                <Terminal className="w-8 h-8" style={{ color: "var(--text-muted)" }} />
+                <p className="text-[13px]" style={{ color: "var(--text-muted)" }}>No rounds executed yet</p>
+                <p className="text-[12px]" style={{ color: "var(--text-muted)" }}>Click Run Secure Round or Load 5-Round Demo</p>
               </div>
             )}
           </div>
 
           <div className="pt-2 text-[11px] font-mono text-text-secondary flex items-center justify-between border-t border-border/50">
             <span>Aggregator: Coordinate Trimmed Mean</span>
-            <span className="text-accent-safe font-bold">β = 0.10</span>
+            <span className="text-accent-safe font-bold">\u03b2 = 0.10</span>
           </div>
         </div>
       </div>

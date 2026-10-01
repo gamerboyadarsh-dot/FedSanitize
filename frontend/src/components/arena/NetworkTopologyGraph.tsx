@@ -1,11 +1,11 @@
 /**
  * NetworkTopologyGraph — SVG Radial Network Topology
- * Mirrors the Plotly network graph from the Streamlit arena.
+ * Responsive, viewport-safe, design-token compliant.
  * Central FED SERVER + 10 client nodes in deterministic radial layout.
  */
 
 import React from "react";
-import type { ArenaNetworkNode, VisualState } from "../../types/telemetry";
+import type { ArenaNetworkNode } from "../../types/telemetry";
 
 interface NetworkTopologyGraphProps {
   nodes: Record<string, ArenaNetworkNode>;
@@ -14,11 +14,11 @@ interface NetworkTopologyGraphProps {
 }
 
 const STATE_COLORS: Record<string, string> = {
-  TRUSTED: "#00E676",
-  TRAINING: "#00E5FF",
-  TRANSMITTING: "#00E5FF",
-  FLAGGED: "#FF7043",
-  QUARANTINED: "#FF1744",
+  TRUSTED: "var(--green)",
+  TRAINING: "var(--cyan)",
+  TRANSMITTING: "var(--cyan)",
+  FLAGGED: "var(--amber)",
+  QUARANTINED: "var(--red)",
 };
 
 const STATE_LABELS: Record<string, string> = {
@@ -35,7 +35,7 @@ export const NetworkTopologyGraph: React.FC<NetworkTopologyGraphProps> = ({
   onSelectClient,
 }) => {
   const W = 520;
-  const H = 420;
+  const H = 400;
   const CX = W / 2;
   const CY = H / 2;
 
@@ -44,79 +44,131 @@ export const NetworkTopologyGraph: React.FC<NetworkTopologyGraphProps> = ({
   const clientList = Object.values(nodes);
 
   return (
-    <div className="relative w-full" style={{ background: "#0D1117", borderRadius: 8, border: "1px solid #30363D" }}>
-      <div className="flex items-center justify-between px-4 pt-3 pb-1">
-        <span className="text-xs font-bold font-mono text-[#00E5FF] uppercase tracking-wider">
-          🌐 Federated Network Topology
+    <div className="flex flex-col justify-between h-full bg-[var(--bg-base)] rounded-xl border border-[var(--border-subtle)] p-4">
+      {/* Header with Title & Legend Chips */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[var(--border-subtle)] shrink-0">
+        <span className="text-xs font-semibold text-[var(--cyan)] uppercase tracking-wider flex items-center gap-1.5">
+          <span>🌐</span> Federated Network Topology
         </span>
-        <div className="flex gap-3">
-          {[["TRUSTED","#00E676"],["FLAGGED","#FF7043"],["QUARANTINED","#FF1744"],["TRAINING","#00E5FF"]].map(([s,c]) => (
-            <span key={s} className="flex items-center gap-1 text-[10px] font-mono text-[#8B949E]">
-              <span className="w-2 h-2 rounded-full inline-block" style={{ background: c }} />
+        <div className="flex flex-wrap gap-2">
+          {[
+            ["TRUSTED", "var(--green)", "ds-chip-trusted"],
+            ["TRAINING", "var(--cyan)", "ds-chip-info"],
+            ["FLAGGED", "var(--amber)", "ds-chip-warning"],
+            ["QUARANTINED", "var(--red)", "ds-chip-quarantined"],
+          ].map(([s, c, chipCls]) => (
+            <span key={s} className={`ds-chip ${chipCls} text-[10px] py-0.5 px-2`}>
               {STATE_LABELS[s]}
             </span>
           ))}
         </div>
       </div>
 
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto">
-        <defs>
-          <radialGradient id="serverGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#00E5FF" stopOpacity="0" />
-          </radialGradient>
-        </defs>
+      {/* SVG Canvas - Scales Responsively */}
+      <div className="relative flex-1 flex items-center justify-center min-h-[300px] max-h-[400px] overflow-hidden">
+        <svg 
+          viewBox={`0 0 ${W} ${H}`} 
+          preserveAspectRatio="xMidYMid meet"
+          className="w-full h-full max-h-[380px]"
+        >
+          <defs>
+            <radialGradient id="serverGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#22D3EE" stopOpacity="0.30" />
+              <stop offset="100%" stopColor="#22D3EE" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="quarantineGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#FF4D6D" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#FF4D6D" stopOpacity="0" />
+            </radialGradient>
+          </defs>
 
-        {clientList.map((node) => {
-          const [nx, ny] = toSVG(node.x, node.y);
-          const isQuarantined = node.visual_state === "QUARANTINED";
-          const color = STATE_COLORS[node.visual_state] || "#58A6FF";
-          return (
-            <line
-              key={`link-${node.client_id}`}
-              x1={nx} y1={ny} x2={CX} y2={CY}
-              stroke={isQuarantined ? "#FF1744" : color}
-              strokeWidth={isQuarantined ? 1 : 1.5}
-              strokeOpacity={isQuarantined ? 0.25 : 0.4}
-              strokeDasharray={isQuarantined ? "4 4" : "none"}
-            />
-          );
-        })}
+          {/* Links between Clients and Federated Server */}
+          {clientList.map((node) => {
+            const [nx, ny] = toSVG(node.x, node.y);
+            const isQuarantined = node.visual_state === "QUARANTINED";
+            const color = STATE_COLORS[node.visual_state] || "#22D3EE";
+            return (
+              <line
+                key={`link-${node.client_id}`}
+                x1={nx} y1={ny} x2={CX} y2={CY}
+                stroke={isQuarantined ? "#FF4D6D" : color}
+                strokeWidth={isQuarantined ? 1 : 1.5}
+                strokeOpacity={isQuarantined ? 0.2 : 0.45}
+                strokeDasharray={isQuarantined ? "4 4" : "none"}
+              />
+            );
+          })}
 
-        <circle cx={CX} cy={CY} r={36} fill="url(#serverGlow)" />
-        <circle cx={CX} cy={CY} r={26} fill="#161B22" stroke="#00E5FF" strokeWidth={2} />
-        <text x={CX} y={CY - 5} textAnchor="middle" fontSize={8} fontWeight="bold" fill="#00E5FF" fontFamily="monospace">FED</text>
-        <text x={CX} y={CY + 7} textAnchor="middle" fontSize={8} fontWeight="bold" fill="#00E5FF" fontFamily="monospace">SERVER</text>
+          {/* Central Federated Server Node */}
+          <circle cx={CX} cy={CY} r={42} fill="url(#serverGlow)" />
+          <circle cx={CX} cy={CY} r={28} fill="#0A1330" stroke="#22D3EE" strokeWidth={2.5} />
+          <text x={CX} y={CY - 5} textAnchor="middle" fontSize={8} fontWeight="bold" fill="#22D3EE" fontFamily="JetBrains Mono">
+            FED
+          </text>
+          <text x={CX} y={CY + 8} textAnchor="middle" fontSize={8} fontWeight="bold" fill="#22D3EE" fontFamily="JetBrains Mono">
+            SERVER
+          </text>
 
-        {clientList.map((node) => {
-          const [nx, ny] = toSVG(node.x, node.y);
-          const color = STATE_COLORS[node.visual_state] || "#58A6FF";
-          const isSelected = selectedClient === node.client_id;
-          const isQuarantined = node.visual_state === "QUARANTINED";
+          {/* Client Nodes in Radial Ring */}
+          {clientList.map((node) => {
+            const [nx, ny] = toSVG(node.x, node.y);
+            const color = STATE_COLORS[node.visual_state] || "#22D3EE";
+            const isSelected = selectedClient === node.client_id;
+            const isQuarantined = node.visual_state === "QUARANTINED";
 
-          return (
-            <g key={node.client_id} onClick={() => onSelectClient(node.client_id)} style={{ cursor: "pointer" }}>
-              {isSelected && (
-                <circle cx={nx} cy={ny} r={19} fill="none" stroke={color} strokeWidth={2} strokeDasharray="3 2" strokeOpacity={0.8} />
-              )}
-              {isQuarantined && (
-                <>
-                  <line x1={nx-8} y1={ny-8} x2={nx+8} y2={ny+8} stroke="#FF1744" strokeWidth={1.5} strokeOpacity={0.6} />
-                  <line x1={nx+8} y1={ny-8} x2={nx-8} y2={ny+8} stroke="#FF1744" strokeWidth={1.5} strokeOpacity={0.6} />
-                </>
-              )}
-              <circle cx={nx} cy={ny} r={14} fill="#161B22" stroke={color} strokeWidth={isSelected ? 2.5 : 1.5} />
-              <text x={nx} y={ny + 4} textAnchor="middle" fontSize={9} fontWeight="bold" fill={color} fontFamily="monospace">
-                {node.client_id}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
+            return (
+              <g 
+                key={node.client_id} 
+                onClick={() => onSelectClient(node.client_id)} 
+                className="cursor-pointer transition-transform hover:scale-110"
+              >
+                {isSelected && (
+                  <circle 
+                    cx={nx} cy={ny} r={22} 
+                    fill="none" 
+                    stroke="#22D3EE" 
+                    strokeWidth={2} 
+                    strokeDasharray="4 2" 
+                    strokeOpacity={0.8} 
+                  />
+                )}
+                {isQuarantined && (
+                  <>
+                    <circle cx={nx} cy={ny} r={20} fill="url(#quarantineGlow)" />
+                    <line x1={nx-9} y1={ny-9} x2={nx+9} y2={ny+9} stroke="#FF4D6D" strokeWidth={2} strokeOpacity={0.8} />
+                    <line x1={nx+9} y1={ny-9} x2={nx-9} y2={ny+9} stroke="#FF4D6D" strokeWidth={2} strokeOpacity={0.8} />
+                  </>
+                )}
+                <circle 
+                  cx={nx} cy={ny} r={15} 
+                  fill="#0F1C42" 
+                  stroke={color} 
+                  strokeWidth={isSelected ? 3 : 2} 
+                />
+                <text 
+                  x={nx} y={ny + 4} 
+                  textAnchor="middle" 
+                  fontSize={9} 
+                  fontWeight="bold" 
+                  fill={color} 
+                  fontFamily="JetBrains Mono"
+                >
+                  {node.client_id}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
 
-      <div className="px-4 pb-3 flex items-center justify-between text-[10px] font-mono text-[#6E7681]">
-        <span>10 Edge Clients · 1 Federated Server · Deterministic Radial Layout</span>
-        {selectedClient && <span className="text-[#00E5FF]">Selected: <b>{selectedClient}</b></span>}
+      {/* Footer Info */}
+      <div className="pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)] shrink-0">
+        <span>10 Edge Nodes · 1 Central Coordinator</span>
+        {selectedClient ? (
+          <span className="text-[var(--cyan)] font-medium">Selected Inspector: <b>{selectedClient}</b></span>
+        ) : (
+          <span>Click any node to inspect</span>
+        )}
       </div>
     </div>
   );

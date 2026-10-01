@@ -1,5 +1,5 @@
 import React from "react";
-import { ShieldAlert, Activity, RefreshCw } from "lucide-react";
+import { ShieldAlert, RefreshCw } from "lucide-react";
 import type { RoundRecord } from "../../types/telemetry";
 import { SlidingNumber } from "../core/SlidingNumber";
 import { AuthBadgeModal } from "../common/AuthBadgeModal";
@@ -27,62 +27,73 @@ export const Header: React.FC<HeaderProps> = ({
   const totalQuarantined = currentRoundData?.quarantined_clients.length ?? 0;
 
   return (
-    <header className="h-20 bg-surface border-b border-border px-6 flex items-center justify-between shrink-0 z-10">
-      {/* Left: Gateway status & Stacked Stat Items */}
+    <header
+      className="h-16 border-b border-[rgba(148,163,184,0.10)] px-6 flex items-center justify-between shrink-0 z-10 backdrop-blur-md"
+      style={{ background: "rgba(5,10,24,0.80)" }}
+    >
+      {/* LEFT: Gateway status indicator */}
       <div className="flex items-center gap-6 min-w-0">
-        <div className="flex items-center gap-2.5 shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-surface-elevated border border-border flex items-center justify-center">
-            <Activity className="w-4 h-4 text-primary animate-pulse" />
-          </div>
-          <div>
-            <div className="text-[10px] font-mono uppercase tracking-widest text-text-secondary whitespace-nowrap">
-              GATEWAY STATUS
-            </div>
-            <div className="text-xs font-mono text-accent-safe font-bold flex items-center gap-1.5 whitespace-nowrap">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent-safe animate-pulse" />
-              SECURE DEFENSE ACTIVE
-            </div>
-          </div>
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Pulsing green dot */}
+          <span className="relative flex h-2 w-2">
+            <span
+              className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+              style={{ backgroundColor: "#34D399" }}
+            />
+            <span
+              className="relative inline-flex rounded-full h-2 w-2"
+              style={{ backgroundColor: "#34D399" }}
+            />
+          </span>
+          <span
+            className="text-[13px] font-sans font-medium whitespace-nowrap"
+            style={{ color: "#34D399" }}
+          >
+            Secure defense active
+          </span>
         </div>
 
+        {/* CENTER: Metric strip — only shown when roundNum > 0 */}
         {roundNum > 0 && (
-          <div className="flex items-center gap-6 border-l border-border pl-6">
-            {/* Round Stat */}
-            <div className="flex flex-col whitespace-nowrap">
-              <span className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
-                ROUND
-              </span>
-              <span className="text-sm font-mono font-bold text-primary">
+          <div className="flex items-center border-l border-[rgba(148,163,184,0.12)] pl-6">
+
+            {/* Round */}
+            <div className="flex flex-col items-start px-5">
+              <span className="eyebrow">Round</span>
+              <span className="kpi-value text-[14px] text-[#22D3EE]">
                 <SlidingNumber value={roundNum} />
               </span>
             </div>
 
-            {/* Clean Acc Stat */}
-            <div className="flex flex-col whitespace-nowrap">
-              <span className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
-                CLEAN ACCURACY
-              </span>
-              <span className="text-sm font-mono font-bold text-accent-safe">
+            <div className="w-px self-stretch bg-[rgba(148,163,184,0.12)]" />
+
+            {/* Clean Accuracy */}
+            <div className="flex flex-col items-start px-5">
+              <span className="eyebrow">Clean Acc</span>
+              <span className="kpi-value text-[14px] text-[#34D399]">
                 <SlidingNumber value={cleanAcc} decimalPlaces={1} suffix="%" />
               </span>
             </div>
 
-            {/* Backdoor ASR Stat */}
-            <div className="flex flex-col whitespace-nowrap">
-              <span className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
-                BACKDOOR ASR
-              </span>
-              <span className={`text-sm font-mono font-bold ${asr < 2.0 ? "text-accent-safe" : "text-accent-danger"}`}>
+            <div className="w-px self-stretch bg-[rgba(148,163,184,0.12)]" />
+
+            {/* Backdoor ASR */}
+            <div className="flex flex-col items-start px-5">
+              <span className="eyebrow">ASR</span>
+              <span
+                className="kpi-value text-[14px]"
+                style={{ color: asr > 2 ? "#f87171" : "#34D399" }}
+              >
                 <SlidingNumber value={asr} decimalPlaces={2} suffix="%" />
               </span>
             </div>
 
-            {/* Quarantined Count */}
-            <div className="flex flex-col whitespace-nowrap">
-              <span className="text-[10px] font-mono text-text-secondary uppercase tracking-wider">
-                QUARANTINED
-              </span>
-              <span className="text-sm font-mono font-bold text-accent-danger">
+            <div className="w-px self-stretch bg-[rgba(148,163,184,0.12)]" />
+
+            {/* Quarantined */}
+            <div className="flex flex-col items-start px-5">
+              <span className="eyebrow">Quarantined</span>
+              <span className="kpi-value text-[14px] text-amber-400">
                 <SlidingNumber value={totalQuarantined} suffix=" Nodes" />
               </span>
             </div>
@@ -90,33 +101,40 @@ export const Header: React.FC<HeaderProps> = ({
         )}
       </div>
 
-      {/* Right: Action Buttons with whitespace-nowrap & consistent h-9 */}
-      <div className="flex items-center gap-3 font-mono text-xs shrink-0">
+      {/* RIGHT: Action buttons */}
+      <div className="flex items-center gap-2.5 text-xs shrink-0">
         <AuthBadgeModal key={authVersion} />
 
+        {/* Load Demo — secondary */}
         <button
           onClick={onLoadDemo}
           disabled={isRunning}
-          className="threat-btn-secondary h-9 px-3.5 rounded-lg disabled:opacity-50 whitespace-nowrap font-medium flex items-center justify-center shadow-sm"
+          className="h-9 px-3.5 rounded-xl text-xs font-medium border border-[rgba(148,163,184,0.20)] text-text-primary bg-transparent hover:bg-white/[0.04] disabled:opacity-50 transition-colors whitespace-nowrap flex items-center justify-center"
         >
           Load 5-Round Demo
         </button>
 
+        {/* Reset — secondary with icon */}
         <button
           onClick={onReset}
           disabled={isRunning}
-          className="threat-btn-secondary h-9 px-3.5 rounded-lg disabled:opacity-50 flex items-center gap-1.5 whitespace-nowrap font-medium shadow-sm"
+          className="h-9 px-3.5 rounded-xl text-xs font-medium border border-[rgba(148,163,184,0.20)] text-text-primary bg-transparent hover:bg-white/[0.04] disabled:opacity-50 transition-colors whitespace-nowrap flex items-center gap-1.5"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           Reset
         </button>
 
+        {/* Run Secure Round — primary with gradient glow */}
         <button
           onClick={onRunRound}
           disabled={isRunning}
-          className={`threat-btn-primary h-9 px-4 rounded-lg font-bold flex items-center gap-2 whitespace-nowrap ${
-            isRunning ? "opacity-50 cursor-not-allowed" : ""
+          className={`h-9 px-4 rounded-xl text-xs font-bold text-white flex items-center gap-2 whitespace-nowrap transition-all disabled:opacity-50 disabled:cursor-not-allowed${
+            isRunning ? "" : " hover:-translate-y-px"
           }`}
+          style={{
+            background: "linear-gradient(135deg, #0891b2, #1d4ed8)",
+            boxShadow: "0 0 20px rgba(34,211,238,0.25)",
+          }}
         >
           {isRunning ? (
             <>

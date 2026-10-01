@@ -125,30 +125,10 @@ export function App() {
         )}
       </AnimatePresence>
 
-      {/* Root Layout Wrapper with Ambient Gradient Background */}
-      <div 
-        className="h-screen w-full text-text-primary overflow-hidden font-sans selection:bg-primary selection:text-black relative"
-        style={{
-          backgroundColor: "#050508",
-          backgroundImage: `
-            radial-gradient(ellipse 60% 45% at 15% 10%, hsl(262 75% 60% / 0.35), transparent 70%),
-            radial-gradient(ellipse 65% 50% at 85% 90%, hsl(217 85% 45% / 0.30), transparent 70%)
-          `,
-          backgroundAttachment: "fixed"
-        }}
-      >
-        {/* SVG Noise Texture Layer */}
-        <div className="pointer-events-none absolute inset-0 z-0 opacity-5 mix-blend-overlay">
-          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <filter id="noiseFilter">
-              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
-            </filter>
-            <rect width="100%" height="100%" filter="url(#noiseFilter)" />
-          </svg>
-        </div>
-
-        {/* Existing App Container (z-10 to sit above background layer) */}
-        <div className="flex w-full h-full relative z-10">
+      {/* Root Layout Wrapper — uses app-bg utility from index.css */}
+      <div className="app-bg h-screen w-full text-text-primary overflow-hidden font-sans selection:bg-primary selection:text-black relative">
+        {/* App Container */}
+        <div className="flex w-full h-full relative">
           {/* Persistent Left Sidebar with AnimatedBackground */}
           <Sidebar 
             currentPage={currentPage} 
@@ -178,7 +158,7 @@ export function App() {
             )}
 
             {/* Scrollable Page Body animated with TransitionPanel */}
-            <main className="flex-1 overflow-y-auto p-8">
+            <main className="flex-1 overflow-y-auto p-8 pb-8">
               <TransitionPanel activeIndex={activePageIndex}>
                 <Overview history={history} latestRound={latestRound} />
                 <ClientProfiling clients={clients} latestRound={latestRound} />
@@ -191,10 +171,10 @@ export function App() {
               </TransitionPanel>
             </main>
 
-            {/* Global Copyright & Architecture Footer */}
-            <footer className="border-t border-border/40 py-2 px-8 text-xs font-mono text-text-secondary/60 flex items-center justify-between shrink-0 bg-surface/30 backdrop-blur-sm select-none">
-              <span>© 2026 FedSanitize · Multi-Layer Byzantine &amp; Backdoor Defense Framework</span>
-              <span className="text-[11px] text-text-secondary/50">NeurIPS 2025 MARS Forensics · All rights reserved.</span>
+            {/* Global Footer */}
+            <footer className="shrink-0 h-10 border-t border-[rgba(148,163,184,0.08)] px-7 flex items-center justify-between text-[11px] text-[#667796] bg-[#0A1330]/60">
+              <span>© 2026 FedSanitize — Multi-Layer Byzantine &amp; Backdoor Defense Framework</span>
+              <span>NeurIPS 2025 MARS Forensics</span>
             </footer>
           </div>
         </div>
